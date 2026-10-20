@@ -33,7 +33,7 @@ def max_blocked_area(frames: np.ndarray, model, conf: float = 0.35) -> tuple[flo
     for i in idx:
         f = frames[i]
         h, w = f.shape[:2]
-        res = model.predict(f[..., ::-1].copy(), conf=conf, verbose=False)[0]  # expects BGR
+        res = model.predict(f[..., ::-1].copy(), conf=conf, verbose=False, device="cpu")[0]  # expects BGR
         for b, c in zip(res.boxes.xyxy.cpu().numpy(), res.boxes.cls.cpu().numpy()):
             name = res.names[int(c)]
             if name not in BLOCKED_CLASSES:

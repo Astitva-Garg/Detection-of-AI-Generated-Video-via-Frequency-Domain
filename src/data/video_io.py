@@ -37,23 +37,47 @@ def probe(path) -> dict:
                 "duration": dur, "frames": s.frames or None}
 
 
+def _sample_stream(path, targets: np.ndarray, max_seconds: float):
+    """Decode once, keeping only the frame nearest to each target time (memory ~ len(targets) frames)."""
+    best_d = np.full(len(targets), np.inf)
+    best: list = [None] * len(targets)
+    times = []
+    with av.open(str(path)) as c:
+        s = c.streams.video[0]
+        s.thread_type = "AUTO"
+        rate = float(s.average_rate) if s.average_rate else None
+        tb = float(s.time_base) if s.time_base else None
+        t0 = None
+        for i, f in enumerate(c.decode(s)):
+            t = f.pts * tb if (f.pts is not None and tb) else i / (rate or 24.0)
+            t0 = t if t0 is None else t0
+            t -= t0
+            if times and t > max_seconds:
+                break
+            times.append(t)
+            d = np.abs(targets - t)
+            upd = d < best_d
+            if upd.any():
+                arr = f.to_ndarray(format="rgb24")
+                for k in np.nonzero(upd)[0]:
+                    best_d[k], best[k] = d[k], arr
+    return best, np.asarray(times)
+
+
 def read_frames(path, n_frames: int = 16, fps: int = 8, start: float = 0.0) -> np.ndarray:
     """Sample `n_frames` at times start + k/fps (nearest decoded frame). Loops short videos."""
-    end = start + (n_frames - 1) / fps
-    frames, times, _ = _decode_all(path, max_seconds=end + 0.5)
-    if not frames:
+    targets = start + np.arange(n_frames) / fps
+    best, times = _sample_stream(path, targets, targets[-1] + 0.5)
+    if not len(times):
         raise ValueError(f"no frames decoded from {path}")
-    times = np.asarray(times)
     if start > times[-1]:  # start beyond end: fall back to beginning
-        start = 0.0
-    out = []
-    span = times[-1] + (times[1] - times[0] if len(times) > 1 else 1 / fps)
-    for k in range(n_frames):
-        t = start + k / fps
-        if t > times[-1] + 1e-6:  # past the end -> loop
-            t = (t - start) % span if span > 0 else 0.0
-        out.append(frames[int(np.argmin(np.abs(times - t)))])
-    return np.stack(out)
+        return read_frames(path, n_frames, fps, 0.0)
+    dt = times[1] - times[0] if len(times) > 1 else 1 / fps
+    if targets[-1] > times[-1] + 0.5 * dt:  # video shorter than the window -> loop over decoded frames
+        span = times[-1] + dt
+        looped = start + np.mod(targets - start, span)
+        best, _ = _sample_stream(path, looped, times[-1] + 0.5)
+    return np.stack(best)
 
 
 def read_all_frames(path, max_seconds: float | None = None) -> tuple[np.ndarray, float | None]:

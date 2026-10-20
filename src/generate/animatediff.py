@@ -19,7 +19,7 @@ def main(n: int) -> None:
         BASE, subfolder="scheduler", clip_sample=False, timestep_spacing="linspace",
         beta_schedule="linear", steps_offset=1)
     pipe.to("cuda")
-    pipe.enable_vae_slicing()
+    pipe.vae.enable_slicing()
 
     def gen(job):
         out = pipe(prompt=job.prompt + ", high quality, photorealistic", negative_prompt=NEGATIVE,

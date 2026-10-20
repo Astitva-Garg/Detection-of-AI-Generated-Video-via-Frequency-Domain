@@ -4,6 +4,7 @@ Content-matched pairs: each SVD fake shares its first frame (and its group_id, h
 with a real clip, so detection cannot rely on scene content.
 """
 import argparse
+from pathlib import Path
 
 import numpy as np
 import pandas as pd
@@ -15,12 +16,18 @@ from src.data.video_io import read_frames
 from src.generate.common import Job, run_jobs, to_uint8
 
 REPO = "stabilityai/stable-video-diffusion-img2vid-xt"
-W, H, FRAMES, FPS, STEPS = 1024, 576, 25, 7, 25
+W, H, FRAMES, FPS, STEPS = 768, 448, 16, 7, 20
+DROP = 2  # SVD's first decoded frames are often smeared; dropped (14 frames = 2 s at 7 fps)
 
 
 def make_jobs(n: int) -> list[Job]:
     meta = pd.read_csv(RAW_REAL / "meta.csv", dtype={"pexels_id": str}).drop_duplicates("pexels_id")
     meta = meta[[(RAW_REAL / f"{p}.mp4").exists() for p in meta.pexels_id]]
+    cf = RAW_REAL.parents[1] / "content_filter.csv"
+    if cf.exists():  # only animate real clips that passed the content filter
+        c = pd.read_csv(cf)
+        ok = {Path(p).stem for p in c[c.allowed].path}
+        meta = meta[meta.pexels_id.isin(ok)]
     # spread across scenes
     meta = meta.sample(frac=1.0, random_state=SEED).groupby("scene", group_keys=False).head(max(1, n // 10))
     meta = meta.sample(frac=1.0, random_state=SEED).head(n)
@@ -41,14 +48,14 @@ def first_frame(video_path: str) -> Image.Image:
 def main(n: int) -> None:
     from diffusers import StableVideoDiffusionPipeline
     pipe = StableVideoDiffusionPipeline.from_pretrained(REPO, torch_dtype=torch.float16, variant="fp16")
-    pipe.enable_model_cpu_offload()
+    pipe.to("cuda")
     pipe.unet.enable_forward_chunking()
 
     def gen(job):
         out = pipe(first_frame(job.image), width=W, height=H, num_frames=FRAMES,
                    num_inference_steps=STEPS, decode_chunk_size=2, motion_bucket_id=127, fps=FPS,
                    generator=torch.Generator("cpu").manual_seed(job.seed), output_type="np").frames[0]
-        return to_uint8(out), FPS
+        return to_uint8(out)[DROP:], FPS
 
     run_jobs(make_jobs(n), gen, RAW_FAKE / "svd")
 
