@@ -55,10 +55,14 @@ def mean_spectrum_2d(df, n_per=40):
     for j, g in enumerate(gens):
         ax[0, j].imshow(means[g], cmap="magma")
         ax[0, j].set_title(g)
-        d = means[g] - means["real"]
-        v = np.percentile(np.abs(d), 99)
-        ax[1, j].imshow(d, cmap="RdBu_r", vmin=-v, vmax=v)
-        ax[1, j].set_title(f"{g} − real" if g != "real" else "(reference)")
+        if g == "real":
+            ax[1, j].text(0.5, 0.5, "reference\n(differences\nare vs. real)", ha="center", va="center",
+                          transform=ax[1, j].transAxes)
+        else:
+            d = means[g] - means["real"]
+            v = np.percentile(np.abs(d), 99)
+            ax[1, j].imshow(d, cmap="RdBu_r", vmin=-v, vmax=v)
+            ax[1, j].set_title(f"{g} − real")
         for a in ax[:, j]:
             a.axis("off")
     fig.suptitle("Mean log power spectrum (top) and difference from real (bottom; red = more energy)")
@@ -303,8 +307,8 @@ def degradation_bars():
 
 def tsne(df):
     cols = D.feature_cols(df, "all")
-    sub = df[~df.aug.astype(bool)].groupby("generator", group_keys=False).apply(
-        lambda x: x.sample(min(len(x), 150), random_state=0))
+    base = df[~df.aug.astype(bool)]
+    sub = pd.concat([g.sample(min(len(g), 150), random_state=0) for _, g in base.groupby("generator")])
     X = StandardScaler().fit_transform(D.xy(sub, cols)[0])
     Z = TSNE(n_components=2, perplexity=30, random_state=0, init="pca").fit_transform(X)
     fig, ax = plt.subplots(figsize=(6.5, 5.5))

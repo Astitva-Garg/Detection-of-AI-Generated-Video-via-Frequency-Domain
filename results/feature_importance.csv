@@ -1,0 +1,264 @@
+col,shap,gain,group
+sp_rad_00_mean,3.492835565829139e-05,5.4315125105436905e-08,radial low (frame)
+sp_rad_00_std,0.0023951852345940753,0.0005801286933480647,radial low (frame)
+sp_rad_01_mean,0.0031603119954124897,0.0018398590755942783,radial low (frame)
+sp_rad_01_std,0.000811133210958876,0.0006840282836057525,radial low (frame)
+sp_rad_02_mean,0.007892955435512853,0.006359215852097114,radial low (frame)
+sp_rad_02_std,0.0009077345997745391,0.0020632284245790293,radial low (frame)
+sp_rad_03_mean,0.008700596392993726,0.0022142480749525687,radial low (frame)
+sp_rad_03_std,0.0006828349214153956,7.508815404133565e-05,radial low (frame)
+sp_rad_04_mean,0.0009114182574479646,0.00023796212786959798,radial low (frame)
+sp_rad_04_std,0.004534358575759584,0.000811041705965212,radial low (frame)
+sp_rad_05_mean,0.006875984385271419,0.0017562388252271828,radial low (frame)
+sp_rad_05_std,0.0,0.0,radial low (frame)
+sp_rad_06_mean,0.005379399221165342,0.0010317015132765431,radial low (frame)
+sp_rad_06_std,0.0020338708926326853,0.0005056384853779762,radial low (frame)
+sp_rad_07_mean,0.006699489863389186,0.0018269615827415076,radial low (frame)
+sp_rad_07_std,0.000669563875054091,0.003256391954606061,radial low (frame)
+sp_rad_08_mean,0.0017026945037322265,0.0005265095671864726,radial low (frame)
+sp_rad_08_std,0.0008638408953628305,0.0033026227141707038,radial low (frame)
+sp_rad_09_mean,0.003636550366470572,0.000979858782798409,radial low (frame)
+sp_rad_09_std,0.005894733511797494,0.0031448396367626395,radial low (frame)
+sp_rad_10_mean,0.0,0.0,radial low (frame)
+sp_rad_10_std,0.00044760874158994256,7.604764198305494e-05,radial low (frame)
+sp_rad_11_mean,0.005112110866858306,0.003915968176948678,radial low (frame)
+sp_rad_11_std,0.0,0.0,radial low (frame)
+sp_rad_12_mean,0.0,0.0,radial low (frame)
+sp_rad_12_std,0.0,0.0,radial low (frame)
+sp_rad_13_mean,0.0,0.0,radial low (frame)
+sp_rad_13_std,0.0,0.0,radial low (frame)
+sp_rad_14_mean,0.003563856578308206,0.0013994614707387846,radial low (frame)
+sp_rad_14_std,0.003670733918255394,0.00027109279052159796,radial low (frame)
+sp_rad_15_mean,0.0,0.0,radial low (frame)
+sp_rad_15_std,0.0,0.0,radial low (frame)
+sp_rad_16_mean,0.0,0.0,radial mid (frame)
+sp_rad_16_std,0.011050820361180168,0.0007083254249385112,radial mid (frame)
+sp_rad_17_mean,0.0002305381939936067,5.83594898548695e-06,radial mid (frame)
+sp_rad_17_std,0.000687167130946383,9.846359168193515e-06,radial mid (frame)
+sp_rad_18_mean,0.0,0.0,radial mid (frame)
+sp_rad_18_std,0.0015262100387293492,0.00026699229988083183,radial mid (frame)
+sp_rad_19_mean,0.0,0.0,radial mid (frame)
+sp_rad_19_std,0.01477324635536494,0.007776369491391417,radial mid (frame)
+sp_rad_20_mean,0.005861824880061778,0.0015767467018580135,radial mid (frame)
+sp_rad_20_std,0.0,0.0,radial mid (frame)
+sp_rad_21_mean,0.015808693362450745,0.0021672176304998597,radial mid (frame)
+sp_rad_21_std,0.004697542345491989,0.0016433316897317815,radial mid (frame)
+sp_rad_22_mean,0.0011362489821183724,0.0008382617158913645,radial mid (frame)
+sp_rad_22_std,0.0008736916505477443,0.0004451690977977896,radial mid (frame)
+sp_rad_23_mean,0.05108400418900523,0.008717812798648193,radial mid (frame)
+sp_rad_23_std,0.03603707038160339,0.002851054112265797,radial mid (frame)
+sp_rad_24_mean,0.06877313235716509,0.02751005899064325,radial mid (frame)
+sp_rad_24_std,0.0,0.0,radial mid (frame)
+sp_rad_25_mean,0.01071681927307673,0.002106968106219982,radial mid (frame)
+sp_rad_25_std,0.0013954311101789373,0.0005868004931479952,radial mid (frame)
+sp_rad_26_mean,0.010181352014619467,0.000762290860895915,radial mid (frame)
+sp_rad_26_std,0.007198936315115589,0.004452603042244455,radial mid (frame)
+sp_rad_27_mean,0.0001393769397452308,1.2253985482389675e-06,radial mid (frame)
+sp_rad_27_std,0.0,0.0,radial mid (frame)
+sp_rad_28_mean,0.0005095945018795902,0.00034595283124967696,radial mid (frame)
+sp_rad_28_std,0.0,0.0,radial mid (frame)
+sp_rad_29_mean,0.0,0.0,radial mid (frame)
+sp_rad_29_std,0.0,0.0,radial mid (frame)
+sp_rad_30_mean,0.0,0.0,radial mid (frame)
+sp_rad_30_std,0.00034306763882047255,1.3993365849029613e-06,radial mid (frame)
+sp_rad_31_mean,0.0015659206297759377,0.00371807098944819,radial mid (frame)
+sp_rad_31_std,0.0,0.0,radial mid (frame)
+sp_rad_32_mean,0.0,0.0,radial high (frame)
+sp_rad_32_std,0.008335106125002285,0.0014046847210958798,radial high (frame)
+sp_rad_33_mean,0.0,0.0,radial high (frame)
+sp_rad_33_std,0.00298835722147492,0.0015188000144637603,radial high (frame)
+sp_rad_34_mean,0.007668820475609918,0.006652867141522637,radial high (frame)
+sp_rad_34_std,0.15796632509204017,0.10763158517322027,radial high (frame)
+sp_rad_35_mean,0.0006827254863785547,0.0026839693773654887,radial high (frame)
+sp_rad_35_std,0.0,0.0,radial high (frame)
+sp_rad_36_mean,0.0,0.0,radial high (frame)
+sp_rad_36_std,0.0,0.0,radial high (frame)
+sp_rad_37_mean,0.0,0.0,radial high (frame)
+sp_rad_37_std,0.0,0.0,radial high (frame)
+sp_rad_38_mean,0.0,0.0,radial high (frame)
+sp_rad_38_std,0.0,0.0,radial high (frame)
+sp_rad_39_mean,0.00015261475505247524,1.1929139164295667e-06,radial high (frame)
+sp_rad_39_std,0.00034506098187924675,2.778053270971899e-06,radial high (frame)
+sp_rad_40_mean,0.0,0.0,radial high (frame)
+sp_rad_40_std,0.0,0.0,radial high (frame)
+sp_rad_41_mean,0.003483726349447931,0.0006511203250046667,radial high (frame)
+sp_rad_41_std,0.0004354319605874794,0.0003056944242251637,radial high (frame)
+sp_rad_42_mean,0.0,0.0,radial high (frame)
+sp_rad_42_std,0.05385237208033724,0.03305443516331198,radial high (frame)
+sp_rad_43_mean,0.00021641092420212889,6.504269579184605e-07,radial high (frame)
+sp_rad_43_std,0.00018360486707846897,1.0150696136064343e-06,radial high (frame)
+sp_rad_44_mean,0.012579843716833624,0.008191785664178846,radial high (frame)
+sp_rad_44_std,0.0,0.0,radial high (frame)
+sp_rad_45_mean,0.003716832688436303,0.002044341713064818,radial high (frame)
+sp_rad_45_std,0.000858762949636157,0.00018643450845794247,radial high (frame)
+sp_rad_46_mean,0.005796781633018528,0.004673173032812988,radial high (frame)
+sp_rad_46_std,0.016056116907059537,0.001516323361906902,radial high (frame)
+sp_rad_47_mean,0.000309149606030998,1.324079584905776e-06,radial high (frame)
+sp_rad_47_std,0.0,0.0,radial high (frame)
+sp_res_rad_00_mean,0.009310588957985083,0.003462505479571633,residual spectrum
+sp_res_rad_00_std,0.042868513028316936,0.01806579067606407,residual spectrum
+sp_res_rad_01_mean,0.0069506851602293765,0.0033165781606839034,residual spectrum
+sp_res_rad_01_std,0.006335651749038947,0.0017638442349079788,residual spectrum
+sp_res_rad_02_mean,0.009989100202514645,0.0009266597661539792,residual spectrum
+sp_res_rad_02_std,0.0,0.0,residual spectrum
+sp_res_rad_03_mean,0.0029630448608904104,0.00035140803945460397,residual spectrum
+sp_res_rad_03_std,0.00013510840504322853,1.1931233647205343e-05,residual spectrum
+sp_res_rad_04_mean,0.012551274973776361,0.003511178395941883,residual spectrum
+sp_res_rad_04_std,0.021286219019592753,0.004316712322607315,residual spectrum
+sp_res_rad_05_mean,0.002955292785644141,0.0020278400413371767,residual spectrum
+sp_res_rad_05_std,0.0028577963323194082,0.0002681660002937219,residual spectrum
+sp_res_rad_06_mean,0.0033219215346993033,0.0010152569690933028,residual spectrum
+sp_res_rad_06_std,0.0019908184778332,0.0006066643934253638,residual spectrum
+sp_res_rad_07_mean,0.00010565601585992608,7.789398471711147e-07,residual spectrum
+sp_res_rad_07_std,0.0002616022459310674,0.0001207766840345954,residual spectrum
+sp_res_rad_08_mean,0.00418243662402748,0.0009828085534479098,residual spectrum
+sp_res_rad_08_std,6.218471904182425e-05,2.5247743284153464e-07,residual spectrum
+sp_res_rad_09_mean,0.0027789064100718287,0.0021730264785450567,residual spectrum
+sp_res_rad_09_std,0.008825863643939419,0.004098947029849589,residual spectrum
+sp_res_rad_10_mean,0.0,0.0,residual spectrum
+sp_res_rad_10_std,0.0039043296223167153,0.002288754599690983,residual spectrum
+sp_res_rad_11_mean,0.0,0.0,residual spectrum
+sp_res_rad_11_std,0.005580680223759125,0.0020363543754973513,residual spectrum
+sp_res_rad_12_mean,0.0,0.0,residual spectrum
+sp_res_rad_12_std,0.02258822840156232,0.0074000787656073475,residual spectrum
+sp_res_rad_13_mean,0.0011124282803111223,0.00020206014753400763,residual spectrum
+sp_res_rad_13_std,0.006226146560144985,0.0004751972211768735,residual spectrum
+sp_res_rad_14_mean,0.00011237476942828346,3.819166251767997e-06,residual spectrum
+sp_res_rad_14_std,0.0004455346976592515,6.874837437009582e-05,residual spectrum
+sp_res_rad_15_mean,0.015498734415285103,0.005895595416146741,residual spectrum
+sp_res_rad_15_std,0.00025715048403092655,5.951049332066827e-07,residual spectrum
+sp_res_rad_16_mean,0.015261636914262189,0.004028435813527108,residual spectrum
+sp_res_rad_16_std,0.00010249131361347886,1.089339295694848e-06,residual spectrum
+sp_res_rad_17_mean,0.000392945959002273,1.1962738968131524e-05,residual spectrum
+sp_res_rad_17_std,0.0003335755708164515,2.9663060612845604e-06,residual spectrum
+sp_res_rad_18_mean,0.00446717111786525,0.0013478779928962781,residual spectrum
+sp_res_rad_18_std,0.0,0.0,residual spectrum
+sp_res_rad_19_mean,0.005644171505344891,0.003917052736308409,residual spectrum
+sp_res_rad_19_std,0.008379607665525465,0.0020292960595268156,residual spectrum
+sp_res_rad_20_mean,0.0,0.0,residual spectrum
+sp_res_rad_20_std,0.0,0.0,residual spectrum
+sp_res_rad_21_mean,0.0019381652425383875,0.0012042344919484405,residual spectrum
+sp_res_rad_21_std,0.008082748826391027,0.005586354489556655,residual spectrum
+sp_res_rad_22_mean,0.010176508385020603,0.0045174341004695735,residual spectrum
+sp_res_rad_22_std,0.02059981460051261,0.0036924892722242503,residual spectrum
+sp_res_rad_23_mean,0.0082463238623561,0.005036569279323956,residual spectrum
+sp_res_rad_23_std,0.0007844717458241001,0.00010437269181969915,residual spectrum
+sp_res_rad_24_mean,0.08618284670152557,0.0523613220665457,residual spectrum
+sp_res_rad_24_std,0.034144751461046605,0.007788004792606379,residual spectrum
+sp_res_rad_25_mean,0.01826294576218565,0.004422553984367921,residual spectrum
+sp_res_rad_25_std,0.0,0.0,residual spectrum
+sp_res_rad_26_mean,0.037290538709577215,0.01790958590633886,residual spectrum
+sp_res_rad_26_std,0.005834728025118185,0.0006947497249141018,residual spectrum
+sp_res_rad_27_mean,0.0034230300439970444,0.005864772962384211,residual spectrum
+sp_res_rad_27_std,0.00040547654854813415,0.0002232945396033111,residual spectrum
+sp_res_rad_28_mean,0.0,0.0,residual spectrum
+sp_res_rad_28_std,0.00045229767030906243,3.1214185477115843e-06,residual spectrum
+sp_res_rad_29_mean,0.003848635379546066,0.0016070489331005986,residual spectrum
+sp_res_rad_29_std,0.006155839981220087,0.0012282217533853173,residual spectrum
+sp_res_rad_30_mean,0.0045084374140079465,0.0033733177532028922,residual spectrum
+sp_res_rad_30_std,0.0,0.0,residual spectrum
+sp_res_rad_31_mean,0.006308604745039491,0.0035434089781970902,residual spectrum
+sp_res_rad_31_std,0.0,0.0,residual spectrum
+sp_res_rad_32_mean,0.0009831046608950779,6.083908279814333e-05,residual spectrum
+sp_res_rad_32_std,0.0,0.0,residual spectrum
+sp_res_rad_33_mean,0.0011642496970246069,0.0008735897545725823,residual spectrum
+sp_res_rad_33_std,0.009943810349935625,0.00394609447834242,residual spectrum
+sp_res_rad_34_mean,0.0,0.0,residual spectrum
+sp_res_rad_34_std,0.0009484032864498191,2.4467993694237024e-05,residual spectrum
+sp_res_rad_35_mean,0.013208333878637407,0.008145347941084069,residual spectrum
+sp_res_rad_35_std,0.0015450743597396315,0.0002935210942860312,residual spectrum
+sp_res_rad_36_mean,0.009717554162734381,0.0031728009056028617,residual spectrum
+sp_res_rad_36_std,0.0005636747668267814,0.00010419173097589832,residual spectrum
+sp_res_rad_37_mean,0.0,0.0,residual spectrum
+sp_res_rad_37_std,0.0,0.0,residual spectrum
+sp_res_rad_38_mean,0.0,0.0,residual spectrum
+sp_res_rad_38_std,0.00011338568657300494,1.3081880929512625e-06,residual spectrum
+sp_res_rad_39_mean,0.0,0.0,residual spectrum
+sp_res_rad_39_std,0.0,0.0,residual spectrum
+sp_res_rad_40_mean,0.0,0.0,residual spectrum
+sp_res_rad_40_std,0.0,0.0,residual spectrum
+sp_res_rad_41_mean,0.011342427010935264,0.005730732404832317,residual spectrum
+sp_res_rad_41_std,0.0,0.0,residual spectrum
+sp_res_rad_42_mean,0.004839436754265034,0.0009762242254945996,residual spectrum
+sp_res_rad_42_std,0.000773565004219809,7.157580771023299e-05,residual spectrum
+sp_res_rad_43_mean,0.03350271045304795,0.015621765849476364,residual spectrum
+sp_res_rad_43_std,0.0,0.0,residual spectrum
+sp_res_rad_44_mean,0.00015885832003767033,1.5405017368376883e-06,residual spectrum
+sp_res_rad_44_std,0.0048120535081625756,0.0006924367586891441,residual spectrum
+sp_res_rad_45_mean,0.04039990524254076,0.014167345808413067,residual spectrum
+sp_res_rad_45_std,0.0012952180945393842,8.024766602127241e-05,residual spectrum
+sp_res_rad_46_mean,0.0032253873803312076,0.0017000820154102314,residual spectrum
+sp_res_rad_46_std,0.00014763689909524648,5.209475431943548e-07,residual spectrum
+sp_res_rad_47_mean,0.01676868606571695,0.003573439188052058,residual spectrum
+sp_res_rad_47_std,0.006893372837074877,0.008110514325899031,residual spectrum
+sp_slope_mean,0.0002143964010984496,1.97705949251954e-06,spectral scalars
+sp_slope_std,0.0,0.0,spectral scalars
+sp_hf_ratio_25_mean,0.00020486467000768778,2.6213157457945716e-06,spectral scalars
+sp_hf_ratio_25_std,0.0029503620636727136,0.0004930064954514361,spectral scalars
+sp_hf_ratio_50_mean,0.0007582131590079354,9.106407723909073e-05,spectral scalars
+sp_hf_ratio_50_std,0.0011159215586670438,0.0016596877596404588,spectral scalars
+sp_hf_ratio_75_mean,0.010680196328795067,0.00663163197935828,spectral scalars
+sp_hf_ratio_75_std,0.0,0.0,spectral scalars
+sp_centroid_mean,0.05434203501349222,0.03168784047646599,spectral scalars
+sp_centroid_std,0.0,0.0,spectral scalars
+sp_rolloff85_mean,0.12405075633607805,0.056683158078217215,spectral scalars
+sp_rolloff85_std,0.0003820103182604883,2.4485742428682847e-06,spectral scalars
+sp_dct_low_mean,0.0,0.0,DCT bands
+sp_dct_low_std,0.007572054844792816,0.0034658265499436947,DCT bands
+sp_dct_mid_mean,0.0,0.0,DCT bands
+sp_dct_mid_std,0.0,0.0,DCT bands
+sp_dct_high_mean,0.0,0.0,DCT bands
+sp_dct_high_std,0.0006493553509525175,0.0010412630630624398,DCT bands
+sp_ang_0_mean,0.00030623679538818916,4.384159557875862e-05,angular
+sp_ang_0_std,0.0033028071262115274,0.0011135565846406706,angular
+sp_ang_1_mean,0.0010549891871392092,0.0003155399372315602,angular
+sp_ang_1_std,0.014264959213556971,0.0065576212851570686,angular
+sp_ang_2_mean,0.008687250150940965,0.0052564925181270115,angular
+sp_ang_2_std,0.005561721723295775,0.008388955036819457,angular
+sp_ang_3_mean,0.0005014396017433478,0.00037594138390848364,angular
+sp_ang_3_std,0.0056882294199997255,0.0022275581287314475,angular
+sp_ang_4_mean,0.0048035807549499255,0.0035052889408475917,angular
+sp_ang_4_std,0.0,0.0,angular
+sp_ang_5_mean,0.001847775305601672,0.0009671816384135794,angular
+sp_ang_5_std,0.01475325809510239,0.0031807327002421133,angular
+sp_ang_6_mean,0.011295379539068574,0.0038112343331489942,angular
+sp_ang_6_std,0.010457684925381417,0.009687900142854188,angular
+sp_ang_7_mean,0.009327541002148517,0.012081240359254673,angular
+sp_ang_7_std,0.0,0.0,angular
+drift_l2_mean,0.0,0.0,spectral drift
+drift_l2_std,0.0,0.0,spectral drift
+drift_l2_max,0.0,0.0,spectral drift
+drift_l2_ac1,0.0002622279792060646,9.136193729816355e-07,spectral drift
+drift_cos_mean,0.00014215774502973863,1.6316765744863641e-06,spectral drift
+drift_cos_std,0.014111185363079252,0.0018706295850699967,spectral drift
+drift_cos_max,0.0,0.0,spectral drift
+drift_cos_ac1,0.0009180904700124362,0.00022890508617027304,spectral drift
+drift_l2_acc_mean,0.0,0.0,spectral drift
+drift_l2_acc_std,0.0,0.0,spectral drift
+drift_band_low_mean,0.0057684955135846065,0.0029484773010092983,spectral drift
+drift_band_low_std,0.0,0.0,spectral drift
+drift_band_mid_mean,0.007665532042544153,0.00313975400202368,spectral drift
+drift_band_mid_std,0.0,0.0,spectral drift
+drift_band_high_mean,0.0,0.0,spectral drift
+drift_band_high_std,0.003611194153829555,0.00012058587093328975,spectral drift
+drift_slope_mean,0.0,0.0,scalar drift
+drift_slope_std,0.001570846843369727,0.0009352947078154207,scalar drift
+drift_slope_max,0.0,0.0,scalar drift
+drift_slope_acc,0.0,0.0,scalar drift
+drift_hf_ratio_50_mean,0.007754404223241539,0.0035691279988620287,scalar drift
+drift_hf_ratio_50_std,0.001534350081274792,0.0015050908951806186,scalar drift
+drift_hf_ratio_50_max,0.004565520872692651,0.0008749473163097066,scalar drift
+drift_hf_ratio_50_acc,0.006023994699313797,0.0020710353791645636,scalar drift
+drift_centroid_mean,0.015300200657356522,0.012995188217101787,scalar drift
+drift_centroid_std,0.015521176812152572,0.007072533836075528,scalar drift
+drift_centroid_max,0.03683700070176341,0.021571836031123344,scalar drift
+drift_centroid_acc,0.05188467395581971,0.029164595576200283,scalar drift
+drift_dct_high_mean,0.013209581793299174,0.004910765727242706,scalar drift
+drift_dct_high_std,0.0005073868953172432,5.725614142852548e-06,scalar drift
+drift_dct_high_max,0.00013517282806626793,3.7927636661658746e-07,scalar drift
+drift_dct_high_acc,0.03149906527091774,0.014038724847045084,scalar drift
+rt_lag1_corr,0.10905229978485052,0.06632911724549602,residual temporal
+rt_hi_temporal_frac,0.15324848163623342,0.10948144902452951,residual temporal
+rt_energy,0.028749733010880383,0.017631293618809888,residual temporal
+rt_res_drift_mean,0.028557121264196423,0.0028939802112115188,residual temporal
+rt_res_drift_std,0.0034451666531085607,0.00025125714742483835,residual temporal

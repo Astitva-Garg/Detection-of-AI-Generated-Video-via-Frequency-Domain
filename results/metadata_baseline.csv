@@ -1,0 +1,2 @@
+model,set,n,acc,auroc,f1,tpr_fake,tnr_real
+metadata_lr,seen_test,74,0.9864864864864865,1.0,0.9090909090909091,0.8333333333333334,1.0

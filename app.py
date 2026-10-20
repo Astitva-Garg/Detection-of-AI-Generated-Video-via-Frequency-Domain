@@ -141,11 +141,10 @@ def _perf_tables():
     out = {}
     for name in ["test_metrics", "per_generator", "degraded", "logo", "metadata_baseline"]:
         p = RESULTS / f"{name}.csv"
-        if p.exists():
-            df = pd.read_csv(p)
-            out[name] = df.round(3)
-        else:
-            out[name] = pd.DataFrame({"info": [f"{name}.csv not found — run evaluation"]})
+        try:
+            out[name] = pd.read_csv(p).round(3)
+        except (FileNotFoundError, pd.errors.EmptyDataError):
+            out[name] = pd.DataFrame({"info": [f"{name}.csv not available — run evaluation"]})
     return out
 
 

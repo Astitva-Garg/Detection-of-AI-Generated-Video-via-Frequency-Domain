@@ -120,6 +120,9 @@ def main() -> None:
     for held in SEEN:
         keep = [g for g in SEEN if g != held]
         sub = df[df.generator.isin(keep + ["real"])]
+        if (test_all.generator == held).sum() < 5 or (sub.label == 1).sum() < 10:
+            print(f"LOGO: skipping {held} (not enough clips)")
+            continue
         m, cols, _ = train_classic(sub, "lgbm", "all")
         tst = test_all[test_all.generator.isin([held, "real"])]
         tst = _balanced_unseen(tst, held)
