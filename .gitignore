@@ -1,0 +1,15 @@
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+.superpowers/
+*.mp4
+*.mov
+*.avi
+*.mkv
+*.webm
+!examples/*.mp4
+*.pt.tmp
+gradio_cached_examples/
+.gradio/
+yolov8*.pt

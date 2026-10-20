@@ -1,0 +1,9 @@
+[project]
+name = "aivideo-freq-detector"
+version = "0.1.0"
+description = "Detecting AI-generated video via spatial frequency and temporal drift features (IE 643 course project)"
+requires-python = ">=3.11,<3.13"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]

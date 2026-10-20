@@ -1,0 +1,135 @@
+# Shared scene vocabulary for real-clip selection (title keywords) and T2V prompts.
+# Content constraint: no prominent humans, animals or common objects.
+
+exclude:  # title words that disqualify a real clip
+  [person, people, man, men, woman, women, girl, boy, child, kid, baby, hand, hands, face, couple,
+   family, friend, surfer, surfing, swimmer, swimming, hiker, hiking, walking, running, dancing,
+   tourist, crowd, silhouette, model, portrait, wedding, player, worker, diver,
+   dog, cat, bird, birds, horse, cow, sheep, animal, animals, fish, insect, bee, butterfly, deer,
+   duck, seagull, eagle, pigeon, wildlife, jellyfish, whale, dolphin, turtle, monkey, lion,
+   car, cars, vehicle, truck, bus, boat, boats, ship, sailboat, yacht, kayak, canoe, train, plane,
+   airplane, drone, helicopter, bike, bicycle, motorcycle, traffic, street, road, highway, bridge,
+   building, buildings, house, city, cityscape, skyline, tower, church, temple, room, kitchen,
+   food, coffee, drink, cup, glass, bottle, phone, laptop, computer, screen, window, car's, book,
+   candle, lamp, table, chair, flag, umbrella, balloon, logo, text, 3d, animation, animated,
+   render, cgi, illustration, cartoon, footage of a, christmas, gift, toy, kite, lighthouse,
+   pier, dock, fence, bench, tent, cabin, hut, windmill, wind turbine, power line, pole, sign,
+   astronaut, astronauts, mosque, camera, town, village, roads, adult, farm, castle, ruins, statue,
+   tractor, sailing, fishing, camping, festival, fireworks, party, lantern, torch, cigarette, vape,
+   smoking, flower pot, vase, bouquet, tree house, swing, playground, pool, fountain, aquarium]
+
+scenes:
+  ocean waves:
+    keywords: [ocean waves, sea waves, waves crashing, waves breaking, ocean water, sea water]
+    prompts:
+      - "ocean waves crashing on a rocky shore, natural daylight, handheld camera footage"
+      - "close-up of sea waves rolling onto a sandy beach, foam and spray"
+      - "aerial view of turquoise ocean waves breaking over a reef"
+      - "stormy dark sea with large waves, overcast sky"
+  waterfall:
+    keywords: [waterfall, waterfalls, cascade]
+    prompts:
+      - "a tall waterfall in a lush green forest, mist rising, slow pan"
+      - "close-up of water cascading over mossy rocks"
+      - "a powerful waterfall plunging into a pool, spray in the air"
+  river stream:
+    keywords: [river, stream, creek, brook, rapids]
+    prompts:
+      - "a clear mountain stream flowing over smooth pebbles"
+      - "a wide river flowing through a forest valley, gentle current"
+      - "white water rapids rushing between boulders"
+  lake water surface:
+    keywords: [lake, pond, water surface, ripples, reflection]
+    prompts:
+      - "calm lake surface with gentle ripples reflecting the sky"
+      - "rain drops falling on a pond surface, concentric ripples"
+      - "sunlight glittering on rippling water surface, close-up"
+  clouds sky:
+    keywords: [clouds, cloud, sky, cloudy, timelapse sky, cumulus]
+    prompts:
+      - "time-lapse of white clouds moving across a blue sky"
+      - "dramatic storm clouds rolling over a field, dark sky"
+      - "fluffy cumulus clouds drifting slowly at golden hour"
+      - "clouds seen from above, flying over a sea of clouds at sunrise"
+  sunset sunrise:
+    keywords: [sunset, sunrise, golden hour, dusk, dawn]
+    prompts:
+      - "sun setting over the horizon, orange and purple sky, slow motion"
+      - "sunrise over misty hills, warm light spreading across the landscape"
+      - "sunset reflected on a calm sea, glowing sky"
+  night sky stars:
+    keywords: [night sky, stars, milky way, starry, galaxy, aurora, northern lights]
+    prompts:
+      - "time-lapse of stars rotating in the night sky over mountains"
+      - "the milky way glowing above a dark landscape"
+      - "green aurora borealis dancing across the night sky"
+  fog mist:
+    keywords: [fog, foggy, mist, misty, haze]
+    prompts:
+      - "thick fog drifting through a pine forest at dawn"
+      - "mist rolling over green hills in the early morning"
+      - "low clouds and fog moving through a mountain valley"
+  forest trees:
+    keywords: [forest, trees, woods, pine, canopy, jungle]
+    prompts:
+      - "sunlight filtering through a dense forest canopy, slow dolly forward"
+      - "tall pine trees swaying in the wind, looking up"
+      - "a lush tropical jungle with dense green foliage"
+      - "autumn forest with orange and yellow leaves"
+  leaves plants:
+    keywords: [leaves, leaf, foliage, grass, fern, moss, flowers, flower field, plants]
+    prompts:
+      - "green leaves rustling in the wind, close-up, shallow depth of field"
+      - "tall grass swaying in a meadow at sunset"
+      - "dew drops on green fern leaves, macro shot"
+      - "a field of wildflowers moving in a gentle breeze"
+  mountains landscape:
+    keywords: [mountain, mountains, landscape, valley, hills, cliff, canyon, peaks]
+    prompts:
+      - "aerial view of snow-capped mountain peaks, slow flyover"
+      - "a green valley between mountains, clouds casting shadows"
+      - "red rock canyon landscape under a clear sky"
+      - "rolling hills covered in green grass, drone shot"
+  desert sand:
+    keywords: [desert, sand, dunes, sand dunes]
+    prompts:
+      - "wind blowing sand across desert dunes, ripples in the sand"
+      - "aerial view of golden sand dunes at sunset"
+      - "close-up of sand grains blowing over a dune crest"
+  snow ice:
+    keywords: [snow, snowfall, snowing, ice, frozen, glacier, iceberg, frost]
+    prompts:
+      - "snow falling softly in a quiet winter forest"
+      - "close-up of ice crystals forming, frost texture"
+      - "a blue glacier with cracks and melting water"
+      - "blizzard snow blowing across a frozen landscape"
+  rain:
+    keywords: [rain, raining, rainy, raindrops, storm, thunderstorm, lightning]
+    prompts:
+      - "heavy rain falling on green leaves, close-up"
+      - "lightning striking during a thunderstorm at night"
+      - "rain pouring down onto a puddle, splashes"
+  fire:
+    keywords: [fire, flames, flame, bonfire, burning, embers, campfire]
+    prompts:
+      - "close-up of flames burning, dark background, slow motion"
+      - "glowing embers and sparks rising from a fire"
+      - "a bonfire burning at night, flickering flames"
+  lava volcano:
+    keywords: [lava, volcano, magma, eruption]
+    prompts:
+      - "molten lava flowing slowly down a volcanic slope"
+      - "a volcano erupting, smoke and glowing lava at night"
+  smoke ink abstract:
+    keywords: [smoke, ink, abstract, liquid, paint, swirl, bokeh, light leaks, particles, texture]
+    prompts:
+      - "colorful ink swirling in water, macro, black background"
+      - "white smoke wisps curling slowly against a black background"
+      - "abstract colorful bokeh lights drifting out of focus"
+      - "liquid paint mixing and swirling, vivid colors, macro"
+  rocks texture:
+    keywords: [rocks, rock, stone, stones, pebbles, cave, coast, shore, beach, waves on rocks]
+    prompts:
+      - "waves washing over dark pebbles on a beach, close-up"
+      - "inside a limestone cave with dripping water"
+      - "rugged coastal cliffs with waves crashing below, aerial"
