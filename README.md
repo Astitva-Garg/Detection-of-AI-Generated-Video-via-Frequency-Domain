@@ -11,13 +11,15 @@ seen / unseen generators and degraded videos, interpretability figures and a Gra
 
 ```
 Pexels-400k metadata ─► real clips ─┐
-                                    ├─► content filter (YOLOv8n) ─► normalise (8 fps, 16 frames, 256², H.264)
+                                    ├─► content filter (YOLOv8n) ─► normalise (8 fps, 16 frames, native 256² crop, H.264)
 5 generators (diffusers) ─► fakes ──┘        │
                                              ├─► manifest.csv (labels, generator, group-level splits)
                                              ├─► degraded copies (H.264 CRF 23/30/38, 0.5× down, blur, noise)
                                              ▼
              features: radial spectrum, residual spectrum, slope, HF ratios, DCT bands, angular energy
                        + temporal drift (spectral L2/cosine drift, band drift, scalar drift, residual temporal corr.)
+                                             ▼
+             + pixel-statistics baseline (74 features) and frequency+pixel fusion
                                              ▼
              models: LogReg, Linear SVM, LightGBM, MLP (feature vectors) · Spectro-temporal 1D-CNN (spectrum sequences)
                                              ▼
@@ -32,13 +34,26 @@ Pexels-400k metadata ─► real clips ─┐
 | Wan2.1 T2V 1.3B | T2V | **unseen** (test only) | `Wan-AI/Wan2.1-T2V-1.3B-Diffusers` |
 | ModelScope T2V 1.7B | T2V | **unseen** (test only) | `ali-vilab/text-to-video-ms-1.7b` |
 
+## Results (held-out test, AUROC)
+
+| Model | Seen generators | Unseen ModelScope | Unseen Wan2.1 |
+|---|---|---|---|
+| MLP, frequency + pixel fusion (app default) | 0.977 (acc 0.939) | 0.739 | 0.841 |
+| MLP, frequency (spatial + temporal drift) | 0.965 | 0.767 | 0.729 |
+| Spectro-temporal 1D-CNN | 0.958 | 0.728 | 0.699 |
+| MLP, pixel baseline | 0.883 | 0.570 | 0.765 |
+
+Grouped 5-fold CV, seen generators: frequency 0.919–0.922, fusion 0.929–0.943, pixel 0.844–0.889.
+Normalisation matters: resizing frames to 256 px instead of a native-resolution crop cost ≈0.10 AUROC.
+Full tables: `results_crop/*.csv`; figures: `results_crop/figures/`; notes: `docs/notes_for_report.md`.
+
 ## Setup
 
 Tested on Windows 11, RTX 4060 Laptop (8 GB), 15 GB RAM, Python 3.11.
 
 ```bash
 uv venv --python 3.11 C:/ie643_env
-uv pip install --python C:/ie643_env/Scripts/python.exe torch torchvision --index-url https://download.pytorch.org/whl/cu128
+uv pip install --python C:/ie643_env/Scripts/python.exe torch==2.11.0 torchvision==0.26.0 --index-url https://download.pytorch.org/whl/cu128
 uv pip install --python C:/ie643_env/Scripts/python.exe -r requirements.txt
 ```
 
@@ -52,18 +67,17 @@ Run from the repository root with the venv's python:
 ```bash
 python -m src.data.pexels --n 560 --cap 40          # 1. real clips (Pexels, no API key needed)
 python -m src.generate.run_queue ltx=160 animatediff=160 svd=120 modelscope=100 wan=80   # 2. AI clips
-python -m src.data.content_filter                   # 3. reject people/animals/objects
-python -m src.data.build_dataset                    # 4. normalise, manifest, splits, degraded copies
-python -m src.features.extract                      # 5. features (parquet + spectrum sequences)
-python -m src.models.train                          # 6. train all models
-python -m src.eval.evaluate                         # 7. metrics -> results/*.csv
-python -m src.viz.figures                           # 8. figures -> results/figures/
-python -m src.viz.reference                         # 9. reference spectra + example clips for the app
+bash run_pipeline.sh                                # 3–9 in one go: content filter, normalise + manifest +
+                                                    #   splits + degraded copies, frequency + pixel features,
+                                                    #   train, evaluate, grouped CV, figures, app examples
 python app.py                                       # 10. interface at http://127.0.0.1:7860
 pytest                                              # unit tests
 ```
 
 Every stage is resumable/incremental: rerunning skips work already done.
+Outputs of the main pipeline (native 256² crop) go to `C:\ie643_data\*_crop`, `models_crop/` and
+`results_crop/`. Set `IE643_NORM=resize` to reproduce the resize ablation (`models/`, `results/`).
+`IE643_DATA` overrides the data folder. `cloud/` holds a script to generate the Wan2.1 clips on a rented GPU.
 
 ## Interface
 
@@ -83,13 +97,15 @@ configs/scenes.yaml        scene vocabulary: Pexels title keywords, exclusions, 
 src/config.py              paths and constants
 src/data/                  pexels.py, video_io.py, normalize.py, content_filter.py, splits.py, degrade.py, build_dataset.py
 src/generate/              common.py (resumable runner), text_embed.py, ltx.py, animatediff.py, svd.py, wan.py, modelscope.py, run_queue.py
-src/features/              spatial.py (per-frame), temporal.py (drift + clip features), extract.py
+src/features/              spatial.py (per-frame), temporal.py (drift + clip features), extract.py, pixel_baseline.py
 src/models/                data.py, classic.py (LR/SVM/LightGBM/MLP), cnn.py (spectro-temporal CNN), train.py
-src/eval/evaluate.py       all evaluation tables
+src/eval/                  evaluate.py (test / unseen / degraded / LOGO / metadata tables), cv.py (grouped 5-fold CV)
 src/viz/                   figures.py, reference.py
 src/predict.py, app.py     inference + Gradio interface
-models/                    trained models (joblib / pt) and reference spectra
-results/                   metrics CSV/JSON and figures
+models_crop/               trained models (joblib / pt) and reference spectra — main pipeline
+results_crop/              metrics CSV/JSON and figures — main pipeline
+models/, results/          resize-normalisation ablation
+examples/                  test-split clips bundled for the demo
 docs/                      design, plan, notes for the report
 ```
 
