@@ -3,7 +3,7 @@ import os
 from pathlib import Path
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
-DATA_ROOT = Path(r"C:\ie643_data")
+DATA_ROOT = Path(os.environ.get("IE643_DATA", r"C:\ie643_data"))
 # normalisation variant: "crop" (native-resolution 256 crop; main) or "resize" (short side -> 256, then
 # crop; ablation — resizing low-pass filters the frame and erased much of the frequency evidence)
 NORM_MODE = os.environ.get("IE643_NORM", "crop")

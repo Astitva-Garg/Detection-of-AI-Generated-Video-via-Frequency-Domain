@@ -4,6 +4,7 @@ Lets 8 GB VRAM / 15 GB RAM run LTX-Video (T5-XXL) and Wan2.1 (UMT5-XXL): the enc
 loaded alone, split between GPU and CPU by accelerate, and never co-resides with the video model.
 """
 import gc
+import os
 from pathlib import Path
 
 import torch
@@ -15,7 +16,8 @@ def _load(repo: str, cls_name: str):
     cls = getattr(transformers, cls_name)
     tok = AutoTokenizer.from_pretrained(repo, subfolder="tokenizer")
     te = cls.from_pretrained(repo, subfolder="text_encoder", torch_dtype=torch.bfloat16,
-                             device_map="auto", max_memory={0: "6GiB", "cpu": "9GiB"},
+                             device_map="auto",
+                             max_memory={0: os.environ.get("IE643_TE_GPU_MEM", "6GiB"), "cpu": "9GiB"},
                              low_cpu_mem_usage=True)
     te.eval()
     return tok, te
