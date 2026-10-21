@@ -125,9 +125,64 @@ Temporal drift (prefix `drift_` / `rt_`):
   (4) leave-one-generator-out (train on 2 seen generators, test on the third); (5) metadata-only
   shortcut baseline; (6) degradation-aware training; (7) CNN vs feature models.
 
-## Results
-<FILL — copy numbers from results/test_metrics.csv, per_generator.csv, degraded.csv, logo.csv,
-metadata_baseline.csv; figures in results/figures/>
+## Results (main pipeline = native crop; files in results_crop/, figures in results_crop/figures/)
+Status 21 Oct 16:00: real + LTX + AnimateDiff + SVD (seen) + ModelScope (unseen). Wan2.1 pending (cloud).
+
+Clips after content filter (main windows, no augmentation windows): real 444 (train 310 / val 66 /
+test 68), LTX 151, AnimateDiff 130, SVD 115, ModelScope 99 (test only). Total 939.
+
+### 1. Normalisation ablation (grouped 5-fold CV, real + LTX + AnimateDiff, LightGBM spatial+temporal)
+- resize-to-256: AUROC 0.825 ± 0.073 · native 256 crop: 0.929 ± 0.023 (MLP: 0.815 → 0.931).
+- Pixel baseline barely changes (0.874 → 0.897): resizing hurts frequency features specifically.
+
+### 2. Feature-group ablation (grouped 5-fold CV, all 3 seen generators, native crop) — AUROC mean ± std
+| features | LightGBM | MLP | LR | SVD-only AUROC (LGBM / MLP) |
+|---|---|---|---|---|
+| pixel baseline | 0.889 ± 0.007 | 0.844 ± 0.033 | 0.845 | 0.899 / 0.873 |
+| spatial | 0.867 ± 0.051 | 0.906 ± 0.024 | 0.848 | 0.862 / 0.904 |
+| temporal | 0.887 ± 0.044 | 0.899 ± 0.018 | 0.805 | 0.924 / 0.948 |
+| spatial+temporal | 0.922 ± 0.021 | 0.919 ± 0.023 | 0.860 | 0.948 / 0.942 |
+(cv_summary.csv)
+
+### 3. Held-out test (seen generators: 68 real + 46 fake) — test_metrics.csv
+- MLP all 0.965 AUROC / 0.886 acc; CNN 0.962 / 0.886; LR all 0.946 / 0.886; LGBM all 0.915 / 0.842;
+  best pixel model 0.898 (SVM) / 0.890 (LR).
+- Per generator (per_generator.csv), MLP all: AnimateDiff 0.973, LTX 0.931, SVD 0.995.
+  Pixel (LGBM): AnimateDiff 0.960, LTX 0.882, SVD 0.839 → pixel cues fail most on content-matched SVD.
+
+### 4. Unseen generator: ModelScope (99 fake vs 68 real test clips)
+- MLP spatial 0.792, LR spatial 0.796, MLP all 0.767, CNN 0.754, LGBM all 0.682.
+- Pixel baseline: 0.570–0.644 (near chance) → frequency features generalise far better than pixel stats.
+- Accuracy at the 0.5 threshold is low (≈0.45–0.67) because most unseen fakes score below 0.5:
+  ranking (AUROC) transfers partly, calibration does not.
+
+### 5. Leave-one-generator-out (train on 2 seen, test on the 3rd) — logo.csv
+- LGBM all: held-out LTX 0.772, AnimateDiff 0.746, SVD 0.684. CNN: 0.682 / 0.757 / 0.707.
+
+### 6. Degradations (seen test, AUROC) — degraded.csv
+| model | H.264 CRF23 | CRF30 | CRF38 | 0.5× down | blur σ1 | noise σ5 |
+|---|---|---|---|---|---|---|
+| CNN | 0.936 | 0.884 | 0.838 | 0.691 | 0.724 | 0.877 |
+| MLP all | 0.916 | 0.836 | 0.741 | 0.624 | 0.637 | 0.912 |
+| LGBM all | 0.904 | 0.827 | 0.753 | 0.709 | 0.794 | 0.852 |
+| LGBM all, degradation-aware | 0.899 | 0.828 | 0.753 | 0.764 | 0.808 | 0.858 |
+- Mild compression is harmless; resampling/blur remove high frequencies and hurt most; training with
+  degraded copies helps for downscale/blur.
+
+### 7. Shortcut checks
+- Metadata-only LR (original width, height, fps, duration): AUROC 1.0 — file metadata alone identifies
+  every generator, which is why all clips are normalised and the detector never sees metadata.
+- Residual resolution effect: on real test clips, mean P(fake) rises from 0.06 (pre-downscaled to 256)
+  to 0.13 (576) for MLP-all; correlation 0.14 (LGBM 0.14, CNN 0.09); all far below 0.5 → small.
+
+### 8. Interpretability (figures)
+- feature_importance_groups.png: noise-residual spectrum is the largest SHAP group, then mid-band
+  frame spectrum, then residual-temporal features; top single feature = std over frames of a mid-high
+  radial bin (a temporal-variability measure).
+- radial_profiles.png / mean_spectrum_2d.png: each generator deviates from real differently (LTX: excess
+  low-mid residual energy and HF deficit; ModelScope: strong mid-band residual peak).
+- cnn_saliency.png: which frequencies/frames drive the CNN.
+- per_scene.png: test subsets per scene are tiny (6–17 clips); treat as anecdotal.
 
 ## Interface methodology
 - Gradio 2-tab app (`app.py`). Upload → identical preprocessing to training (16 frames at 8 fps,
