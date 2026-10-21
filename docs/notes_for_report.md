@@ -227,3 +227,34 @@ Generation time on the laptop: LTX 104 min, AnimateDiff 147 min, SVD 388 min, Mo
   seen performance and the best average over unseen generators. Single runs, small unseen test sets
   (57–99 fakes) — differences of ~0.03 are within noise.
 - The demo app's default model is MLP fusion (0.6 s per clip on CPU).
+
+
+### 11. Bootstrap 95 % confidence intervals (2000 stratified resamples; bootstrap_auroc.csv, bootstrap_diffs.csv)
+| test set | MLP fusion | MLP frequency | CNN | MLP pixel |
+|---|---|---|---|---|
+| seen (46 fake / 68 real) | 0.977 | 0.965 [0.934, 0.988] | 0.958 [0.921, 0.986] | 0.883 [0.820, 0.936] |
+| SVD only (16 / 68) | 0.980 | 0.995 [0.982, 1.000] | 0.980 | 0.825 [0.728, 0.904] |
+| ModelScope (99 / 68) | 0.739 [0.661, 0.812] | 0.767 [0.693, 0.838] | 0.728 | 0.570 [0.482, 0.660] |
+| Wan2.1 (57 / 68) | 0.838 [0.765, 0.905] | 0.722 [0.628, 0.809] | 0.686 | 0.778 [0.692, 0.858] |
+| unseen pooled (156 / 68) | 0.776 [0.707, 0.837] | 0.751 [0.678, 0.820] | 0.713 | 0.646 [0.562, 0.724] |
+Paired differences (AUROC difference, 95 % CI):
+- frequency − pixel: seen +0.082 [0.031, 0.144]; ModelScope +0.197 [0.123, 0.271]; SVD +0.170 [0.092, 0.267];
+  unseen pooled +0.105 [0.038, 0.171] → significant. Wan2.1 −0.056 [−0.134, 0.019] → not significant.
+- fusion − frequency: Wan2.1 +0.116 [0.062, 0.175] significant; seen +0.012 [−0.007, 0.033], unseen pooled
+  +0.025 [−0.012, 0.064], ModelScope −0.028 [−0.069, 0.012] → not significant.
+- frequency MLP − CNN: all CIs include 0.
+→ Defensible claims: frequency > pixel (seen, ModelScope, SVD); adding pixel features helps on Wan2.1;
+  fusion is not a significant overall improvement.
+
+### 12. Generator attribution (6-class: real + 5 generators; grouped 5-fold CV; attribution.csv,
+attribution_confusion.png). Chance = 0.167 balanced accuracy.
+| features | LR | LightGBM |
+|---|---|---|
+| pixel | 0.636 | 0.627 |
+| spatial | 0.606 | 0.554 |
+| temporal | 0.645 | 0.634 |
+| spatial + temporal | 0.712 | 0.658 |
+| fusion | 0.775 | 0.749 |
+- Per-class recall (LR, frequency): LTX 0.77, AnimateDiff 0.75, SVD 0.86, Wan2.1 0.53, ModelScope 0.73, real 0.63.
+- Temporal features alone identify SVD with 0.95 recall (LR) — image-to-video has a distinctive drift signature.
+- Each generator leaves a distinguishable frequency fingerprint; Wan2.1 is the hardest (most confused with real).
