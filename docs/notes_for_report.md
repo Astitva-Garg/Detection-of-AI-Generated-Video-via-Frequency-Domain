@@ -258,3 +258,26 @@ attribution_confusion.png). Chance = 0.167 balanced accuracy.
 - Per-class recall (LR, frequency): LTX 0.77, AnimateDiff 0.75, SVD 0.86, Wan2.1 0.53, ModelScope 0.73, real 0.63.
 - Temporal features alone identify SVD with 0.95 recall (LR) — image-to-video has a distinctive drift signature.
 - Each generator leaves a distinguishable frequency fingerprint; Wan2.1 is the hardest (most confused with real).
+
+
+### 13. Out-of-domain stress test (wild_eval.csv, wild_predictions.csv, wild_stress_test.png)
+- Data: random clips from public Hugging Face collections `34data/gen-videos-*`: Sora 2 (60), Veo 3 (60),
+  Kling (30), HunyuanVideo (60), "Wan2" (40; exact Wan version unknown). 1280×704–720, 24–30 fps, 8–15 s.
+  Content is NOT scenery (lab demos, people, objects); prompts and post-processing unknown. Accessed 21 Oct 2026.
+- Compared against the 68 real test clips. ALL clips (fake and real) go through the app's deployment path
+  (src/predict.py: first 2 s at 8 fps, short side > 576 px downscaled to 512, native 256 crop, H.264 CRF 18).
+- AUROC (all clips):
+| source | CNN | MLP freq | MLP fusion | LGBM freq | MLP pixel |
+|---|---|---|---|---|---|
+| Sora 2 | 0.873 | 0.856 | 0.852 | 0.846 | 0.727 |
+| HunyuanVideo | 0.805 | 0.722 | 0.657 | 0.665 | 0.566 |
+| Wan2 | 0.731 | 0.731 | 0.756 | 0.638 | 0.715 |
+| Veo 3 | 0.694 | 0.698 | 0.763 | 0.675 | 0.769 |
+| Kling | 0.706 | 0.609 | 0.615 | 0.533 | 0.547 |
+| mean | 0.762 | 0.723 | 0.729 | 0.671 | 0.665 |
+- Scenery-only subset (YOLO filter; only 6–16 clips per source) — similar ordering, Sora 2 CNN 0.941.
+- Detection rate at 0.5 is low (Sora 2 45–70 %, Veo 3 7–65 %, Kling 13–23 %) and real false-positive rate on the
+  deployment path is 7 % (CNN) – 26 % (pixel): ranking transfers partly, calibration does not.
+- Takeaways: frequency features rank Sora 2 fakes well (0.85–0.87) without ever seeing Sora; the spectro-temporal
+  CNN generalises best out of domain (mean 0.76) though it ties the MLP in domain; pixel stats are worst on average
+  but best on Veo 3. Caveat: content/encoding confounds — this is a stress test, not a controlled comparison.
