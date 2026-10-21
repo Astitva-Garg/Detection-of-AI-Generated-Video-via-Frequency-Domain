@@ -9,6 +9,7 @@ from src.config import FPS, MODELS, N_FRAMES, SIZE
 from src.data.degrade import apply_degradation
 from src.data.normalize import normalize_frames
 from src.data.video_io import h264_roundtrip, probe, read_frames
+from src.features.pixel_baseline import clip_pixel_features
 from src.features.temporal import clip_features
 from src.models.cnn import SpecTempCNN, cnn_predict
 
@@ -33,7 +34,7 @@ class Predictor:
 
     def available(self) -> list[str]:
         names = sorted(p.stem for p in self.model_dir.glob("*.joblib")
-                       if "_logo_" not in p.stem and not p.stem.endswith("_pixel"))
+                       if "_logo_" not in p.stem)
         if (self.model_dir / "cnn.pt").exists():
             names.append("cnn")
         return names
@@ -81,6 +82,7 @@ class Predictor:
             frames = apply_degradation(frames, degradation)
             notes.append(f"Applied degradation: {degradation}.")
         feats, seq = clip_features(frames)
+        feats.update(clip_pixel_features(frames))
         entry = self._load(model)
         top = []
         if "cnn" in entry:

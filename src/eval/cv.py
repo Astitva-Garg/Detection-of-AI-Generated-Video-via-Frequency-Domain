@@ -16,7 +16,7 @@ from src.models import data as D
 from src.models.classic import fit_model
 
 MODELS = ["lr", "lgbm", "mlp"]
-GROUPS = ["pixel", "spatial", "temporal", "all"]
+GROUPS = ["pixel", "spatial", "temporal", "all", "fusion"]
 
 
 def run(k: int = 5) -> pd.DataFrame:

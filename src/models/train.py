@@ -42,7 +42,7 @@ def main(skip_cnn: bool = False, generators: list[str] | None = None, tag: str =
     if generators:
         df = df[df.generator.isin(generators + ["real"])]
     rows = []
-    groups = GROUPS + (["pixel"] if any(c.startswith("px_") for c in df.columns) else [])
+    groups = GROUPS + (["pixel", "fusion"] if any(c.startswith("px_") for c in df.columns) else [])
     for name in CLASSIC:
         for group in groups:
             m, cols, met = train_classic(df, name, group)

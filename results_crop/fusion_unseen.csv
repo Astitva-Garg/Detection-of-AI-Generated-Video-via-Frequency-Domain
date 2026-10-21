@@ -1,0 +1,13 @@
+features,model,seen,modelscope,wan
+freq,lr,0.946,0.754,0.564
+freq,mlp,0.965,0.767,0.729
+freq,lgbm,0.915,0.682,0.702
+pixel,lr,0.89,0.595,0.766
+pixel,mlp,0.883,0.57,0.765
+pixel,lgbm,0.889,0.574,0.785
+freq+pixel,lr,0.962,0.747,0.795
+freq+pixel,mlp,0.977,0.739,0.841
+freq+pixel,lgbm,0.939,0.68,0.773
+spatial+pixel,lr,0.952,0.762,0.827
+spatial+pixel,mlp,0.969,0.728,0.838
+spatial+pixel,lgbm,0.927,0.664,0.789

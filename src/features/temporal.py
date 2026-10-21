@@ -5,7 +5,8 @@ from src.config import N_BINS
 from src.features.spatial import EPS, frame_features, radial_spectrum, residual, to_luma
 
 DRIFT_SCALARS = ["slope", "hf_ratio_50", "centroid", "dct_high"]
-FEATURE_GROUPS = {"spatial": ["sp_"], "temporal": ["drift_", "rt_"], "pixel": ["px_"]}
+FEATURE_GROUPS = {"spatial": ["sp_"], "temporal": ["drift_", "rt_"], "pixel": ["px_"],
+                  "fusion": ["sp_", "drift_", "rt_", "px_"]}  # frequency + pixel statistics
 
 
 def _stats(x: np.ndarray, name: str) -> dict[str, float]:

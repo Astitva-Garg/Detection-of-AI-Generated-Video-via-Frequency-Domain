@@ -25,10 +25,11 @@ P = Predictor()
 x_freq = (np.arange(N_BINS) + 0.5) / N_BINS
 
 MODEL_LABELS = {
-    "lgbm_all": "LightGBM — spatial + temporal (recommended)",
+    "mlp_fusion": "MLP — frequency + pixel fusion (recommended)",
+    "mlp_all": "MLP — frequency: spatial + temporal",
+    "lgbm_all": "LightGBM — frequency: spatial + temporal",
     "lgbm_all_robust": "LightGBM — degradation-aware",
     "cnn": "Spectro-temporal 1D-CNN",
-    "mlp_all": "MLP — spatial + temporal",
     "lr_all": "Logistic regression — spatial + temporal",
     "svm_all": "Linear SVM — spatial + temporal",
     "lgbm_spatial": "LightGBM — spatial only",

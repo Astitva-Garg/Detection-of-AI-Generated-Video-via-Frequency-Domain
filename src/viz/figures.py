@@ -263,7 +263,7 @@ def ablation_bars():
     t = pd.read_csv(RESULTS / "test_metrics.csv")
     rows = []
     for m in ["lr", "svm", "mlp", "lgbm"]:
-        for g in ["pixel", "spatial", "temporal", "all"]:
+        for g in ["pixel", "spatial", "temporal", "all", "fusion"]:
             for st in ["seen_test", "unseen_test"]:
                 r = t[(t.model == f"{m}_{g}") & (t.set == st)]
                 if len(r):
@@ -272,12 +272,12 @@ def ablation_bars():
     fig, ax = plt.subplots(1, 2, figsize=(11, 3.8), sharey=True)
     for k, st in enumerate(["seen_test", "unseen_test"]):
         sub = a[a.set == st]
-        w = 0.2
-        for i, g in enumerate(["pixel", "spatial", "temporal", "all"]):
+        w = 0.16
+        for i, g in enumerate(["pixel", "spatial", "temporal", "all", "fusion"]):
             v = sub[sub.group == g].set_index("model").reindex(["lr", "svm", "mlp", "lgbm"]).auroc
             lab = {"pixel": "pixel baseline", "spatial": "freq: spatial", "temporal": "freq: temporal drift",
-                   "all": "freq: spatial + temporal"}[g]
-            ax[k].bar(np.arange(4) + (i - 1.5) * w, v, w, label=lab)
+                   "all": "freq: spatial + temporal", "fusion": "freq + pixel"}[g]
+            ax[k].bar(np.arange(4) + (i - 2) * w, v, w, label=lab)
         ax[k].set_xticks(range(4), ["LR", "Lin-SVM", "MLP", "LightGBM"])
         ax[k].set_title(f"AUROC — {st.replace('_', ' ')}")
         ax[k].set_ylim(0.4, 1.0)

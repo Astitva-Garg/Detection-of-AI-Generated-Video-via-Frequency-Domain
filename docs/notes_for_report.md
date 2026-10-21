@@ -126,10 +126,11 @@ Temporal drift (prefix `drift_` / `rt_`):
   shortcut baseline; (6) degradation-aware training; (7) CNN vs feature models.
 
 ## Results (main pipeline = native crop; files in results_crop/, figures in results_crop/figures/)
-Status 21 Oct 16:00: real + LTX + AnimateDiff + SVD (seen) + ModelScope (unseen). Wan2.1 pending (cloud).
+Final run 21 Oct 22:30: all 5 generators. Wan2.1 generation stopped at 70 clips (57 after content filter), ≈4.6 min/clip locally.
 
 Clips after content filter (main windows, no augmentation windows): real 444 (train 310 / val 66 /
-test 68), LTX 151, AnimateDiff 130, SVD 115, ModelScope 99 (test only). Total 939.
+test 68), LTX 151, AnimateDiff 130, SVD 115, ModelScope 99 (test only), Wan2.1 57 (test only). Total 996.
+Generation time on the laptop: LTX 104 min, AnimateDiff 147 min, SVD 388 min, ModelScope ≈100 min, Wan2.1 ≈330 min (≈18 h total).
 
 ### 1. Normalisation ablation (grouped 5-fold CV, real + LTX + AnimateDiff, LightGBM spatial+temporal)
 - resize-to-256: AUROC 0.825 ± 0.073 · native 256 crop: 0.929 ± 0.023 (MLP: 0.815 → 0.931).
@@ -205,3 +206,24 @@ test 68), LTX 151, AnimateDiff 130, SVD 115, ModelScope 99 (test only). Total 93
 - Generator-agnostic features: learn on residual temporal spectra only; domain generalisation across
   generators (leave-one-out training objective).
 - Larger, more recent generators (cloud GPU), and phone-captured real footage.
+
+
+### 9. Second unseen generator: Wan2.1 (57 fake vs 57 random real test clips) — per_generator.csv
+- Frequency: MLP spatial 0.755, MLP all 0.729, CNN 0.699, LGBM all 0.702.
+- Pixel baseline: 0.765–0.813 — on Wan2.1 the pixel cues transfer *better* than frequency cues,
+  the opposite of ModelScope. Which cue transfers depends on the generator.
+
+### 10. New idea after the results: frequency + pixel fusion (feature group `fusion`, 337 features)
+| model | seen test AUROC / acc | ModelScope | Wan2.1 | unseen pooled | 5-fold CV |
+|---|---|---|---|---|---|
+| MLP fusion | 0.977 / 0.939 | 0.739 | 0.841 | 0.776 | 0.929 ± 0.018 |
+| LR fusion | 0.962 / 0.921 | 0.747 | 0.795 | 0.764 | 0.900 ± 0.029 |
+| LGBM fusion | 0.939 / 0.851 | 0.680 | 0.773 | 0.712 | 0.943 ± 0.018 |
+| MLP frequency only | 0.965 / 0.886 | 0.767 | 0.729 | 0.751 | 0.919 ± 0.023 |
+| MLP pixel only | 0.883 / 0.772 | 0.570 | 0.765 | 0.646 | 0.844 ± 0.033 |
+- Degradations (seen test) MLP fusion: CRF23 0.956, CRF30 0.928, CRF38 0.824, down 0.799, blur 0.819,
+  noise 0.923 — much more robust to blur/downscaling than frequency-only (0.62–0.64).
+- Interpretation: the two cue types fail on different generators, so combining them gives the best
+  seen performance and the best average over unseen generators. Single runs, small unseen test sets
+  (57–99 fakes) — differences of ~0.03 are within noise.
+- The demo app's default model is MLP fusion (0.6 s per clip on CPU).
