@@ -1,0 +1,2 @@
+model,set,n,acc,auroc,f1,tpr_fake,tnr_real
+metadata_lr,seen_test,98,1.0,1.0,1.0,1.0,1.0
