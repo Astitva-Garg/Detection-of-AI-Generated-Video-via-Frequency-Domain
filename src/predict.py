@@ -7,7 +7,8 @@ import torch
 
 from src.config import FPS, MODELS, N_FRAMES, SIZE
 from src.data.degrade import apply_degradation
-from src.data.video_io import h264_roundtrip, probe, read_frames, resize_crop
+from src.data.normalize import normalize_frames
+from src.data.video_io import h264_roundtrip, probe, read_frames
 from src.features.temporal import clip_features
 from src.models.cnn import SpecTempCNN, cnn_predict
 
@@ -73,7 +74,9 @@ class Predictor:
                          "high-frequency detail and makes the decision less reliable.")
         raw = read_frames(video_path, N_FRAMES, FPS, start)
         # same final step as the stored training clips: 256x256 H.264 CRF 18 at 8 fps
-        frames = h264_roundtrip(resize_crop(raw, SIZE), FPS, crf=18)
+        # mirror the real-clip training path: large videos are first brought to a generator-like size
+        pre = 512 if min(raw.shape[1:3]) > 576 else None
+        frames = h264_roundtrip(normalize_frames(raw, pre), FPS, crf=18)
         if degradation and degradation != "none":
             frames = apply_degradation(frames, degradation)
             notes.append(f"Applied degradation: {degradation}.")

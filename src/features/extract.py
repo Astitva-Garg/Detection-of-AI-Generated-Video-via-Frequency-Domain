@@ -5,7 +5,7 @@ from concurrent.futures import ProcessPoolExecutor
 import numpy as np
 import pandas as pd
 
-from src.config import CLIPS, DATA_ROOT, FEATURES, FPS, N_FRAMES
+from src.config import SUF, CLIPS, DATA_ROOT, FEATURES, FPS, N_FRAMES
 from src.data.video_io import read_frames
 from src.features.temporal import clip_features
 
@@ -47,9 +47,9 @@ def _run(items: list[tuple[str, str]], name: str, workers: int) -> None:
 
 
 def main(workers: int) -> None:
-    man = pd.read_csv(DATA_ROOT / "manifest.csv")
+    man = pd.read_csv(DATA_ROOT / f"manifest{SUF}.csv")
     _run([(c, str(CLIPS / f"{c}.mp4")) for c in man.clip_id], "clean", workers)
-    deg_p = DATA_ROOT / "manifest_degraded.csv"
+    deg_p = DATA_ROOT / f"manifest_degraded{SUF}.csv"
     if deg_p.exists():
         deg = pd.read_csv(deg_p)
         _run([(f"{r.clip_id}|{r.degradation}", r.path) for r in deg.itertuples()], "degraded", workers)

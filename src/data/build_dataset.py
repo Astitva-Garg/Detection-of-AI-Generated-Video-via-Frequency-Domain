@@ -9,15 +9,15 @@ from pathlib import Path
 
 import pandas as pd
 
-from src.config import (CLIPS, DATA_ROOT, DEGRADED, FPS, N_FRAMES, RAW_FAKE, RAW_REAL, REAL_PRE_SIDES,
+from src.config import (CLIPS, DATA_ROOT, SUF, DEGRADED, FPS, N_FRAMES, RAW_FAKE, RAW_REAL, REAL_PRE_SIDES,
                         SEEN, UNSEEN)
 from src.data.degrade import DEGRADATIONS, apply_degradation
 from src.data.normalize import normalize_clip
 from src.data.splits import assign_split, stable_choice
 from src.data.video_io import read_frames, write_video
 
-MANIFEST = DATA_ROOT / "manifest.csv"
-MANIFEST_DEG = DATA_ROOT / "manifest_degraded.csv"
+MANIFEST = DATA_ROOT / f"manifest{SUF}.csv"
+MANIFEST_DEG = DATA_ROOT / f"manifest_degraded{SUF}.csv"
 
 
 def _content() -> dict[str, tuple[bool, float]]:

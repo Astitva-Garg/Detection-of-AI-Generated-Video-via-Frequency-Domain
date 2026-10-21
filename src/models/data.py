@@ -2,12 +2,12 @@
 import numpy as np
 import pandas as pd
 
-from src.config import DATA_ROOT, FEATURES, UNSEEN
+from src.config import SUF, DATA_ROOT, FEATURES, UNSEEN
 from src.features.temporal import group_columns
 
 
 def manifest() -> pd.DataFrame:
-    return pd.read_csv(DATA_ROOT / "manifest.csv")
+    return pd.read_csv(DATA_ROOT / f"manifest{SUF}.csv")
 
 
 def _with_pixel(f: pd.DataFrame) -> pd.DataFrame:

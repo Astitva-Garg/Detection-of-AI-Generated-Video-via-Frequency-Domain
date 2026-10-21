@@ -3,16 +3,25 @@ from pathlib import Path
 
 import numpy as np
 
-from src.config import FPS, N_FRAMES, SIZE
+from src.config import FPS, N_FRAMES, NORM_MODE, SIZE
 from src.data.video_io import h264_roundtrip, probe, read_frames, resize_crop, resize_short, write_video
 
 
-def normalize_frames(frames: np.ndarray, pre_short_side: int | None = None) -> np.ndarray:
-    """Optional pre-downscale + H.264 round trip (real clips only), then resize/crop to SIZE."""
+def centre_crop(frames: np.ndarray, size: int = SIZE) -> np.ndarray:
+    """Native-resolution centre crop (no resampling unless the clip is smaller than `size`)."""
+    if min(frames.shape[1:3]) < size:
+        frames = resize_short(frames, size)
+    h, w = frames.shape[1:3]
+    y, x = (h - size) // 2, (w - size) // 2
+    return np.ascontiguousarray(frames[:, y:y + size, x:x + size])
+
+
+def normalize_frames(frames: np.ndarray, pre_short_side: int | None = None, mode: str = NORM_MODE) -> np.ndarray:
+    """Optional pre-downscale + H.264 round trip (real clips only), then resize+crop or native crop to SIZE."""
     if pre_short_side is not None and min(frames.shape[1:3]) > pre_short_side:
         frames = resize_short(frames, pre_short_side)
         frames = h264_roundtrip(frames, FPS, crf=18)
-    return resize_crop(frames, SIZE)
+    return centre_crop(frames, SIZE) if mode == "crop" else resize_crop(frames, SIZE)
 
 
 def normalize_clip(src, dst, pre_short_side: int | None = None, start: float = 0.0) -> dict:
