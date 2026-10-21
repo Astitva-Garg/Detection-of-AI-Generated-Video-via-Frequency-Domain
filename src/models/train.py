@@ -42,8 +42,9 @@ def main(skip_cnn: bool = False, generators: list[str] | None = None, tag: str =
     if generators:
         df = df[df.generator.isin(generators + ["real"])]
     rows = []
+    groups = GROUPS + (["pixel"] if any(c.startswith("px_") for c in df.columns) else [])
     for name in CLASSIC:
-        for group in GROUPS:
+        for group in groups:
             m, cols, met = train_classic(df, name, group)
             joblib.dump({"model": m, "cols": cols}, MODELS / f"{name}_{group}{tag}.joblib")
             rows.append({"model": f"{name}_{group}{tag}", **met})

@@ -263,7 +263,7 @@ def ablation_bars():
     t = pd.read_csv(RESULTS / "test_metrics.csv")
     rows = []
     for m in ["lr", "svm", "mlp", "lgbm"]:
-        for g in ["spatial", "temporal", "all"]:
+        for g in ["pixel", "spatial", "temporal", "all"]:
             for st in ["seen_test", "unseen_test"]:
                 r = t[(t.model == f"{m}_{g}") & (t.set == st)]
                 if len(r):
@@ -272,16 +272,33 @@ def ablation_bars():
     fig, ax = plt.subplots(1, 2, figsize=(11, 3.8), sharey=True)
     for k, st in enumerate(["seen_test", "unseen_test"]):
         sub = a[a.set == st]
-        w = 0.25
-        for i, g in enumerate(["spatial", "temporal", "all"]):
+        w = 0.2
+        for i, g in enumerate(["pixel", "spatial", "temporal", "all"]):
             v = sub[sub.group == g].set_index("model").reindex(["lr", "svm", "mlp", "lgbm"]).auroc
-            ax[k].bar(np.arange(4) + (i - 1) * w, v, w, label=g)
+            lab = {"pixel": "pixel baseline", "spatial": "freq: spatial", "temporal": "freq: temporal drift",
+                   "all": "freq: spatial + temporal"}[g]
+            ax[k].bar(np.arange(4) + (i - 1.5) * w, v, w, label=lab)
         ax[k].set_xticks(range(4), ["LR", "Lin-SVM", "MLP", "LightGBM"])
         ax[k].set_title(f"AUROC — {st.replace('_', ' ')}")
         ax[k].set_ylim(0.4, 1.0)
     ax[0].legend(title="features")
     _save(fig, "ablation_bars.png")
     a.to_csv(RESULTS / "ablation.csv", index=False)
+
+
+def per_scene():
+    p = RESULTS / "per_scene.csv"
+    if not p.exists():
+        return
+    s = pd.read_csv(p).sort_values("auroc")
+    fig, ax = plt.subplots(figsize=(7, 0.32 * len(s) + 1))
+    ax.barh(s.scene, s.auroc, color="#2a6f97")
+    for y, (a, n) in enumerate(zip(s.auroc, s.n)):
+        ax.text(a + 0.005, y, f"n={n}", va="center", fontsize=7)
+    ax.set_xlim(0.4, 1.02)
+    ax.set_xlabel("AUROC (lgbm_all, seen-generator test)")
+    ax.set_title("Detection difficulty by scene type")
+    _save(fig, "per_scene.png")
 
 
 def degradation_bars():
@@ -385,7 +402,7 @@ def main(only: list[str] | None = None):
     steps = {"examples": lambda: dataset_examples(df), "spectrum2d": lambda: mean_spectrum_2d(df),
              "radial": lambda: (radial_profiles(df), radial_hf_zoom(df)), "drift": lambda: (drift_examples(df), drift_distributions(df)),
              "importance": lambda: feature_importance(df), "saliency": lambda: cnn_saliency(df),
-             "roc": lambda: roc_and_confusion(df), "ablation": ablation_bars, "degradation": degradation_bars,
+             "roc": lambda: roc_and_confusion(df), "ablation": ablation_bars, "scene": per_scene, "degradation": degradation_bars,
              "tsne": lambda: tsne(df), "errors": lambda: error_gallery(df), "curves": training_curves}
     for k, f in steps.items():
         if only and k not in only:

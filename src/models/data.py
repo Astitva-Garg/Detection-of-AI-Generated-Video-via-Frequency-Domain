@@ -10,13 +10,20 @@ def manifest() -> pd.DataFrame:
     return pd.read_csv(DATA_ROOT / "manifest.csv")
 
 
+def _with_pixel(f: pd.DataFrame) -> pd.DataFrame:
+    p = FEATURES / "pixel.parquet"
+    if p.exists():
+        f = f.merge(pd.read_parquet(p), on="key", how="left")
+    return f
+
+
 def clean_table() -> pd.DataFrame:
-    f = pd.read_parquet(FEATURES / "clean.parquet").rename(columns={"key": "clip_id"})
+    f = _with_pixel(pd.read_parquet(FEATURES / "clean.parquet")).rename(columns={"key": "clip_id"})
     return manifest().merge(f, on="clip_id", how="inner")
 
 
 def degraded_table() -> pd.DataFrame:
-    f = pd.read_parquet(FEATURES / "degraded.parquet")
+    f = _with_pixel(pd.read_parquet(FEATURES / "degraded.parquet"))
     f[["clip_id", "degradation"]] = f["key"].str.split("|", expand=True)
     return manifest().merge(f.drop(columns="key"), on="clip_id", how="inner")
 

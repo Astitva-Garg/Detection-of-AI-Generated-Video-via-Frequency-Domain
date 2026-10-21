@@ -31,7 +31,8 @@ class Predictor:
         self._yolo = None
 
     def available(self) -> list[str]:
-        names = sorted(p.stem for p in self.model_dir.glob("*.joblib") if "_logo_" not in p.stem)
+        names = sorted(p.stem for p in self.model_dir.glob("*.joblib")
+                       if "_logo_" not in p.stem and not p.stem.endswith("_pixel"))
         if (self.model_dir / "cnn.pt").exists():
             names.append("cnn")
         return names

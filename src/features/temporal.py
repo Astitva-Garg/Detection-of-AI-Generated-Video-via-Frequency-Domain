@@ -5,7 +5,7 @@ from src.config import N_BINS
 from src.features.spatial import EPS, frame_features, radial_spectrum, residual, to_luma
 
 DRIFT_SCALARS = ["slope", "hf_ratio_50", "centroid", "dct_high"]
-FEATURE_GROUPS = {"spatial": ["sp_"], "temporal": ["drift_", "rt_"]}
+FEATURE_GROUPS = {"spatial": ["sp_"], "temporal": ["drift_", "rt_"], "pixel": ["px_"]}
 
 
 def _stats(x: np.ndarray, name: str) -> dict[str, float]:
@@ -99,7 +99,7 @@ def clip_features(frames_rgb: np.ndarray, n_bins: int = N_BINS) -> tuple[dict[st
 
 def group_columns(columns, group: str) -> list[str]:
     if group == "all":
-        prefixes = sum(FEATURE_GROUPS.values(), [])
+        prefixes = FEATURE_GROUPS["spatial"] + FEATURE_GROUPS["temporal"]  # frequency features only
     else:
         prefixes = FEATURE_GROUPS[group]
     return [c for c in columns if any(c.startswith(p) for p in prefixes)]

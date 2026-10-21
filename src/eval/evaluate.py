@@ -85,6 +85,15 @@ def main() -> None:
             un = un.drop_duplicates("clip_id")
             rows.append({"model": name, "set": "unseen_test", **metrics(un.label, predict(entry, un))})
     pd.DataFrame(rows).to_csv(RESULTS / "test_metrics.csv", index=False)
+
+    # per-scene difficulty (main model, seen-generator test set)
+    if "lgbm_all" in models:
+        st = seen_test.assign(p=predict(models["lgbm_all"], seen_test))
+        sc = []
+        for scene, g in st.groupby("scene"):
+            if g.label.nunique() == 2 and len(g) >= 6:
+                sc.append({"scene": scene, **metrics(g.label, g.p)})
+        pd.DataFrame(sc).to_csv(RESULTS / "per_scene.csv", index=False)
     pd.DataFrame(gen_rows).to_csv(RESULTS / "per_generator.csv", index=False)
     pd.concat(preds).to_csv(RESULTS / "predictions.csv", index=False)
 
