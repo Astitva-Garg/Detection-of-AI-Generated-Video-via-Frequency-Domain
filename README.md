@@ -71,6 +71,9 @@ bash run_pipeline.sh                                # 3–9 in one go: content f
                                                     #   splits + degraded copies, frequency + pixel features,
                                                     #   train, evaluate, grouped CV, figures, app examples
 python app.py                                       # 10. interface at http://127.0.0.1:7860
+python -m src.eval.bootstrap                        # extra: bootstrap 95 % CIs for test AUROC and model differences
+python -m src.eval.attribution                      # extra: 6-class generator attribution (grouped CV)
+python -m src.data.wild && python -m src.eval.wild_eval   # extra: in-the-wild stress test (Sora 2, Veo 3, Kling, ...)
 pytest                                              # unit tests
 ```
 
@@ -99,7 +102,8 @@ src/data/                  pexels.py, video_io.py, normalize.py, content_filter.
 src/generate/              common.py (resumable runner), text_embed.py, ltx.py, animatediff.py, svd.py, wan.py, modelscope.py, run_queue.py
 src/features/              spatial.py (per-frame), temporal.py (drift + clip features), extract.py, pixel_baseline.py
 src/models/                data.py, classic.py (LR/SVM/LightGBM/MLP), cnn.py (spectro-temporal CNN), train.py
-src/eval/                  evaluate.py (test / unseen / degraded / LOGO / metadata tables), cv.py (grouped 5-fold CV)
+src/eval/                  evaluate.py (test / unseen / degraded / LOGO / metadata tables), cv.py (grouped 5-fold CV),
+                           bootstrap.py (CIs), attribution.py (which generator), wild_eval.py (stress test)
 src/viz/                   figures.py, reference.py
 src/predict.py, app.py     inference + Gradio interface
 models_crop/               trained models (joblib / pt) and reference spectra — main pipeline
