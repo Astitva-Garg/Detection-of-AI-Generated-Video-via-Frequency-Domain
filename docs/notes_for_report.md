@@ -327,6 +327,18 @@ ModelScope 99, Wan2.1 57 (unseen, test only). Total 984 clips.
 ### 14.4 Attribution (6 classes, grouped 5-fold CV, LR): frequency 0.714, fusion 0.779 balanced accuracy
 (chance 0.167); temporal-only features recognise SVD with 0.957 recall.
 
+### 14.4b Leave-one-generator-out (logo.csv): LGBM held-out LTX 0.661, AnimateDiff 0.580, SVD 0.695 (mean 0.645);
+CNN 0.734 / 0.562 / 0.656. Weaker than the earlier single run (0.73) — transfer to a new generator family is limited.
+
+### 14.4c Degradations, seen test, AUROC (degraded.csv; single deployed models)
+| model | CRF23 | CRF30 | CRF38 | 0.5× down | blur σ1 | noise σ5 |
+|---|---|---|---|---|---|---|
+| MLP fusion | 0.966 | 0.935 | 0.878 | 0.741 | 0.740 | 0.934 |
+| MLP frequency | 0.926 | 0.854 | 0.791 | 0.663 | 0.684 | 0.896 |
+| MLP pixel | 0.886 | 0.879 | 0.867 | 0.862 | 0.863 | 0.888 |
+- Frequency features lose most under blur/downscaling (they remove high frequencies); pixel statistics barely
+  change; fusion sits in between and is best under compression.
+
 ### 14.5 Defensible headline claims
 1. Frequency features detect diffusion video from seen generators (≈0.96) and beat pixel statistics (+0.08).
 2. They transfer to an unseen generator where pixel cues fail (ModelScope 0.76 vs 0.58), and to Sora 2 in the
