@@ -348,3 +348,32 @@ CNN 0.734 / 0.562 / 0.656. Weaker than the earlier single run (0.73) — transfe
    at a small, significant cost on ModelScope — a trade-off, not a universal win.
 5. The spectro-temporal CNN generalises best on average in the wild (0.77) but is the least stable model.
 6. Threshold transfer is the open problem: ranking (AUROC) transfers, the 0.5 cut-off does not.
+
+
+## 15. Deep pixel baselines (22 Oct; src/models/pixel_cnn.py; pixel_deep_runs.csv, pixel_deep.csv)
+Same clips, splits and test sets as §14. Input: 8 of the 16 normalised frames (native 256² crops, no resizing);
+training on random 224² crops + horizontal flip, frame-level BCE-with-logits (positive-class weight), AdamW,
+cosine LR, best epoch by validation AUROC; clip score = mean sigmoid over 8 frames (centre crop).
+- Pixel CNN from scratch: 5 stride-2 blocks of two 3×3 convs (16-32-64-128-128 ch), BN, ReLU, GAP, dropout 0.3;
+  589,553 params; lr 1e-3, wd 1e-4, 15 epochs, batch 64; ≈12 s/epoch on RTX 4060.
+- ResNet-18 (ImageNet-1k pretrained, torchvision), all layers fine-tuned, single-logit head; 11.18 M params;
+  lr 1e-4, wd 1e-4, 6 epochs, batch 64, mixed precision; ≈32–41 s/epoch.
+5 seeds each (643, 1, 2, 3, 4). Mean AUROC (std in pixel_deep.csv / seed_stability.csv):
+| model | seen | ModelScope | Wan2.1 | Sora 2 | Veo 3 | Hunyuan | Kling | Wan2 | wild mean |
+|---|---|---|---|---|---|---|---|---|---|
+| ResNet-18 fine-tuned | 0.960 | 0.884 | 0.928 | 0.803 | 0.846 | 0.750 | 0.722 | 0.812 | 0.787 |
+| Pixel CNN (scratch) | 0.841 | 0.614 | 0.887 | 0.761 | 0.791 | 0.716 | 0.539 | 0.727 | 0.707 |
+| MLP fusion (ours) | 0.985 | 0.745 | 0.869 | 0.879 | 0.779 | 0.673 | 0.606 | 0.767 | 0.741 |
+| MLP frequency (ours) | 0.959 | 0.762 | 0.739 | 0.842 | 0.681 | 0.731 | 0.610 | 0.762 | 0.725 |
+| Spectro-temporal CNN (ours) | 0.955 | 0.743 | 0.667 | 0.851 | 0.714 | 0.835 | 0.704 | 0.757 | 0.772 |
+| MLP pixel statistics | 0.879 | 0.575 | 0.801 | 0.761 | 0.806 | 0.574 | 0.569 | 0.746 | 0.691 |
+Takeaways (honest):
+- Frequency features beat pixel models trained only on our data (statistics and from-scratch CNN) on seen
+  generators, ModelScope and Sora 2; the from-scratch pixel CNN is strong only on Wan2.1/Veo 3 (generator "look").
+- The ImageNet-pretrained ResNet-18 generalises best overall (ModelScope 0.88, Wan2.1 0.93, wild mean 0.79) and
+  ties frequency features on seen generators; our fusion MLP is still best on seen generators (0.985) and Sora 2,
+  our CNN on HunyuanVideo. So "frequency > pixels" holds against non-pretrained pixel models, not against a
+  pretrained CNN — likely because pretraining gives strong priors and the CNN sees native-resolution pixels
+  (it can learn its own high-frequency filters).
+- Trade-off to state: ours ≈ 50–65 k parameters, no pretraining, interpretable features, 0.6 s/clip on CPU
+  (the brief's "lightweight classifier"); ResNet-18 is 170–220× larger and a black box.
