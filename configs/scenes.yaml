@@ -16,7 +16,10 @@ exclude:  # title words that disqualify a real clip
    pier, dock, fence, bench, tent, cabin, hut, windmill, wind turbine, power line, pole, sign,
    astronaut, astronauts, mosque, camera, town, village, roads, adult, farm, castle, ruins, statue,
    tractor, sailing, fishing, camping, festival, fireworks, party, lantern, torch, cigarette, vape,
-   smoking, flower pot, vase, bouquet, tree house, swing, playground, pool, fountain, aquarium]
+   smoking, flower pot, vase, bouquet, tree house, swing, playground, pool, fountain, aquarium,
+   # computer-generated footage is not camera-captured (added after finding CG clips in the real class)
+   cg, digital, geometric, geometry, background, loop, tunnel, motion graphics, outer space, in space,
+   on space, planet, neon, abstract video]
 
 scenes:
   ocean waves:

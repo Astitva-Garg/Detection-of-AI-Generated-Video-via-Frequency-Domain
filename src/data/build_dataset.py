@@ -13,6 +13,7 @@ from src.config import (CLIPS, DATA_ROOT, SUF, DEGRADED, FPS, N_FRAMES, RAW_FAKE
                         SEEN, UNSEEN)
 from src.data.degrade import DEGRADATIONS, apply_degradation
 from src.data.normalize import normalize_clip
+from src.data.pexels import _word_re, load_scenes
 from src.data.splits import assign_split, stable_choice
 from src.data.video_io import read_frames, write_video
 
@@ -32,7 +33,10 @@ def candidate_rows() -> list[dict]:
     content = _content()
     rows = []
     meta = pd.read_csv(RAW_REAL / "meta.csv", dtype={"pexels_id": str}).drop_duplicates("pexels_id")
+    excluded = _word_re(load_scenes()["exclude"])  # re-applied so later additions (e.g. CG terms) take effect
     for r in meta.itertuples():
+        if excluded.search(r.title.replace("· Free Stock Video", "")):
+            continue
         src = RAW_REAL / f"{r.pexels_id}.mp4"
         if not src.exists() or str(src) not in content:
             continue
@@ -86,8 +90,14 @@ def _degrade(row: dict, names: list[str]) -> list[dict]:
 def main(workers: int) -> None:
     CLIPS.mkdir(parents=True, exist_ok=True)
     old = pd.read_csv(MANIFEST) if MANIFEST.exists() else pd.DataFrame(columns=["clip_id"])
+    cands = candidate_rows()
+    keep = {r["clip_id"] for r in cands}
+    dropped = old[~old.clip_id.isin(keep)]
+    if len(dropped):
+        print(f"dropping {len(dropped)} clips that no longer qualify:", list(dropped.clip_id)[:20], flush=True)
+    old = old[old.clip_id.isin(keep)]
     have = set(old.clip_id)
-    todo = [r for r in candidate_rows() if r["clip_id"] not in have]
+    todo = [r for r in cands if r["clip_id"] not in have]
     print(f"{len(have)} in manifest, {len(todo)} new clips to normalise", flush=True)
     new = []
     with ProcessPoolExecutor(workers) as ex:
@@ -107,6 +117,7 @@ def main(workers: int) -> None:
     # degraded copies: every test clip gets all degradations; every non-aug train clip gets one
     # (for degradation-aware training)
     old_d = pd.read_csv(MANIFEST_DEG) if MANIFEST_DEG.exists() else pd.DataFrame(columns=["clip_id", "degradation"])
+    old_d = old_d[old_d.clip_id.isin(set(man.clip_id))]
     have_d = set(zip(old_d.clip_id, old_d.degradation))
     jobs = []
     for r in man[~man.aug.astype(bool)].to_dict("records"):
