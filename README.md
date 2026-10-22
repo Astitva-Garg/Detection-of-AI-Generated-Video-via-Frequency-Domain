@@ -34,18 +34,19 @@ Pexels-400k metadata ─► real clips ─┐
 | Wan2.1 T2V 1.3B | T2V | **unseen** (test only) | `Wan-AI/Wan2.1-T2V-1.3B-Diffusers` |
 | ModelScope T2V 1.7B | T2V | **unseen** (test only) | `ali-vilab/text-to-video-ms-1.7b` |
 
-## Results (held-out test, AUROC)
+## Results (held-out test AUROC, mean ± std over 5 training seeds)
 
-| Model | Seen generators | Unseen ModelScope | Unseen Wan2.1 |
-|---|---|---|---|
-| MLP, frequency + pixel fusion (app default) | 0.977 (acc 0.939) | 0.739 | 0.841 |
-| MLP, frequency (spatial + temporal drift) | 0.965 | 0.767 | 0.729 |
-| Spectro-temporal 1D-CNN | 0.958 | 0.728 | 0.699 |
-| MLP, pixel baseline | 0.883 | 0.570 | 0.765 |
+| Model | Seen generators | Unseen ModelScope | Unseen Wan2.1 | In the wild (Sora 2 / mean of 5) |
+|---|---|---|---|---|
+| MLP, frequency + pixel fusion (app default) | 0.985 ± 0.003 | 0.745 ± 0.022 | 0.869 ± 0.010 | 0.879 / 0.741 |
+| MLP, frequency (spatial + temporal drift) | 0.959 ± 0.003 | 0.762 ± 0.022 | 0.739 ± 0.007 | 0.842 / 0.725 |
+| Spectro-temporal 1D-CNN | 0.955 ± 0.012 | 0.743 ± 0.019 | 0.667 ± 0.009 | 0.851 / 0.772 |
+| MLP, pixel baseline | 0.879 ± 0.005 | 0.575 ± 0.010 | 0.801 ± 0.020 | 0.761 / 0.691 |
 
-Grouped 5-fold CV, seen generators: frequency 0.919–0.922, fusion 0.929–0.943, pixel 0.844–0.889.
-Normalisation matters: resizing frames to 256 px instead of a native-resolution crop cost ≈0.10 AUROC.
-Full tables: `results_crop/*.csv`; figures: `results_crop/figures/`; notes: `docs/notes_for_report.md`.
+Grouped 5-fold CV on seen generators (LightGBM / MLP): frequency 0.925 / 0.929, fusion 0.948 / 0.936,
+pixel 0.894 / 0.853. Resizing frames to 256 px instead of a native-resolution crop cost ≈0.10 AUROC.
+In the wild = public clips from Sora 2, Veo 3, Kling, HunyuanVideo, Wan2 (different content; stress test only).
+Full tables: `results_crop/*.csv`; figures: `results_crop/figures/`; notes: `docs/notes_for_report.md` §14.
 
 ## Setup
 
@@ -74,6 +75,7 @@ python app.py                                       # 10. interface at http://12
 python -m src.eval.bootstrap                        # extra: bootstrap 95 % CIs for test AUROC and model differences
 python -m src.eval.attribution                      # extra: 6-class generator attribution (grouped CV)
 python -m src.data.wild && python -m src.eval.wild_eval   # extra: in-the-wild stress test (Sora 2, Veo 3, Kling, ...)
+python -m src.eval.seed_stability                   # extra: retrain main models with 5 seeds (needs wild_eval first)
 pytest                                              # unit tests
 ```
 
@@ -103,7 +105,8 @@ src/generate/              common.py (resumable runner), text_embed.py, ltx.py, 
 src/features/              spatial.py (per-frame), temporal.py (drift + clip features), extract.py, pixel_baseline.py
 src/models/                data.py, classic.py (LR/SVM/LightGBM/MLP), cnn.py (spectro-temporal CNN), train.py
 src/eval/                  evaluate.py (test / unseen / degraded / LOGO / metadata tables), cv.py (grouped 5-fold CV),
-                           bootstrap.py (CIs), attribution.py (which generator), wild_eval.py (stress test)
+                           bootstrap.py (CIs), attribution.py (which generator), wild_eval.py (stress test),
+                           seed_stability.py (5-seed mean ± std)
 src/viz/                   figures.py, reference.py
 src/predict.py, app.py     inference + Gradio interface
 models_crop/               trained models (joblib / pt) and reference spectra — main pipeline

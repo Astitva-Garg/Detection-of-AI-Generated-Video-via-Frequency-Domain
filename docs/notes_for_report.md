@@ -44,7 +44,10 @@
   (people, animals, vehicles, buildings, objects, "3d/animation/render" etc.); tag-style titles
   ("Free stock video of …") dropped. 37,460 candidates → capped at 40 per scene → 560 sampled,
   544 downloaded (rest: dead links). Mostly 1080p–4K, 24–60 fps.
-- Content filter rejected <FILL from content_filter.csv> real clips (top classes: person, dog, …).
+- Content filter rejected 100 of 544 real clips (top classes: person 29, dining table, bird).
+- 22 Oct: 12 more real clips removed because their titles show computer-generated footage ("CG Footage of
+  Stars in Outer Space", "Digital Abstract Art", "abstract geometry background", "Stars in Space" ×3, …);
+  exclusion terms added to scenes.yaml. Final real clips: 432.
 - Per real clip: main 2 s window starting at 1 s; train clips ≥ 7 s give a second window at 4 s
   (augmentation, train only).
 
@@ -126,6 +129,10 @@ Temporal drift (prefix `drift_` / `rt_`):
   shortcut baseline; (6) degradation-aware training; (7) CNN vs feature models.
 
 ## Results (main pipeline = native crop; files in results_crop/, figures in results_crop/figures/)
+
+> **Use section 14 (FINAL) for all numbers in the report/slides.** Sections 1–13 record how the work
+> progressed; their numbers were computed before 12 computer-generated clips were removed from the real class
+> and from single training runs.
 Final run 21 Oct 22:30: all 5 generators. Wan2.1 generation stopped at 70 clips (57 after content filter), ≈4.6 min/clip locally.
 
 Clips after content filter (main windows, no augmentation windows): real 444 (train 310 / val 66 /
@@ -281,3 +288,51 @@ attribution_confusion.png). Chance = 0.167 balanced accuracy.
 - Takeaways: frequency features rank Sora 2 fakes well (0.85–0.87) without ever seeing Sora; the spectro-temporal
   CNN generalises best out of domain (mean 0.76) though it ties the MLP in domain; pixel stats are worst on average
   but best on Veo 3. Caveat: content/encoding confounds — this is a stress test, not a controlled comparison.
+
+
+## 14. FINAL NUMBERS (after removing CG clips; 22 Oct) — use these
+Data: real 432 (train 304 + 292 extra windows / val 63 / test 65), LTX 151, AnimateDiff 130, SVD 115 (seen);
+ModelScope 99, Wan2.1 57 (unseen, test only). Total 984 clips.
+
+### 14.1 Seed stability — 5 training seeds, mean ± std AUROC (seed_stability.csv, seed_stability.png)
+| test set | MLP fusion | MLP frequency | CNN | MLP pixel |
+|---|---|---|---|---|
+| seen test | 0.985 ± 0.003 | 0.959 ± 0.003 | 0.955 ± 0.012 | 0.879 ± 0.005 |
+| ModelScope (unseen) | 0.745 ± 0.022 | 0.762 ± 0.022 | 0.743 ± 0.019 | 0.575 ± 0.010 |
+| Wan2.1 (unseen) | 0.869 ± 0.010 | 0.739 ± 0.007 | 0.667 ± 0.009 | 0.801 ± 0.020 |
+| wild Sora 2 | 0.879 ± 0.010 | 0.842 ± 0.014 | 0.851 ± 0.015 | 0.761 ± 0.013 |
+| wild Veo 3 | 0.779 ± 0.008 | 0.681 ± 0.013 | 0.714 ± 0.051 | 0.806 ± 0.017 |
+| wild HunyuanVideo | 0.673 ± 0.015 | 0.731 ± 0.017 | 0.835 ± 0.020 | 0.574 ± 0.021 |
+| wild Kling | 0.606 ± 0.017 | 0.610 ± 0.007 | 0.704 ± 0.047 | 0.569 ± 0.018 |
+| wild Wan2 | 0.767 ± 0.019 | 0.762 ± 0.021 | 0.757 ± 0.034 | 0.746 ± 0.014 |
+| wild mean (5 sources) | 0.741 ± 0.011 | 0.725 ± 0.012 | 0.772 ± 0.031 | 0.691 ± 0.015 |
+- MLPs are stable across seeds (std ≈ 0.01); the CNN varies more (up to ±0.05) — one earlier single CNN run
+  looked best in the wild (0.76), a later one worst (0.65); the 5-seed mean (0.77) is the reliable figure.
+
+### 14.2 Grouped 5-fold CV on seen generators (cv_summary.csv), AUROC mean
+| features | LR | LightGBM | MLP |
+|---|---|---|---|
+| pixel | 0.843 | 0.894 | 0.853 |
+| spatial | 0.866 | 0.872 | 0.901 |
+| temporal | 0.827 | 0.895 | 0.908 |
+| spatial + temporal | 0.876 | 0.925 | 0.929 |
+| fusion (freq + pixel) | 0.899 | 0.948 | 0.936 |
+
+### 14.3 Bootstrap 95 % CIs on the held-out test set (bootstrap_diffs.csv; deployed single models)
+- frequency − pixel: seen +0.080 [0.019, 0.143]; ModelScope +0.196 [0.120, 0.273]; SVD +0.172 [0.090, 0.272];
+  unseen pooled +0.104 [0.038, 0.174] → significant. Wan2.1 −0.057 [−0.138, 0.022] → n.s.
+- fusion − frequency: seen +0.025 [0.005, 0.051] significant; Wan2.1 +0.141 [0.089, 0.201] significant;
+  ModelScope −0.039 [−0.083, −0.004] significantly worse; unseen pooled +0.026 [−0.011, 0.064] n.s.
+
+### 14.4 Attribution (6 classes, grouped 5-fold CV, LR): frequency 0.714, fusion 0.779 balanced accuracy
+(chance 0.167); temporal-only features recognise SVD with 0.957 recall.
+
+### 14.5 Defensible headline claims
+1. Frequency features detect diffusion video from seen generators (≈0.96) and beat pixel statistics (+0.08).
+2. They transfer to an unseen generator where pixel cues fail (ModelScope 0.76 vs 0.58), and to Sora 2 in the
+   wild (0.84) — but not uniformly: on Wan2.1 and Veo 3 pixel cues transfer better.
+3. Temporal drift is what exposes image-to-video fakes (SVD ≈0.99; drift alone ≈0.95).
+4. Fusing frequency + pixel features is the best detector on seen data (0.985) and on Wan2.1 / Sora 2 / Veo 3,
+   at a small, significant cost on ModelScope — a trade-off, not a universal win.
+5. The spectro-temporal CNN generalises best on average in the wild (0.77) but is the least stable model.
+6. Threshold transfer is the open problem: ranking (AUROC) transfers, the 0.5 cut-off does not.

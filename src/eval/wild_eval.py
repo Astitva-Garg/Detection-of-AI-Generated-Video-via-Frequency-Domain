@@ -65,6 +65,10 @@ def main(workers: int = 3) -> None:
     df["source"] = [k.split("|")[0] for k in df.index]
     df["label"] = (df.source != "real").astype(int)
     df["scenery"] = [max_blocked_area(firsts[k], yolo)[0] <= 0.05 for k in df.index]
+    # cache features so other analyses (seed stability) can reuse the deployment-path features
+    from src.config import FEATURES
+    df.reset_index(names="key").to_parquet(FEATURES / "wild.parquet", index=False)
+    np.savez_compressed(FEATURES / "seq_wild.npz", **{k: seqs[k] for k in df.index})
     for name in MODEL_NAMES:
         ent = joblib.load(MODELS / f"{name}.joblib")
         X = np.nan_to_num(df[ent["cols"]].to_numpy(np.float32))
