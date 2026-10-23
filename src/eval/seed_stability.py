@@ -80,23 +80,28 @@ def plot() -> None:
     matplotlib.use("Agg")
     import matplotlib.pyplot as plt
     r = pd.read_csv(RESULTS / "seed_stability_runs.csv")
+    deep = RESULTS / "pixel_deep_runs.csv"           # pixel CNN + ResNet-18 (src.models.pixel_cnn)
+    if deep.exists():
+        r = pd.concat([r, pd.read_csv(deep)], ignore_index=True)
     cols = ["seen", "modelscope", "wan", "wild_sora2", "wild_veo3", "wild_hunyuan", "wild_kling", "wild_wan2"]
     labels = ["seen\ntest", "ModelScope\n(unseen)", "Wan2.1\n(unseen)", "Sora 2", "Veo 3", "Hunyuan", "Kling", "Wan2"]
     order = [("mlp_fusion", "MLP freq+pixel"), ("mlp_all", "MLP frequency"), ("cnn", "Spectro-temporal CNN"),
-             ("mlp_pixel", "MLP pixel")]
+             ("mlp_pixel", "MLP pixel stats"), ("pixel_cnn", "Pixel CNN (scratch)"),
+             ("resnet18", "ResNet-18 (ImageNet)")]
+    order = [(k, lab) for k, lab in order if k in set(r.model)]
     g = r.groupby("model")[cols]
     m, s = g.mean(), g.std()
-    fig, ax = plt.subplots(figsize=(12, 4.4))
-    w = 0.2
+    fig, ax = plt.subplots(figsize=(13, 4.6))
+    w = 0.8 / len(order)
     for i, (k, lab) in enumerate(order):
-        ax.bar(np.arange(len(cols)) + (i - 1.5) * w, m.loc[k], w, yerr=s.loc[k], capsize=2, label=lab)
+        ax.bar(np.arange(len(cols)) + (i - (len(order) - 1) / 2) * w, m.loc[k], w, yerr=s.loc[k], capsize=2, label=lab)
     ax.axvline(2.5, color="k", lw=0.8)
     ax.text(5.5, 1.005, "in the wild (never seen, different content)", ha="center", fontsize=9)
     ax.axhline(0.5, color="k", ls=":", lw=0.8)
     ax.set_xticks(range(len(cols)), labels)
     ax.set_ylim(0.45, 1.03)
     ax.set_ylabel("AUROC (mean ± std, 5 seeds)")
-    ax.legend(fontsize=8, ncol=4, loc="lower left")
+    ax.legend(fontsize=8, ncol=3, loc="lower left")
     fig.tight_layout()
     fig.savefig(RESULTS / "figures" / "seed_stability.png", dpi=200, bbox_inches="tight")
 

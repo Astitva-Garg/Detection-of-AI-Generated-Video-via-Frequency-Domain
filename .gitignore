@@ -13,3 +13,4 @@ __pycache__/
 gradio_cached_examples/
 .gradio/
 yolov8*.pt
+results_crop_old16/
