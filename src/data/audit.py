@@ -14,6 +14,9 @@ from src.config import CLIPS, DATA_ROOT, FPS, N_FRAMES, SUF
 from src.data.video_io import read_frames
 
 
+FLAT_STD = 8.0  # mean per-frame luma std below this = low-texture clip, excluded from the duplicate check
+
+
 def dhash(img: np.ndarray, size: int = 8) -> int:
     g = cv2.resize(cv2.cvtColor(img, cv2.COLOR_RGB2GRAY), (size + 1, size), interpolation=cv2.INTER_AREA)
     bits = (g[:, 1:] > g[:, :-1]).flatten()
@@ -70,6 +73,9 @@ def main(workers: int) -> None:
         ham = np.array([[bin(int(v)).count("1") for v in row] for row in x]) if len(x) else np.zeros((0, 2))
         for j in np.nonzero((ham.min(axis=1) <= 6))[0]:
             a, b = df.iloc[i], df.iloc[i + 1 + j]
+            # near-flat frames (dark sky, fog, black) all hash to ~0 bits: not evidence of duplication
+            if a.spatial_std < FLAT_STD or b.spatial_std < FLAT_STD:
+                continue
             if a.group_id != b.group_id:
                 dups.append({"a": a.clip_id, "b": b.clip_id, "gen_a": a.generator, "gen_b": b.generator,
                              "split_a": a.split, "split_b": b.split, "ham": int(ham[j].min()),

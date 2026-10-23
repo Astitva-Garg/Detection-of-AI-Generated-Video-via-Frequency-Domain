@@ -377,3 +377,70 @@ Takeaways (honest):
   (it can learn its own high-frequency filters).
 - Trade-off to state: ours ≈ 50–65 k parameters, no pretraining, interpretable features, 0.6 s/clip on CPU
   (the brief's "lightweight classifier"); ResNet-18 is 170–220× larger and a black box.
+
+
+## 16. FINAL NUMBERS v2 — stride frame sampling (24 Oct) — SUPERSEDES §14 AND §15. Use only these.
+**Why the rerun:** an audit found that time-based sampling (16 frames at 8 fps) of SVD's 14-frame 7 fps output
+duplicated 2 frames in every SVD clip (frames 4 and 10). That duplication alone separated SVD from real at
+0.956 AUROC — a shortcut. **Fix:** stride sampling — take every k-th native frame, k = round(native fps / 8),
+14 frames per clip (≈1.75–1.9 s; effective 7–8.3 fps for all sources). It never duplicates a frame and spaces
+frames evenly for every source (fixed 7 fps time sampling would have left SVD as the only evenly spaced source).
+After the fix: SVD clips with a repeated frame 6/115 (mean 0.32 per clip) vs real 24/432 (0.37) — no longer a cue.
+Same data: real 432, LTX 151, AnimateDiff 130, SVD 115 (seen); ModelScope 99, Wan2.1 57 (unseen, test only).
+
+**Effect of the fix on SVD (AUROC):** temporal-only MLP, CV 0.949 → 0.864; test 0.998 → 0.929. Spatial-only
+MLP unchanged (CV 0.900 → 0.904). Frequency MLP on SVD test 0.996 → 0.964. → The old claim "temporal drift
+alone catches SVD" was inflated by the artifact; drop it.
+
+### 16.1 Main table — 5 training seeds, mean ± std AUROC (seed_stability.csv, pixel_deep.csv)
+| model | params | seen test | ModelScope | Wan2.1 | Sora 2 | Veo 3 | Hunyuan | Kling | Wan2 | wild mean |
+|---|---|---|---|---|---|---|---|---|---|---|
+| MLP fusion (freq + pixel) | ~50k | 0.977 ± 0.003 | 0.744 ± 0.024 | 0.819 ± 0.008 | 0.899 | 0.803 | 0.652 | 0.629 | 0.785 | 0.754 ± 0.012 |
+| MLP frequency | ~45k | 0.966 ± 0.006 | 0.798 ± 0.008 | 0.690 ± 0.012 | 0.855 | 0.699 | 0.714 | 0.618 | 0.750 | 0.727 ± 0.006 |
+| Spectro-temporal CNN | 65k | 0.919 ± 0.021 | 0.740 ± 0.029 | 0.640 ± 0.052 | 0.859 | 0.769 | 0.783 | 0.684 | 0.692 | 0.757 ± 0.042 |
+| MLP pixel statistics | ~15k | 0.889 ± 0.007 | 0.619 ± 0.027 | 0.827 ± 0.015 | 0.772 | 0.815 | 0.547 | 0.592 | 0.743 | 0.694 ± 0.021 |
+| Pixel CNN (scratch) | 590k | 0.808 ± 0.027 | 0.598 ± 0.057 | 0.871 ± 0.011 | 0.747 | 0.752 | 0.650 | 0.553 | 0.692 | 0.679 ± 0.025 |
+| ResNet-18 (ImageNet, fine-tuned) | 11.2M | 0.954 ± 0.009 | 0.900 ± 0.010 | 0.926 ± 0.017 | 0.809 | 0.843 | 0.744 | 0.695 | 0.813 | 0.781 ± 0.013 |
+
+### 16.2 Grouped 5-fold CV, seen generators (cv_summary.csv), AUROC mean
+| features | LR | LightGBM | MLP |
+|---|---|---|---|
+| pixel | 0.836 | 0.884 | 0.842 |
+| spatial | 0.864 | 0.877 | 0.902 |
+| temporal | 0.804 | 0.876 | 0.874 |
+| spatial + temporal | 0.876 | 0.906 | 0.909 |
+| fusion | 0.902 | 0.929 | 0.928 |
+Spatial + temporal > either alone for every model (drift adds information); fusion best.
+
+### 16.3 Bootstrap 95 % CIs, held-out test, deployed single models (bootstrap_diffs.csv)
+- frequency − pixel: seen +0.079 [0.022, 0.142]; ModelScope +0.182 [0.104, 0.256]; SVD +0.140 [0.056, 0.240]
+  → significant. Wan2.1 −0.144 [−0.234, −0.059] → pixel significantly better on Wan2.1.
+- fusion − frequency: Wan2.1 +0.135 [0.080, 0.195] significant; ModelScope −0.055 [−0.095, −0.016] significant
+  (fusion worse); seen +0.016 [−0.006, 0.043] and pooled unseen +0.015 n.s.
+- frequency MLP − spectro-temporal CNN: all CIs include 0 except SVD (+0.058, borderline).
+
+### 16.4 Other results
+- Held-out test accuracy at 0.5: MLP fusion 0.928 (seen) / 0.538 (unseen pooled); MLP frequency 0.883 / 0.525.
+- Attribution (6 classes, grouped 5-fold CV; chance 0.167): fusion LR 0.737, LGBM 0.754; frequency LR 0.669;
+  pixel LR 0.608; spatial LR 0.593; temporal LR 0.526.
+- Leave-one-generator-out (held-out LTX / AnimateDiff / SVD): LightGBM 0.744 / 0.580 / 0.684 (mean 0.669);
+  CNN 0.779 / 0.615 / 0.719 (mean 0.704).
+- Degradations, seen test, AUROC (MLP fusion | MLP frequency | CNN): H.264 CRF23 0.955 | 0.927 | 0.913;
+  CRF30 0.913 | 0.800 | 0.825; CRF38 0.839 | 0.740 | 0.701; 0.5× down 0.749 | 0.663 | 0.674;
+  blur σ1 0.782 | 0.749 | 0.688; noise σ5 0.930 | 0.889 | 0.862. Degradation-aware LGBM: CRF38 0.727, down 0.684.
+- Metadata-only (original w, h, fps, duration): AUROC 1.000 → why every clip is normalised.
+- Audit after the fix: no artificial repeated frames; near-duplicate check found no genuine duplicate footage
+  (the coarse 64-bit hash flags low-texture clips with unrelated titles; a stricter 256-bit check found 0 pairs).
+  Two real clips slipped past the content filters ("Preparing Rolled Ice Cream", "Beach Resort on Top of a Cliff").
+  Mild scene imbalance (AI/real share 0.44 desert … 1.69 forest); Wan2.1 clips brighter (luma 125 vs 113).
+
+### 16.5 Defensible headline claims (v2)
+1. Frequency features detect seen generators (0.966) and beat every pixel model trained only on our data on seen
+   generators, ModelScope and SVD (significant).
+2. Spatial + temporal drift beats either alone in CV for every model; drift is not a special SVD detector.
+3. Native-resolution crops instead of resizing matter (resize cost ≈0.10 AUROC, §1).
+4. Which cue transfers depends on the generator: frequency → ModelScope, pixel → Wan2.1 (both significant);
+   frequency + pixel fusion is best on seen generators (0.977) and Sora 2 (0.899).
+5. A large ImageNet-pretrained ResNet-18 generalises best to unseen generators (ModelScope 0.90, Wan2.1 0.93,
+   wild mean 0.78) — pretraining matters; ours trade some transfer for being ~200× smaller and interpretable.
+6. Thresholds do not transfer: unseen accuracy ≈ 0.53 at 0.5 despite AUROC ≈ 0.75.
