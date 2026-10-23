@@ -36,7 +36,7 @@ def test_predict_normal_clip(tmp_path, model_dir):
     t = time.time()
     r = Predictor(model_dir).predict(p, model="lr_all", check_content=False)
     assert 0 <= r.p_fake <= 1 and time.time() - t < 10
-    assert r.frames.shape == (16, 256, 256, 3) and r.top_features
+    assert r.frames.shape == (14, 256, 256, 3) and r.top_features
 
 
 def test_predict_short_clip_note(tmp_path, model_dir):

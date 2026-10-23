@@ -80,6 +80,42 @@ def read_frames(path, n_frames: int = 16, fps: int = 8, start: float = 0.0) -> n
     return np.stack(best)
 
 
+def read_frames_stride(path, n_frames: int = 14, target_fps: float = 8.0, start: float = 0.0) -> tuple[np.ndarray, float]:
+    """Every k-th native frame, k = max(1, round(native_fps / target_fps)), starting at `start` seconds.
+
+    Unlike time-based sampling, this never duplicates a frame and always gives evenly spaced frames,
+    whatever the source frame rate (time-based 8 fps sampling of 7 fps SVD output repeated 2 frames per
+    clip). Returns (frames, effective_fps). Loops only if the video has fewer than n_frames*k frames.
+    """
+    with av.open(str(path)) as c:
+        s = c.streams.video[0]
+        fps = float(s.average_rate) if s.average_rate else None
+    if not fps or fps <= 0:
+        fps = 24.0
+    k = max(1, int(round(fps / target_fps)))
+    first = int(round(start * fps))
+    wanted = [first + k * i for i in range(n_frames)]
+    last, want = wanted[-1], set(wanted)
+    kept = {}
+    with av.open(str(path)) as c:
+        s = c.streams.video[0]
+        s.thread_type = "AUTO"
+        for i, f in enumerate(c.decode(s)):
+            if i in want:
+                kept[i] = f.to_ndarray(format="rgb24")
+            if i >= last:
+                break
+    if len(kept) < n_frames:                      # too short (or start beyond end): restart / loop
+        if first > 0 and not kept:
+            return read_frames_stride(path, n_frames, target_fps, 0.0)
+        frames = [kept[i] for i in sorted(kept)]
+        if not frames:
+            raise ValueError(f"no frames decoded from {path}")
+        frames = [frames[j % len(frames)] for j in range(n_frames)]
+        return np.stack(frames), fps / k
+    return np.stack([kept[i] for i in wanted]), fps / k
+
+
 def read_all_frames(path, max_seconds: float | None = None) -> tuple[np.ndarray, float | None]:
     frames, _, rate = _decode_all(path, max_seconds)
     return np.stack(frames), rate

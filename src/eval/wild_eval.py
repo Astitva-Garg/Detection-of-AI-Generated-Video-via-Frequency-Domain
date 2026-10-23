@@ -19,7 +19,7 @@ import torch
 
 from src.config import FPS, MODELS, N_FRAMES, RAW_REAL, RESULTS
 from src.data.normalize import normalize_frames
-from src.data.video_io import h264_roundtrip, read_frames
+from src.data.video_io import h264_roundtrip, read_frames, read_frames_stride
 from src.data.wild import WILD
 from src.eval.evaluate import metrics
 from src.features.pixel_baseline import clip_pixel_features
@@ -33,7 +33,7 @@ MODEL_NAMES = ["mlp_fusion", "mlp_all", "lgbm_all", "mlp_pixel"]
 def _features(args):
     key, path = args
     try:
-        raw = read_frames(path, N_FRAMES, FPS)
+        raw, _ = read_frames_stride(path, N_FRAMES, FPS)
         pre = 512 if min(raw.shape[1:3]) > 576 else None
         frames = h264_roundtrip(normalize_frames(raw, pre), FPS, crf=18)
         f, seq = clip_features(frames)

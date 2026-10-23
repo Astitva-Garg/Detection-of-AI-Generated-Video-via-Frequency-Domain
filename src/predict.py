@@ -8,7 +8,7 @@ import torch
 from src.config import FPS, MODELS, N_FRAMES, SIZE
 from src.data.degrade import apply_degradation
 from src.data.normalize import normalize_frames
-from src.data.video_io import h264_roundtrip, probe, read_frames
+from src.data.video_io import h264_roundtrip, probe, read_frames_stride
 from src.features.pixel_baseline import clip_pixel_features
 from src.features.temporal import clip_features
 from src.models.cnn import SpecTempCNN, cnn_predict
@@ -69,11 +69,11 @@ class Predictor:
         notes = []
         meta = probe(video_path)
         if meta["duration"] is not None and meta["duration"] < (N_FRAMES - 1) / FPS:
-            notes.append(f"Clip is only {meta['duration']:.1f} s; frames were looped to make a 2 s window.")
+            notes.append(f"Clip is only {meta['duration']:.1f} s; frames were looped to fill the 14-frame window.")
         if min(meta["w"], meta["h"]) < SIZE:
             notes.append(f"Low resolution ({meta['w']}x{meta['h']}); upscaled to {SIZE}px, which removes "
                          "high-frequency detail and makes the decision less reliable.")
-        raw = read_frames(video_path, N_FRAMES, FPS, start)
+        raw, _ = read_frames_stride(video_path, N_FRAMES, FPS, start)
         # same final step as the stored training clips: 256x256 H.264 CRF 18 at 8 fps
         # mirror the real-clip training path: large videos are first brought to a generator-like size
         pre = 512 if min(raw.shape[1:3]) > 576 else None

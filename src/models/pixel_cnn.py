@@ -21,7 +21,7 @@ from sklearn.metrics import roc_auc_score
 
 from src.config import CLIPS, FEATURES, FPS, N_FRAMES, RAW_REAL, RESULTS, UNSEEN
 from src.data.normalize import normalize_frames
-from src.data.video_io import h264_roundtrip, read_frames
+from src.data.video_io import h264_roundtrip, read_frames, read_frames_stride
 from src.data.wild import WILD
 from src.eval.evaluate import metrics
 from src.models import data as D
@@ -39,7 +39,7 @@ def _clean_frames(clip_id: str) -> np.ndarray:
 
 def _deploy_frames(path: str) -> np.ndarray:
     """The app's preprocessing path (same as wild_eval)."""
-    raw = read_frames(path, N_FRAMES, FPS)
+    raw, _ = read_frames_stride(path, N_FRAMES, FPS)
     pre = 512 if min(raw.shape[1:3]) > 576 else None
     return h264_roundtrip(normalize_frames(raw, pre), FPS, crf=18)[FRAME_IDX]
 

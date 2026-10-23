@@ -4,7 +4,7 @@ from pathlib import Path
 import numpy as np
 
 from src.config import FPS, N_FRAMES, NORM_MODE, SIZE
-from src.data.video_io import h264_roundtrip, probe, read_frames, resize_crop, resize_short, write_video
+from src.data.video_io import h264_roundtrip, probe, read_frames_stride, resize_crop, resize_short, write_video
 
 
 def centre_crop(frames: np.ndarray, size: int = SIZE) -> np.ndarray:
@@ -26,7 +26,7 @@ def normalize_frames(frames: np.ndarray, pre_short_side: int | None = None, mode
 
 def normalize_clip(src, dst, pre_short_side: int | None = None, start: float = 0.0) -> dict:
     meta = probe(src)
-    frames = read_frames(src, N_FRAMES, FPS, start)
+    frames, _ = read_frames_stride(src, N_FRAMES, FPS, start)
     out = normalize_frames(frames, pre_short_side)
     write_video(Path(dst), out, FPS, crf=18)
     return {"orig_w": meta["w"], "orig_h": meta["h"], "orig_fps": meta["fps"],
