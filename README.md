@@ -2,6 +2,8 @@
 
 IE 643 course project — team *mdhkideggimirch* (Astitva Garg, 24B2440).
 
+Repository: https://github.com/Astitva-Garg/Detection-of-AI-Generated-Video-via-Frequency-Domain
+
 A lightweight detector that decides whether a short clip is **camera-captured** or **diffusion-generated**
 from (a) spatial frequency-domain signatures of each frame and (b) how those signatures **drift from frame
 to frame**. Includes a curated real-vs-AI dataset pipeline (5 open T2V/I2V generators), evaluation on
