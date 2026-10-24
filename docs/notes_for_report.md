@@ -48,7 +48,7 @@
 - 22 Oct: 12 more real clips removed because their titles show computer-generated footage ("CG Footage of
   Stars in Outer Space", "Digital Abstract Art", "abstract geometry background", "Stars in Space" ×3, …);
   exclusion terms added to scenes.yaml. Final real clips: 432.
-- Per real clip: main 2 s window starting at 1 s; train clips ≥ 7 s give a second window at 4 s
+- Per real clip: main window (14 frames) starting at 1 s; train clips ≥ 7 s give a second window at 4 s
   (augmentation, train only).
 
 ### AI-generated
@@ -69,7 +69,8 @@
 - Counts per generator/split: <FILL from results/summary.json "counts">.
 
 ### Normalisation (identical for real and fake)
-- Sample 16 frames at 8 fps (2 s) by nearest timestamp; loop only if the clip is shorter than 2 s.
+- [FINAL, see §16] Take 14 frames, every k-th native frame with k = round(native fps / 8) (≈1.75–1.9 s,
+  effective 7–8.3 fps). Earlier runs used 16 frames at 8 fps by nearest timestamp, which duplicated 2 SVD frames.
 - Real only: downscale to a short side drawn from {256, 320, 480, 512, 576} (the generators' native
   sizes) and H.264-encode (CRF 18) — so real clips go through a similar resample + compression chain as
   generated ones (prevents a "4K vs 512 px" shortcut).
@@ -94,7 +95,7 @@ Per frame, on luminance, Hann window, mean removed:
   Nyquist, spectral centroid, 85 % roll-off.
 - 8×8 block-DCT energy fractions (low / mid / high zig-zag bands).
 - Energy in 8 orientation wedges above 25 % Nyquist.
-Clip level: mean and std over the 16 frames (prefix `sp_`).
+Clip level: mean and std over the 14 frames (prefix `sp_`).
 Temporal drift (prefix `drift_` / `rt_`):
 - L2 and cosine distance between consecutive radial spectra → mean, std, max, lag-1 autocorrelation;
   second-order drift (|Δ of drift|); drift in low / mid / high thirds of the spectrum.
@@ -113,7 +114,7 @@ Temporal drift (prefix `drift_` / `rt_`):
   lr 1e-3, weight decay 1e-4; cosine LR schedule over 200 epochs; batch 64; early stopping (patience 20)
   on validation AUROC.
 - Spectro-temporal CNN: shared frequency encoder per frame (Conv1d 2→16, k5 → Conv1d 16→32, k5,
-  stride 2 → adaptive pool to 8) → temporal Conv1d stack (256→64→64, k3) over the 16 frames → mean+max
+  stride 2 → adaptive pool to 8) → temporal Conv1d stack (256→64→64, k3) over the 14 frames → mean+max
   pooling over time → dropout 0.3 → linear. <FILL param count> parameters. BCEWithLogits with positive
   weight, AdamW lr 1e-3, wd 1e-4, cosine schedule, 60 epochs, batch 32, early stopping (patience 10) on
   val AUROC, time-reversal augmentation, per-bin standardisation from train statistics.
@@ -129,6 +130,10 @@ Temporal drift (prefix `drift_` / `rt_`):
   shortcut baseline; (6) degradation-aware training; (7) CNN vs feature models.
 
 ## Results (main pipeline = native crop; files in results_crop/, figures in results_crop/figures/)
+
+> **READ FIRST: the FINAL numbers are in §16 at the end of this file.** Sections 1–15 below are the history of
+> earlier runs (before the CG-clip cleanup and before the SVD duplicated-frame fix). Their numbers are
+> superseded; keep them only to describe how the project evolved (e.g. the resize-vs-crop finding in §1).
 
 > **Use section 14 (FINAL) for all numbers in the report/slides.** Sections 1–13 record how the work
 > progressed; their numbers were computed before 12 computer-generated clips were removed from the real class
@@ -193,7 +198,7 @@ Generation time on the laptop: LTX 104 min, AnimateDiff 147 min, SVD 388 min, Mo
 - per_scene.png: test subsets per scene are tiny (6–17 clips); treat as anecdotal.
 
 ## Interface methodology
-- Gradio 2-tab app (`app.py`). Upload → identical preprocessing to training (16 frames at 8 fps,
+- Gradio 2-tab app (`app.py`). Upload → identical preprocessing to training (14 frames, stride ≈8 fps,
   256×256, H.264 CRF 18 round trip) → features → chosen model → verdict.
 - Explanations: frames + 2D spectra; clip radial/residual spectrum vs training-set real/fake means;
   drift-over-time plots; top feature contributions (LightGBM SHAP values / linear coef × value).
@@ -272,7 +277,7 @@ attribution_confusion.png). Chance = 0.167 balanced accuracy.
   Kling (30), HunyuanVideo (60), "Wan2" (40; exact Wan version unknown). 1280×704–720, 24–30 fps, 8–15 s.
   Content is NOT scenery (lab demos, people, objects); prompts and post-processing unknown. Accessed 21 Oct 2026.
 - Compared against the 68 real test clips. ALL clips (fake and real) go through the app's deployment path
-  (src/predict.py: first 2 s at 8 fps, short side > 576 px downscaled to 512, native 256 crop, H.264 CRF 18).
+  (src/predict.py: first 14 frames at stride ≈8 fps, short side > 576 px downscaled to 512, native 256 crop, H.264 CRF 18).
 - AUROC (all clips):
 | source | CNN | MLP freq | MLP fusion | LGBM freq | MLP pixel |
 |---|---|---|---|---|---|

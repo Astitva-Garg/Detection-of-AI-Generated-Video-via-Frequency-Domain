@@ -157,8 +157,8 @@ def build_ui():
     with gr.Blocks(title="AI-Generated Video Detector") as demo:
         gr.Markdown("# AI-Generated Video Detection via Frequency Domain\n"
                     "IE 643 course project. Upload a short clip (scenery works best: no prominent people, "
-                    "animals or objects). The detector reads the **spatial frequency spectrum** of 16 frames "
-                    "(2 s at 8 fps) and how that spectrum **drifts from frame to frame**.")
+                    "animals or objects). The detector reads the **spatial frequency spectrum** of 14 frames "
+                    "(every k-th frame, ≈8 fps, ≈1.8 s) and how that spectrum **drifts from frame to frame**.")
         with gr.Tab("Detect"):
             with gr.Row():
                 with gr.Column(scale=1):

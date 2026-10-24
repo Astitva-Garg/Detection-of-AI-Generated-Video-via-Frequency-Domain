@@ -11,7 +11,7 @@ seen / unseen generators and degraded videos, interpretability figures and a Gra
 
 ```
 Pexels-400k metadata ─► real clips ─┐
-                                    ├─► content filter (YOLOv8n) ─► normalise (8 fps, 16 frames, native 256² crop, H.264)
+                                    ├─► content filter (YOLOv8n) ─► normalise (14 frames, every k-th native frame ≈8 fps, native 256² crop, H.264)
 5 generators (diffusers) ─► fakes ──┘        │
                                              ├─► manifest.csv (labels, generator, group-level splits)
                                              ├─► degraded copies (H.264 CRF 23/30/38, 0.5× down, blur, noise)
@@ -36,17 +36,21 @@ Pexels-400k metadata ─► real clips ─┐
 
 ## Results (held-out test AUROC, mean ± std over 5 training seeds)
 
-| Model | Seen generators | Unseen ModelScope | Unseen Wan2.1 | In the wild (Sora 2 / mean of 5) |
-|---|---|---|---|---|
-| MLP, frequency + pixel fusion (app default) | 0.985 ± 0.003 | 0.745 ± 0.022 | 0.869 ± 0.010 | 0.879 / 0.741 |
-| MLP, frequency (spatial + temporal drift) | 0.959 ± 0.003 | 0.762 ± 0.022 | 0.739 ± 0.007 | 0.842 / 0.725 |
-| Spectro-temporal 1D-CNN | 0.955 ± 0.012 | 0.743 ± 0.019 | 0.667 ± 0.009 | 0.851 / 0.772 |
-| MLP, pixel baseline | 0.879 ± 0.005 | 0.575 ± 0.010 | 0.801 ± 0.020 | 0.761 / 0.691 |
+| Model | Params | Seen generators | Unseen ModelScope | Unseen Wan2.1 | In the wild (Sora 2 / mean of 5) |
+|---|---|---|---|---|---|
+| MLP, frequency + pixel fusion (app default) | ~50k | 0.977 ± 0.003 | 0.744 ± 0.024 | 0.819 ± 0.008 | 0.899 / 0.754 |
+| MLP, frequency (spatial + temporal drift) | ~45k | 0.966 ± 0.006 | 0.798 ± 0.008 | 0.690 ± 0.012 | 0.855 / 0.727 |
+| Spectro-temporal 1D-CNN | 65k | 0.919 ± 0.021 | 0.740 ± 0.029 | 0.640 ± 0.052 | 0.859 / 0.757 |
+| MLP, pixel statistics (baseline) | ~15k | 0.889 ± 0.007 | 0.619 ± 0.027 | 0.827 ± 0.015 | 0.772 / 0.694 |
+| Pixel CNN from scratch (baseline) | 590k | 0.808 ± 0.027 | 0.598 ± 0.057 | 0.871 ± 0.011 | 0.747 / 0.679 |
+| ResNet-18, ImageNet-pretrained, fine-tuned (baseline) | 11.2M | 0.954 ± 0.009 | 0.900 ± 0.010 | 0.926 ± 0.017 | 0.809 / 0.781 |
 
-Grouped 5-fold CV on seen generators (LightGBM / MLP): frequency 0.925 / 0.929, fusion 0.948 / 0.936,
-pixel 0.894 / 0.853. Resizing frames to 256 px instead of a native-resolution crop cost ≈0.10 AUROC.
+Grouped 5-fold CV on seen generators (LightGBM / MLP): spatial + temporal 0.906 / 0.909, fusion 0.929 / 0.928,
+pixel 0.884 / 0.842. Resizing frames to 256 px instead of a native-resolution crop cost ≈0.10 AUROC.
+Frames are sampled with a fixed stride of native frames (14 frames, ≈8 fps): time-based resampling had
+duplicated frames in SVD clips, a shortcut found by `src/data/audit.py` and fixed before these results.
 In the wild = public clips from Sora 2, Veo 3, Kling, HunyuanVideo, Wan2 (different content; stress test only).
-Full tables: `results_crop/*.csv`; figures: `results_crop/figures/`; notes: `docs/notes_for_report.md` §14.
+Full tables: `results_crop/*.csv`; figures: `results_crop/figures/`; notes: `docs/notes_for_report.md` §16.
 
 ## Setup
 
@@ -75,6 +79,9 @@ python app.py                                       # 10. interface at http://12
 python -m src.eval.bootstrap                        # extra: bootstrap 95 % CIs for test AUROC and model differences
 python -m src.eval.attribution                      # extra: 6-class generator attribution (grouped CV)
 python -m src.data.wild && python -m src.eval.wild_eval   # extra: in-the-wild stress test (Sora 2, Veo 3, Kling, ...)
+python -m src.eval.seed_stability                   # extra: 5-seed stability of the main models
+python -m src.models.pixel_cnn                      # extra: pixel CNN from scratch + fine-tuned ResNet-18 baselines
+python -m src.data.audit                            # extra: dataset audit (repeated frames, duplicates, borders)
 python -m src.eval.seed_stability                   # extra: retrain main models with 5 seeds (needs wild_eval first)
 pytest                                              # unit tests
 ```
