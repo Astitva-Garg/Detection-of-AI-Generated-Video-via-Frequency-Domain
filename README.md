@@ -79,7 +79,6 @@ python app.py                                       # 10. interface at http://12
 python -m src.eval.bootstrap                        # extra: bootstrap 95 % CIs for test AUROC and model differences
 python -m src.eval.attribution                      # extra: 6-class generator attribution (grouped CV)
 python -m src.data.wild && python -m src.eval.wild_eval   # extra: in-the-wild stress test (Sora 2, Veo 3, Kling, ...)
-python -m src.eval.seed_stability                   # extra: 5-seed stability of the main models
 python -m src.models.pixel_cnn                      # extra: pixel CNN from scratch + fine-tuned ResNet-18 baselines
 python -m src.data.audit                            # extra: dataset audit (repeated frames, duplicates, borders)
 python -m src.eval.seed_stability                   # extra: retrain main models with 5 seeds (needs wild_eval first)
