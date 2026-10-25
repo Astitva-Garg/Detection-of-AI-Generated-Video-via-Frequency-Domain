@@ -26,6 +26,6 @@ When `run.log` ends with `generated OK: …` and `wan_clips.tgz`, download `wan_
 cd /c/ie643_data/raw/fake && mv wan wan_local_backup && tar xzf wan_clips.tgz
 ```
 
-Then tell Claude — it reruns filter → build → features → train → evaluate → figures.
+Then rerun the pipeline: it runs filter → build → features → train → evaluate → figures.
 
 **Stop the cloud machine afterwards** so it stops billing.
