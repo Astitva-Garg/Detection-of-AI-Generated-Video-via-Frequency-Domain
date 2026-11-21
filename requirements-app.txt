@@ -1,0 +1,17 @@
+# Minimal packages to run the Gradio demo (python app.py) on any machine, CPU only. Python 3.11.
+# Same pins as requirements.txt, without the generation / training extras.
+torch==2.11.0
+numpy==2.4.6
+scipy==1.17.1
+pandas==3.0.6
+scikit-learn==1.9.1
+lightgbm==4.7.0
+matplotlib==3.11.2
+gradio==6.30.0
+gradio_client==2.7.2
+av==18.1.0
+opencv-python-headless==5.0.0.93
+joblib==1.6.0
+pyyaml==6.0.3
+# Optional: only for the "prominent person/animal/object" warning (the app works without it).
+ultralytics==8.4.183

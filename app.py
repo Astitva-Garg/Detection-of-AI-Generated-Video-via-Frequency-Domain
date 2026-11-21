@@ -13,14 +13,14 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 
-from src.config import N_BINS, RESULTS
+from src.config import MODELS, N_BINS, RESULTS
 from src.data.degrade import DEGRADATIONS
 from src.features.spatial import power_spectrum, to_luma
 from src.predict import Predictor
 
 ROOT = Path(__file__).parent
 EXAMPLES = sorted((ROOT / "examples").glob("*.mp4"))
-REF = ROOT / "models" / "reference_spectra.json"   # class-mean radial spectra, written by build_reference()
+REF = MODELS / "reference_spectra.json"   # class-mean radial spectra, written by build_reference()
 P = Predictor()
 x_freq = (np.arange(N_BINS) + 0.5) / N_BINS
 
