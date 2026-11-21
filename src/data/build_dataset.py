@@ -11,6 +11,7 @@ import pandas as pd
 
 from src.config import (CLIPS, DATA_ROOT, SUF, DEGRADED, FPS, N_FRAMES, RAW_FAKE, RAW_REAL, REAL_PRE_SIDES,
                         SEEN, UNSEEN)
+from src.data.content_filter import data_key
 from src.data.degrade import DEGRADATIONS, apply_degradation
 from src.data.normalize import normalize_clip
 from src.data.pexels import _word_re, load_scenes
@@ -26,7 +27,7 @@ def _content() -> dict[str, tuple[bool, float]]:
     if not p.exists():
         return {}
     df = pd.read_csv(p)
-    return {r.path: (bool(r.allowed), float(r.frac)) for r in df.itertuples()}
+    return {data_key(r.path): (bool(r.allowed), float(r.frac)) for r in df.itertuples()}
 
 
 def candidate_rows() -> list[dict]:
@@ -38,9 +39,9 @@ def candidate_rows() -> list[dict]:
         if excluded.search(r.title.replace("· Free Stock Video", "")):
             continue
         src = RAW_REAL / f"{r.pexels_id}.mp4"
-        if not src.exists() or str(src) not in content:
+        if not src.exists() or data_key(src) not in content:
             continue
-        ok, frac = content[str(src)]
+        ok, frac = content[data_key(src)]
         if not ok:
             continue
         g = f"real_{r.pexels_id}"
@@ -59,9 +60,9 @@ def candidate_rows() -> list[dict]:
         for line in man.read_text(encoding="utf-8").splitlines():
             j = json.loads(line)
             src = RAW_FAKE / gen / f"{j['id']}.mp4"
-            if j["status"] != "ok" or not src.exists() or str(src) not in content:
+            if j["status"] != "ok" or not src.exists() or data_key(src) not in content:
                 continue
-            ok, frac = content[str(src)]
+            ok, frac = content[data_key(src)]
             if not ok:
                 continue
             split = "test" if gen in UNSEEN else assign_split(j["group_id"])
@@ -87,7 +88,7 @@ def _degrade(row: dict, names: list[str]) -> list[dict]:
     return out
 
 
-def main(workers: int) -> None:
+def main(workers: int, degraded: bool = True) -> None:
     CLIPS.mkdir(parents=True, exist_ok=True)
     old = pd.read_csv(MANIFEST) if MANIFEST.exists() else pd.DataFrame(columns=["clip_id"])
     cands = candidate_rows()
@@ -113,6 +114,8 @@ def main(workers: int) -> None:
     man = man.drop(columns=[c for c in ("src", "pre", "n_src_frames") if c in man.columns])
     man.to_csv(MANIFEST, index=False)
     print(man.groupby(["generator", "split"]).size().unstack(fill_value=0).to_string())
+    if not degraded:
+        return
 
     # degraded copies: every test clip gets all degradations; every non-aug train clip gets one
     # (for degradation-aware training)
@@ -147,4 +150,6 @@ def main(workers: int) -> None:
 if __name__ == "__main__":
     ap = argparse.ArgumentParser()
     ap.add_argument("--workers", type=int, default=6)
-    main(ap.parse_args().workers)
+    ap.add_argument("--skip-degraded", action="store_true", help="only the clean clips and the manifest")
+    a = ap.parse_args()
+    main(a.workers, not a.skip_degraded)

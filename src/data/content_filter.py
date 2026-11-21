@@ -22,6 +22,16 @@ BLOCKED_CLASSES = set(COCO)
 THRESH = 0.05
 
 
+def data_key(p) -> str:
+    """Location of a raw clip inside the data folder ('raw/real/<id>.mp4'), whatever machine or folder it sits in.
+
+    The results file used to store absolute paths, which stop matching as soon as the data folder moves.
+    Old absolute paths are mapped to the same key, so existing files keep working.
+    """
+    s = str(p).replace("\\", "/")
+    return "raw/" + s.split("/raw/", 1)[1] if "/raw/" in s else s
+
+
 def is_allowed(frac: float, thresh: float = THRESH) -> bool:
     return frac <= thresh
 
@@ -49,11 +59,11 @@ def main() -> None:
     from src.data.video_io import read_frames
     model = YOLO("yolov8n.pt")
     out = DATA_ROOT / "content_filter.csv"
-    done = set(pd.read_csv(out)["path"]) if out.exists() else set()
+    done = {data_key(x) for x in pd.read_csv(out)["path"]} if out.exists() else set()
     paths = sorted(RAW_REAL.glob("*.mp4")) + sorted(RAW_FAKE.glob("*/*.mp4"))
     rows = []
     for i, p in enumerate(paths):
-        if str(p) in done:
+        if data_key(p) in done:
             continue
         try:
             frames = read_frames(p, 16, 8)
@@ -61,7 +71,7 @@ def main() -> None:
         except Exception as e:
             print("skip", p, e)
             continue
-        rows.append({"path": str(p), "frac": frac, "cls": cls, "allowed": is_allowed(frac)})
+        rows.append({"path": data_key(p), "frac": frac, "cls": cls, "allowed": is_allowed(frac)})
         if len(rows) >= 50:
             pd.DataFrame(rows).to_csv(out, mode="a", header=not out.exists(), index=False)
             rows = []
