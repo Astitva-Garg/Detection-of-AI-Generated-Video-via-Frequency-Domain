@@ -45,7 +45,7 @@ It runs on real held-out clips and prints every step (outputs in `demo_output/`)
 4. compares pixel-only, frequency-only and fusion models on the same 267 held-out clips, with 95 % bootstrap
    intervals, and checks the live numbers against the stored results (`--retrain` also retrains from the training
    features);
-5. `--video my_clip.mp4` traces any video you give it from the raw file to the verdict.
+5. `--video examples/<file>.mp4` traces any video you give it from the raw file to the verdict. `examples/` holds 18 held-out clips (3 real, 3 each from five generators) with the shipped model's verdict on each, wrong ones included ([`examples/README.md`](examples/README.md)).
 
 The interface: double-click `run_app.bat` (first run installs the packages, a few minutes), or
 `python app.py`, then open http://127.0.0.1:7860. The first analysis takes about 10 s (the object detector loads),
@@ -63,10 +63,10 @@ src/models/     classic.py (LR, SVM, LightGBM, MLP), cnn.py, pixel_cnn.py (pixel
 src/eval/       evaluate, cv, bootstrap, seed_stability, attribution, wild_eval
 src/viz/        figures and the app's reference data
 src/predict.py  the deployment path (raw video to verdict);  src/demo_live.py  the live demo
-tools/          make_bundle.py: builds the data bundle (dist/, git-ignored)
+tools/          make_bundle.py (data bundle), make_examples.py (the example clips)
 models_crop/    trained models (main pipeline)            results_crop/   results and figures (main pipeline)
 results/        cross-validation of the resize variant (see results/README.md)
-examples/       8 held-out clips for the app      tests/   unit tests      docs/   report and slides
+examples/       18 held-out clips (3 per source) for the app and --video      tests/   unit tests      docs/   report and slides
 data/           the dataset (not in git, see below)
 ```
 
