@@ -1,18 +1,32 @@
+# environments and caches
 .venv/
+.venv-app/
 __pycache__/
 *.pyc
 .pytest_cache/
+.gradio/
+gradio_cached_examples/
 .superpowers/
+
+# data (a link to the data folder) and generated outputs: see README
+/data/
+/demo_output/
+
+# downloaded detector weights
+yolov8*.pt
+
+# videos: only the bundled examples are tracked
 *.mp4
 *.mov
 *.avi
 *.mkv
 *.webm
 !examples/*.mp4
-*.pt.tmp
-gradio_cached_examples/
-.gradio/
-yolov8*.pt
-results_crop_old16/
-docs/IE643_Project_Report*.docx
-docs/~$*.docx
+
+# personal notes and drafts
+/notes/
+docs/*.docx
+docs/~$*
+
+# built distribution files
+/dist/
