@@ -86,7 +86,7 @@ py -3.11 -m venv .venv
 
 `data/` is not in git. Its layout, what each folder is, how it was made, sizes and known issues are in
 [`data/README.md`](data/README.md). To reproduce from the normalised clips you need the data bundle (the
-manifests, `clips_crop/`, the small files of `features_crop/`, about 150 MB); put it in `data/` and check it:
+manifests, `clips_crop/`, the small files of `features_crop/`, 173 MB zip); unzip it **in the project root** (the zip already contains the `data/` folder) and check it:
 
 ```bash
 python -m src.data.checksums --verify        # compares 1,294 core files with data/SHA256SUMS.txt
