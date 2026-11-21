@@ -1,0 +1,16 @@
+model,features,crop,resize,resize_minus_crop
+lgbm,all,0.906,0.832,-0.074
+lgbm,fusion,0.929,0.912,-0.017
+lgbm,pixel,0.884,0.88,-0.004
+lgbm,spatial,0.877,0.801,-0.076
+lgbm,temporal,0.876,0.787,-0.089
+lr,all,0.876,0.782,-0.094
+lr,fusion,0.902,0.851,-0.051
+lr,pixel,0.836,0.843,0.007
+lr,spatial,0.864,0.771,-0.093
+lr,temporal,0.804,0.765,-0.039
+mlp,all,0.909,0.825,-0.084
+mlp,fusion,0.928,0.888,-0.04
+mlp,pixel,0.842,0.873,0.031
+mlp,spatial,0.902,0.801,-0.101
+mlp,temporal,0.874,0.808,-0.066
