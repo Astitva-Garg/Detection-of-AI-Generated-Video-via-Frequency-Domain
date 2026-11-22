@@ -37,7 +37,7 @@
   figcaption { font-size:13.6pt; color:var(--blue); margin-top:0.8mm; line-height:1.2; text-align:center; }
   figcaption b { color:#000; }
   .two { display:grid; grid-template-columns:1fr 1fr; column-gap:4mm; align-items:start; }
-  .two figure { margin-bottom:1mm; } .two img { max-height:43mm; width:auto; max-width:100%; }
+  .two figure { margin-bottom:1mm; } .two img { max-height:60mm; width:auto; max-width:100%; }
   table { border-collapse:collapse; margin:1mm auto 1mm; font-size:15pt; }
   th, td { border:1px solid #777; padding:0.7mm 3mm; text-align:center; }
   td.l, th.l { text-align:left; }
@@ -56,7 +56,7 @@
   .refs { font-size:9.6pt; line-height:1.15; margin:0; padding-left:0; list-style:none; } .refs li { margin-bottom:1mm; }
   .qrrow { display:flex; justify-content:space-around; align-items:flex-start; text-align:center; font-weight:700; font-size:13pt; margin-top:1mm; }
   .qrrow .url { font-size:8.5pt; font-weight:400; max-width:100mm; word-break:break-all; line-height:1.15; margin-top:0.8mm; }
-  .qrrow img { width:27mm; height:27mm; display:block; margin:0 auto; }
+  .qrrow img { width:32mm; height:32mm; display:block; margin:0 auto; }
   .qrrow .ph { width:32mm; height:32mm; border:2px dashed #777; display:flex; align-items:center; justify-content:center; font-weight:400; font-size:12pt; margin:0 auto; }
 </style>
 </head>
@@ -98,10 +98,10 @@ features on identical held-out clips. Frequency cues win on trained generators (
 <li><b>Relevance:</b> text-to-video diffusion models (Sora 2, Veo 3, Kling, Wan) have passed the point where people can reliably tell their output from real footage, and open models (LTX-Video, Wan2.1) put this capability in everyone&rsquo;s hands.</li>
 <li><b>Significance:</b> misinformation, fraud and tampered evidence need detectors. A detector tied to one generator&rsquo;s artefacts fails on the next release, so it must rest on cues that all generators share and be tested on generators it has never seen.</li>
 <li><b>Why frequency:</b> diffusion models synthesise frames by iterative denoising and up-sampling, which leaves systematic traces in the power spectrum (excess or missing energy at high spatial frequencies) and in how the spectrum drifts between frames (Figure 1) [1&ndash;5].</li>
-<li><b>Why deep learning:</b> the traces are spread over hundreds of weak, correlated features, and no hand-written rule separates them. Networks learn the decision boundary from data: an MLP on 263 spectral features and a 1D-CNN on the 2 &times; 14 &times; 48 radial-spectrum sequence, against pixel-statistics models and a fine-tuned ResNet-18 as baselines.</li>
+<li><b>Why deep learning:</b> the traces are spread over hundreds of weak, correlated features, and no hand-written rule separates them. Networks learn the decision boundary from data: an MLP on 263 spectral features and a 1D-CNN on the 2 &times; 14 &times; 48 radial-spectrum sequence, against pixel-statistics models and a fine-tuned ResNet-18 [6] as baselines.</li>
 </ul>
 <figure style="margin:1mm 0 1mm">
-<img src="figs/fig_spectra.png" style="width:250mm">
+<img src="figs/fig_spectra.png" style="width:222mm">
 <figcaption><b>Figure 1:</b> How the spectrum maps are made (top) and each generator&rsquo;s fingerprint (bottom). * = never seen in training.</figcaption>
 </figure>
 <p style="font-size:15pt;margin-bottom:2mm"><b>How to read it.</b> A 2-D FFT turns a frame into a map of how much energy it has at each spatial frequency: the centre is coarse structure (big shapes), the edges are fine detail (texture, noise). Averaging 40 clips and subtracting the real average leaves a generator&rsquo;s fingerprint: <span style="color:#1f5fa8"><b>blue</b></span> = less energy than camera video at that frequency, <span style="color:#b2182b"><b>red</b></span> = more. The generators differ from real, and from each other (LTX-Video shows a regular dot grid, a periodic artefact that is plausibly from up-sampling). That makes the spectrum a usable signal, and explains why a detector trained on some generators carries over only partly to others.</p>
@@ -109,12 +109,16 @@ features on identical held-out clips. Frequency cues win on trained generators (
 <h2>Workflow</h2>
 <p>Figure 2 shows the seven steps, from collecting clips to sharing the code.</p>
 <figure>
-<img src="figs/fig_workflow.png" style="width:250mm">
+<img src="figs/fig_workflow.png" style="width:230mm">
 <figcaption><b>Figure 2:</b> Overall workflow. Step 6 (red) is the novelty assessment.</figcaption>
 </figure>
 
 <h2>Methodology</h2>
-<p>Figure 3 (top of the right column) follows one clip through the system: two groups of numbers, A and B, are measured and a small neural network turns them into the chance that the clip is AI-made. Table 1 lists exactly what is measured.</p>
+<p>Figure 3 follows one clip through the system: two groups of numbers, A and B, are measured and a small neural network turns them into the chance that the clip is AI-made. Table 1 (right column) lists exactly what is measured.</p>
+<figure>
+<img src="figs/fig_architecture.png" style="width:194mm">
+<figcaption><b>Figure 3:</b> Overall architecture, with the real curves of one test clip.</figcaption>
+</figure>
 
 
 </div>
@@ -122,15 +126,12 @@ features on identical held-out clips. Frequency cues win on trained generators (
 <!-- ================= RIGHT COLUMN ================= -->
 <div class="col">
 
-<figure>
-<img src="figs/fig_architecture.png" style="width:130mm">
-<figcaption><b>Figure 3:</b> Overall architecture, with the real curves of one test clip.</figcaption>
-</figure>
+
 <table class="feat">
 <tr><th>Group</th><th>#</th><th>What is measured</th></tr>
 <tr><td><b>A</b> fine detail</td><td>226</td><td>Per frame (113 values, then mean and std over frames): radial power spectrum (48 bins); the same for the noise residual (frame minus its 3&times;3 median, 48 bins); spectral slope; energy share beyond 25/50/75 % of Nyquist; centroid; 85 % roll-off; DCT low/mid/high shares; energy in 8 orientations.</td></tr>
 <tr><td><b>B</b> change over time</td><td>37</td><td>L2 and cosine distance between consecutive frames&rsquo; radial spectra (mean, std, max, lag-1 autocorrelation); second-order change; low/mid/high-band drift; drift of slope, high-frequency share, centroid, DCT-high; 5 noise-residual features (lag-1 temporal correlation, high-temporal-frequency share, energy, residual-spectrum drift).</td></tr>
-<tr><td><b>Control</b> pixels</td><td>74</td><td>Mean and std over frames: HSV histograms (8 bins &times; 3), luminance mean, std, 5/50/95th percentiles, Sobel gradient mean, std, p95, Laplacian variance, edge density, saturation mean, std; plus mean frame difference.</td></tr>
+<tr><td><b>Control</b> pixels</td><td>74</td><td>Mean and std over frames: HSV histograms (8 bins &times; 3), luminance mean, std, 5/50/95th percentiles, Sobel gradient mean, std, p95, Laplacian variance, edge density, saturation mean, std; plus mean and std of the frame difference.</td></tr>
 </table>
 <div class="tcap"><b>Table 1:</b> Features. Models: LR, SVM, LightGBM and an MLP (263&rarr;128&rarr;64&rarr;1) on A + B; a 1D-CNN on the 2 &times; 14 &times; 48 spectrum sequence; ResNet-18 (11 M weights, fine-tuned) on raw frames.</div>
 
@@ -163,20 +164,20 @@ features on identical held-out clips. Frequency cues win on trained generators (
 </div>
 
 <h2>Results</h2>
-<p>On the same held-out clips, fine detail beats pixel statistics on trained generators: <b>0.966 vs 0.889</b> (5-run means; for the shipped model the paired gap is +0.079, 95 % interval +0.02 to +0.14). On new generators the picture is mixed (Figure 6, Table 3).</p>
+<p>On the same held-out clips, fine detail beats pixel statistics on trained generators: <b>0.966 vs 0.889</b> (5-run means; for the final trained model the paired gap is +0.079, 95 % interval +0.02 to +0.14). On new generators the picture is mixed (Figure 6, Table 3).</p>
 <div style="display:grid;grid-template-columns:0.82fr 1.18fr;column-gap:4mm;align-items:center">
-<figure style="margin:0"><img src="figs/fig_compare.png" style="width:100%"><figcaption><b>Figure 6:</b> Shipped model (one run): pixel vs detail vs both. Black lines: 95 % range. Table 3 gives 5-run means.</figcaption></figure>
+<figure style="margin:0"><img src="figs/fig_compare.png" style="width:100%"><figcaption><b>Figure 6:</b> Final trained model (one run): pixel vs detail vs both. Black lines: 95 % range. Table 3 gives 5-run means.</figcaption></figure>
 <div>
 <table class="res">
-<tr><th class="l">AUROC</th><th>Trained-on</th><th>Model-Scope (new)</th><th>Wan2.1 (new)</th><th>250 public</th></tr>
+<tr><th class="l">AUROC</th><th>Trained-on</th><th>ModelScope (new)</th><th>Wan2.1 (new)</th><th>250 public</th></tr>
 <tr><td class="l">Pixel statistics</td><td>0.889</td><td>0.619</td><td>0.827</td><td>0.694</td></tr>
 <tr><td class="l">Pixel CNN</td><td>0.808</td><td>0.598</td><td>0.871</td><td>0.679</td></tr>
 <tr><td class="l">ResNet-18</td><td>0.954</td><td><b>0.900</b></td><td><b>0.926</b></td><td><b>0.781</b></td></tr>
 <tr><td class="l"><b>Ours:</b> detail</td><td>0.966</td><td>0.798</td><td>0.690</td><td>0.727</td></tr>
 <tr><td class="l"><b>Ours:</b> time CNN</td><td>0.919</td><td>0.740</td><td>0.640</td><td>0.757</td></tr>
-<tr><td class="l"><b>Ours:</b> detail + pixels</td><td><b>0.977</b></td><td>0.744</td><td>0.819</td><td>0.754</td></tr>
+<tr><td class="l"><b>Ours:</b> combined</td><td><b>0.977</b></td><td>0.744</td><td>0.819</td><td>0.754</td></tr>
 </table>
-<div class="tcap" style="margin-bottom:0"><b>Table 3:</b> Unseen-clip scores, mean of 5 runs. Heavy compression, blur or down-scaling cost 0.2&ndash;0.3.</div>
+<div class="tcap" style="margin-bottom:0"><b>Table 3:</b> Held-out scores, mean of 5 runs. Heavy compression, blur or down-scaling cost 0.2&ndash;0.3.</div>
 </div></div>
 
 <h2>Conclusion</h2>
