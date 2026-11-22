@@ -73,13 +73,14 @@ Caveats: the ResNet-18 here is the single stored seed-643 checkpoint; the prompt
 
 | Poster item | Source file | Written by |
 |---|---|---|
-| Figure 1: mean spectra, real and generator minus real (40 clips per source) | `data/manifest_crop.csv`, `data/clips_crop/` | `tools/make_poster_figures.py` (`spectra`) |
+| Figure 1: how the spectrum maps are made (one real frame, its spectrum, the real average, LTX minus real) and each generator's difference from real (40 clips per source) | `data/manifest_crop.csv`, `data/clips_crop/` | `tools/poster_spectra.py` |
 | Figures 2 and 3: workflow and architecture diagrams (Figure 3 holds the real curves of one held-out clip and the shipped model's verdict) | `data/clips_crop/`, `results_crop/predictions.csv` | `tools/poster_diagrams.py` |
 | Figure 4: resize vs native crop | `resize_ablation_cv.csv` | stage `ablation` |
 | Figure 5: frame shuffling | `temporal_order.csv` | stage `extras` |
 | Figure 6: pixel vs frequency vs fusion with intervals | `live_comparison.csv` | stage `demo` (`python -m src.demo_live`) |
-| Figure 7 and Table 2: all models, 5 seeds | `seed_stability.csv`, `pixel_deep.csv` | stages `seeds`, `deep` |
-| Table 1: clips per source and split | `data/manifest_crop.csv` | stage `dataset` |
+| Table 3 (all models, 5 seeds; Figure 7 was dropped as it repeated this table) | `seed_stability.csv`, `pixel_deep.csv` | stages `seeds`, `deep` |
+| Table 1: features in groups A, B and control (counts and definitions) | `src/features/spatial.py`, `temporal.py`, `pixel_baseline.py` | by hand from the code |
+| Table 2: clips per source and split | `data/manifest_crop.csv` | stage `dataset` |
 | Numbers in the novelty text | `resize_ablation_cv.csv`, `temporal_order.csv`, `fresh_prompts*.csv`, `late_fusion.csv`, `bootstrap_diffs.csv` | stages above |
 | QR code of the repository link | the link itself | `tools/make_poster_figures.py` (`qr`, needs the optional package `segno`) |
 | IITB and IE 643 logos | the course poster template | not generated |

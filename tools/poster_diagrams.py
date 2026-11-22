@@ -44,22 +44,22 @@ def _save(fig, name):
 def workflow():
     """Figure 2: the seven steps."""
     _style()
-    fig, ax = plt.subplots(figsize=(10.4, 5.0))
+    fig, ax = plt.subplots(figsize=(10.4, 5.7))
     fig.subplots_adjust(0.003, 0.003, 0.997, 0.997)
-    ax.set_xlim(0, 104); ax.set_ylim(0, 52); ax.axis("off")
+    ax.set_xlim(0, 104); ax.set_ylim(0, 57); ax.axis("off")
     steps = [
-        ("1", "COLLECT", ["432 real (Pexels),", "552 generated (LTX,", "AnimateDiff, SVD,", "ModelScope, Wan2.1)"]),
-        ("2", "NORMALISE", ["14 frames per clip,", "256² native crop,", "H.264 CRF 18; split", "by group 70/15/15"]),
-        ("3", "EXTRACT", ["FFT radial spectra,", "noise residual, drift:", "263 frequency + 74", "pixel features"]),
-        ("4", "TRAIN", ["LR, SVM, LightGBM,", "MLP, 1D-CNN, ResNet;", "weighted BCE, AdamW;", "early stop on val."]),
-        ("5", "EVALUATE", ["AUROC, 267 held-out", "clips, 2 unseen models,", "250 public clips;", "bootstrap CI, 5 seeds"]),
-        ("6", "EXTRA CHECKS", ["Resize vs crop, frame shuffle", "and reversal, new prompts,", "ResNet-18 + frequency", "late fusion"]),
-        ("7", "REPRODUCE", ["Code, SHA-256-checked data,", "live demo and a", "one-command pipeline", "(run_pipeline.sh)"]),
+        ("1", "COLLECT", ["432 real (Pexels stock,", "YOLO-filtered); 552 AI:", "LTX, AnimateDiff, SVD,", "ModelScope, Wan2.1;", "60 prompts, 18 scenes"]),
+        ("2", "NORMALISE", ["14 frames per clip,", "256 x 256 native crop,", "H.264 CRF 18; split by", "source group 70/15/15;", "ModelScope, Wan test-only"]),
+        ("3", "EXTRACT", ["grey frame, Hann window,", "2-D FFT: radial + noise-", "residual spectra (48 bins)", "and drift over frames:", "263 frequency, 74 pixel"]),
+        ("4", "TRAIN", ["LR, SVM, LightGBM, MLP,", "1D-CNN, ResNet-18;", "weighted BCE, AdamW,", "cosine schedule, early", "stop on validation AUROC"]),
+        ("5", "EVALUATE", ["AUROC on 267 held-out", "clips (65 real), 2 unseen", "generators, 250 public", "clips; paired bootstrap,", "5 seeds, grouped 5-fold CV"]),
+        ("6", "EXTRA CHECKS", ["Resize vs native crop; frame", "reversal and shuffle; 72 clips", "from 36 unseen prompts;", "ResNet-18 + frequency", "late fusion (stacker on val.)"]),
+        ("7", "REPRODUCE", ["SHA-256-checked data bundle", "(1,295 files), live demo,", "45 unit tests and a", "one-command pipeline", "(run_pipeline.sh)"]),
     ]
     w1, g1 = 22.9, 3.73
     w2, g2 = 31.0, 5.0
-    h = 22.0
-    pos = [(0.5 + i * (w1 + g1), 29.0, w1) for i in range(4)] + [(0.5 + i * (w2 + g2), 1.5, w2) for i in range(3)]
+    h = 25.5
+    pos = [(0.5 + i * (w1 + g1), 30.5, w1) for i in range(4)] + [(0.5 + i * (w2 + g2), 1.0, w2) for i in range(3)]
     for (n, title, lines), (x, y, w) in zip(steps, pos):
         hot = title == "EXTRA CHECKS"
         col = RED if hot else NAVY
@@ -68,17 +68,17 @@ def workflow():
         ax.text(x + 3.0, y + h - 3.5, n, color="white", ha="center", va="center", fontsize=18, fontweight="bold")
         ax.text(x + 6.6, y + h - 3.5, title, ha="left", va="center", fontsize=16.5, fontweight="bold", color=col)
         for k, line in enumerate(lines):
-            ax.text(x + 1.4, y + h - 8.8 - k * 3.45, line, ha="left", va="center", fontsize=13.6)
+            ax.text(x + 1.3, y + h - 8.6 - k * 3.3, line, ha="left", va="center", fontsize=12.6)
     for i in range(3):
         x0, _, w = pos[i]
-        _arrow(ax, (x0 + w + 0.2, 40), (pos[i + 1][0] - 0.2, 40))
+        _arrow(ax, (x0 + w + 0.2, 43), (pos[i + 1][0] - 0.2, 43))
     for i in range(4, 6):
         x0, _, w = pos[i]
-        _arrow(ax, (x0 + w + 0.2, 12.5), (pos[i + 1][0] - 0.2, 12.5))
+        _arrow(ax, (x0 + w + 0.2, 13.8), (pos[i + 1][0] - 0.2, 13.8))
     x3, _, w3 = pos[3]
     cx = pos[4][0] + pos[4][2] / 2
-    ax.plot([x3 + w3 / 2, x3 + w3 / 2, cx], [29.0, 26.4, 26.4], color=NAVY, lw=3.2, solid_capstyle="butt")
-    _arrow(ax, (cx, 26.4), (cx, 23.7))
+    ax.plot([x3 + w3 / 2, x3 + w3 / 2, cx], [30.5, 28.8, 28.8], color=NAVY, lw=3.2, solid_capstyle="butt")
+    _arrow(ax, (cx, 28.8), (cx, 26.7))
     _save(fig, "fig_workflow.png")
 
 

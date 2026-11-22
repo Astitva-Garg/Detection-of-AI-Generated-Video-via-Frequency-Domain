@@ -16,6 +16,7 @@ from pathlib import Path
 
 from tools import make_poster_figures as F
 from tools import poster_diagrams as DG
+from tools import poster_spectra as SP
 
 ROOT = Path(__file__).resolve().parents[1]
 BROWSERS = [r"C:\Program Files\Google\Chrome\Application\chrome.exe",
@@ -32,7 +33,7 @@ def find_browser():
 
 
 def main(pdf: bool) -> None:
-    for f in (F.compare, F.models, F.resize, F.spectra, F.temporal_order, DG.workflow, DG.architecture, F.qr):
+    for f in (F.compare, F.models, F.resize, SP.spectra, F.temporal_order, DG.workflow, DG.architecture, F.qr):
         f()
     if not pdf:
         return
