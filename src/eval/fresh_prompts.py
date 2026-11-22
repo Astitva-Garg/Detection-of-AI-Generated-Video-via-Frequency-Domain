@@ -112,6 +112,13 @@ def main(workers: int) -> pd.DataFrame:
                      "real_rejected@0.5": float((pr < 0.5).mean()), "n_real": len(real), "n_old": len(old), "n_new": len(fresh)})
     except Exception as e:
         print("ResNet-18 not scored:", e)
+    old_res, old_diff = RESULTS / "fresh_prompts.csv", RESULTS / "fresh_prompts_diffs.csv"
+    keep_res = None
+    if "resnet18" not in scored and old_res.exists():     # frame caches need data/raw: keep the stored ResNet rows
+        prev = pd.read_csv(old_res)
+        keep_res = prev[prev.model == "resnet18"]
+        rows += keep_res.to_dict("records")
+        print("ResNet-18 rows kept from the stored results file")
     res = pd.DataFrame(rows)
     res.round(3).to_csv(RESULTS / "fresh_prompts.csv", index=False)
     print(res.round(3).to_string(index=False))
@@ -126,6 +133,9 @@ def main(workers: int) -> pd.DataFrame:
             diffs.append({"set": which, "a": a, "b": b, "auroc_a": roc_auc_score(y, pa), "auroc_b": roc_auc_score(y, pb),
                           "a_minus_b": roc_auc_score(y, pa) - roc_auc_score(y, pb), "ci_low": lo, "ci_high": hi})
     dd = pd.DataFrame(diffs)
+    if keep_res is not None and len(keep_res) and old_diff.exists():
+        prev = pd.read_csv(old_diff)
+        dd = pd.concat([dd, prev[(prev.a == "resnet18") | (prev.b == "resnet18")]], ignore_index=True)
     dd.round(3).to_csv(RESULTS / "fresh_prompts_diffs.csv", index=False)
     print(); print(dd.round(3).to_string(index=False))
     return res

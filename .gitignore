@@ -34,3 +34,4 @@ docs/~$*
 /poster/preview*.png
 /poster/pdf_*.png
 /poster/dom.html
+/poster/.chrome*/
