@@ -248,6 +248,7 @@ def compare(man: pd.DataFrame, workers: int) -> pd.DataFrame:
                          "ci_low": lo, "ci_high": hi, "acc@0.5": m["acc"], "tpr_fake@0.5": m["tpr_fake"]})
     df = pd.DataFrame(rows)
     df.round(3).to_csv(OUT / "04_comparison.csv", index=False)
+    df.round(3).to_csv(RESULTS / "live_comparison.csv", index=False)   # tracked copy (the poster figure reads it)
     for sname in sets:
         sub = df[df.set == sname]
         n = int(sub.n.iloc[0])

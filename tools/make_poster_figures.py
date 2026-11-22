@@ -35,7 +35,7 @@ def table(path):
 
 def compare():
     """Pixel vs frequency vs fusion, MLP, same held-out clips, 95 % bootstrap intervals."""
-    c = pd.read_csv(Path(PROJECT_ROOT / "demo_output" / "04_comparison.csv"))
+    c = pd.read_csv(RESULTS / "live_comparison.csv")   # written by `python -m src.demo_live`
     c = c[(c.model == "mlp") & c.set.str.contains("seen|ModelScope|Wan")]
     sets = [("seen", "Seen"), ("ModelScope", "ModelScope\n(unseen)"), ("Wan2.1", "Wan2.1\n(unseen)")]
     fig, ax = plt.subplots(figsize=(COL, 3.25))
@@ -170,6 +170,21 @@ def temporal_order():
     save(fig, "fig_temporal.png")
 
 
+REPO_URL = "https://github.com/Astitva-Garg/Detection-of-AI-Generated-Video-via-Frequency-Domain"
+
+
+def qr():
+    """QR code of the repository link (needs the optional package `segno`)."""
+    try:
+        import segno
+    except ImportError:
+        print("segno not installed: keeping the existing poster/figs/qr_repo.svg (pip install segno to regenerate)")
+        return
+    OUT.mkdir(parents=True, exist_ok=True)
+    segno.make(REPO_URL, error="m").save(OUT / "qr_repo.svg", scale=10, border=1, dark="#000000")
+    print("saved qr_repo.svg")
+
+
 if __name__ == "__main__":
-    for f in (compare, models, resize, degradation, spectra, radial, temporal_order):
+    for f in (compare, models, resize, degradation, spectra, temporal_order, qr):
         f()

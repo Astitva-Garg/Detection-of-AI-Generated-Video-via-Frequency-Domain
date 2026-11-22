@@ -62,10 +62,27 @@ baseline is unchanged (LightGBM 0.884 and 0.880). An earlier run on a smaller cl
 | Frame order: AUROC of the shipped models when the held-out clips' frames are reversed or shuffled (features recomputed), with paired intervals. Spatial-only models cannot change (check); reversal changes nothing; shuffling costs the temporal features 0.14 (MLP) to 0.20 (LightGBM) on seen generators | `temporal_order.csv` | `src/eval/temporal_order.py` |
 | Prompt-disjoint test: ModelScope regenerated from 36 new prompts (`configs/fresh_prompts.yaml`, 72 clips), scored by the shipped models with no retraining, next to the old-prompt ModelScope test clips. Every pixel and spectral model loses 0.05 to 0.15 AUROC (ResNet-18: 0.905 to 0.893); frequency still beats pixel (MLP +0.259, interval [+0.173, +0.341]) | `fresh_prompts.csv`, `fresh_prompts_diffs.csv` | `src/eval/fresh_prompts.py` |
 | Frequency + ResNet-18 late fusion (a 2-weight logistic stacker fitted on the seen validation clips only). Negative result: it raises the frequency MLP on unseen generators (+0.06 to +0.08) but does not improve ResNet-18 (seen +0.004 [-0.028, +0.038], ModelScope -0.055, Wan2.1 -0.195) | `late_fusion.csv` | `src/eval/late_fusion.py` |
-| Poster figures (all drawn from the files above and the main results) | `poster/figs/` | `tools/make_poster_figures.py` |
 
 Caveats: the ResNet-18 here is the single stored seed-643 checkpoint; the prompt-disjoint test has one unseen generator
 (ModelScope) and 72 clips; the fresh clips are not content-filtered by YOLO (the prompts exclude people and vehicles).
+
+## Poster (`bash run_pipeline.sh poster`, or `python -m tools.build_poster`)
+
+`tools/build_poster.py` regenerates every figure below from the files named, then prints `poster/poster.html` to
+`poster/poster.pdf` with headless Chrome or Edge.
+
+| Poster item | Source file | Written by |
+|---|---|---|
+| Figure 1: mean spectra, real and generator minus real (40 clips per source) | `data/manifest_crop.csv`, `data/clips_crop/` | `tools/make_poster_figures.py` (`spectra`) |
+| Figures 2 and 3: workflow and architecture diagrams | drawn in `poster/poster.html` (inline SVG, no data) | by hand |
+| Figure 4: resize vs native crop | `resize_ablation_cv.csv` | stage `ablation` |
+| Figure 5: frame shuffling | `temporal_order.csv` | stage `extras` |
+| Figure 6: pixel vs frequency vs fusion with intervals | `live_comparison.csv` | stage `demo` (`python -m src.demo_live`) |
+| Figure 7 and Table 2: all models, 5 seeds | `seed_stability.csv`, `pixel_deep.csv` | stages `seeds`, `deep` |
+| Table 1: clips per source and split | `data/manifest_crop.csv` | stage `dataset` |
+| Numbers in the novelty text | `resize_ablation_cv.csv`, `temporal_order.csv`, `fresh_prompts*.csv`, `late_fusion.csv`, `bootstrap_diffs.csv` | stages above |
+| QR code of the repository link | the link itself | `tools/make_poster_figures.py` (`qr`, needs the optional package `segno`) |
+| IITB and IE 643 logos | the course poster template | not generated |
 
 ## What is not backed by a file
 

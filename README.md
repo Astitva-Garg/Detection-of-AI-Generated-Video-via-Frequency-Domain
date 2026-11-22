@@ -67,7 +67,7 @@ src/eval/       evaluate, cv, bootstrap, seed_stability, attribution, wild_eval
 src/viz/        figures and the app's reference data
 src/predict.py  the deployment path (raw video to verdict);  src/demo_live.py  the live demo
 tools/          make_bundle.py (data bundle), make_examples.py (the example clips), make_poster_figures.py
-poster/         the A1 poster (poster.html, poster.pdf, figs/)
+poster/         the A1 poster (poster.html, poster.pdf, figs/); rebuilt by tools/build_poster.py
 models_crop/    trained models (main pipeline)            results_crop/   results and figures (main pipeline)
 results/        cross-validation of the resize variant (see results/README.md)
 examples/       18 held-out clips (3 per source) for the app and --video      tests/   unit tests      docs/   report and slides

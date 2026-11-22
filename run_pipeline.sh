@@ -40,10 +40,12 @@ seeds|retrain the main models with 5 seeds, mean +/- std|wild_eval, deep
 figures|all figures -> results_crop/figures|evaluate, seeds
 reference|app reference spectra and example clips|train
 ablation|resize versus native crop on identical clips: rebuild the resize variant, cross-validate, compare|data/raw, features
+demo|live demo: re-extract features of the held-out clips, compare pixel / frequency / fusion -> results_crop/live_comparison.csv|features, train
 generate_fresh|ModelScope on 36 new prompts x 2 seeds for the prompt-disjoint test (about 30 GPU-minutes)|GPU
+poster|rebuild every poster figure from the result files and print poster/poster.pdf|demo, extras, ablation results
 extras|frame-order test, prompt-disjoint test, frequency + ResNet-18 late fusion|train, deep (+ GPU for the last one)"
 
-BUNDLE="features pixel audit train evaluate cv bootstrap attribution wild wild_eval deep seeds extras figures reference"
+BUNDLE="features pixel audit train evaluate cv bootstrap attribution wild wild_eval deep seeds extras figures reference demo poster"
 RAW_STAGES="filter dataset"
 RAW_LAST="ablation"
 
@@ -81,6 +83,8 @@ stage() {
     seeds)       run seeds       "$PY" -m src.eval.seed_stability ;;
     figures)     run figures     "$PY" -m src.viz.figures ;;
     reference)   run reference   "$PY" -m src.viz.reference ;;
+    demo)        run demo        "$PY" -X utf8 -m src.demo_live --workers "$WORKERS" ;;
+    poster)      run poster      "$PY" -m tools.build_poster ;;
     generate_fresh) run generate_fresh "$PY" -m src.generate.modelscope --fresh ;;
     extras)
       run temporal_order "$PY" -m src.eval.temporal_order --workers "$WORKERS"

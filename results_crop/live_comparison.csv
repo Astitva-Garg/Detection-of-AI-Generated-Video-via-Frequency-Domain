@@ -1,0 +1,31 @@
+set,model,features,n,auroc,ci_low,ci_high,acc@0.5,tpr_fake@0.5
+seen (real+LTX+AnimateDiff+SVD),lr,pixel,111,0.88,0.812,0.934,0.775,0.739
+seen (real+LTX+AnimateDiff+SVD),lgbm,pixel,111,0.904,0.849,0.953,0.784,0.717
+seen (real+LTX+AnimateDiff+SVD),mlp,pixel,111,0.881,0.816,0.938,0.802,0.804
+seen (real+LTX+AnimateDiff+SVD),lr,frequency,111,0.943,0.893,0.979,0.883,0.957
+seen (real+LTX+AnimateDiff+SVD),lgbm,frequency,111,0.92,0.866,0.963,0.82,0.739
+seen (real+LTX+AnimateDiff+SVD),mlp,frequency,111,0.96,0.919,0.986,0.883,0.891
+seen (real+LTX+AnimateDiff+SVD),lr,fusion,111,0.95,0.909,0.982,0.883,0.913
+seen (real+LTX+AnimateDiff+SVD),lgbm,fusion,111,0.943,0.898,0.977,0.865,0.87
+seen (real+LTX+AnimateDiff+SVD),mlp,fusion,111,0.976,0.953,0.994,0.928,0.978
+seen (real+LTX+AnimateDiff+SVD),cnn,frequency,111,0.941,0.895,0.976,0.829,0.696
+ModelScope (unseen) vs real,lr,pixel,164,0.657,0.563,0.745,0.5,0.303
+ModelScope (unseen) vs real,lgbm,pixel,164,0.574,0.479,0.669,0.433,0.172
+ModelScope (unseen) vs real,mlp,pixel,164,0.611,0.514,0.694,0.5,0.303
+ModelScope (unseen) vs real,lr,frequency,164,0.753,0.68,0.828,0.604,0.455
+ModelScope (unseen) vs real,lgbm,frequency,164,0.691,0.61,0.772,0.518,0.283
+ModelScope (unseen) vs real,mlp,frequency,164,0.792,0.723,0.859,0.64,0.485
+ModelScope (unseen) vs real,lr,fusion,164,0.77,0.692,0.845,0.543,0.333
+ModelScope (unseen) vs real,lgbm,fusion,164,0.691,0.608,0.779,0.482,0.232
+ModelScope (unseen) vs real,mlp,fusion,164,0.738,0.66,0.818,0.567,0.354
+ModelScope (unseen) vs real,cnn,frequency,164,0.753,0.678,0.82,0.591,0.374
+Wan2.1 (unseen) vs real,lr,pixel,122,0.81,0.724,0.887,0.762,0.719
+Wan2.1 (unseen) vs real,lgbm,pixel,122,0.828,0.75,0.899,0.697,0.544
+Wan2.1 (unseen) vs real,mlp,pixel,122,0.821,0.74,0.897,0.77,0.737
+Wan2.1 (unseen) vs real,lr,frequency,122,0.607,0.499,0.707,0.516,0.158
+Wan2.1 (unseen) vs real,lgbm,frequency,122,0.643,0.539,0.739,0.549,0.175
+Wan2.1 (unseen) vs real,mlp,frequency,122,0.677,0.578,0.77,0.557,0.193
+Wan2.1 (unseen) vs real,lr,fusion,122,0.792,0.707,0.866,0.664,0.439
+Wan2.1 (unseen) vs real,lgbm,fusion,122,0.753,0.661,0.834,0.59,0.281
+Wan2.1 (unseen) vs real,mlp,fusion,122,0.811,0.734,0.879,0.689,0.456
+Wan2.1 (unseen) vs real,cnn,frequency,122,0.69,0.59,0.776,0.549,0.123

@@ -32,3 +32,5 @@ hf_transfer==0.1.9
 joblib==1.6.0
 einops==0.8.2
 remotezip==0.12.6
+# Optional: only to regenerate the poster QR code (tools/make_poster_figures.py)
+segno
