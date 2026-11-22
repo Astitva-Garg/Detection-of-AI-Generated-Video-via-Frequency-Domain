@@ -54,7 +54,7 @@ def workflow():
         ("4", "TRAIN", ["LR, SVM, LightGBM, MLP,", "1D-CNN, ResNet-18;", "weighted BCE, AdamW,", "cosine schedule; model", "chosen on val. AUROC"]),
         ("5", "EVALUATE", ["AUROC on 267 held-out", "clips (65 real), 2 unseen", "generators, 250 public", "clips; paired bootstrap,", "5 seeds, grouped 5-fold CV"]),
         ("6", "EXTRA CHECKS", ["Resize vs native crop; frame", "reversal and shuffle; 72 clips", "from 36 unseen prompts;", "ResNet-18 + frequency", "late fusion (stacker on val.)"]),
-        ("7", "REPRODUCE", ["SHA-256-checked data bundle", "(1,295 files), live demo,", "45 unit tests and a", "one-command pipeline", "(run_pipeline.sh)"]),
+        ("7", "REPRODUCE", ["Every score and figure is", "rebuilt from the shared", "data and code, and a", "clean re-run gives the", "same results (GPU noise aside)"]),
     ]
     w1, g1 = 22.9, 3.73
     w2, g2 = 31.0, 5.0

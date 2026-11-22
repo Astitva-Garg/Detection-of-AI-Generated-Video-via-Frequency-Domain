@@ -107,7 +107,7 @@ features on identical held-out clips. Frequency cues win on trained generators (
 <p style="font-size:15pt;margin-bottom:2mm"><b>How to read it.</b> A 2-D FFT turns a frame into a map of how much energy it has at each spatial frequency: the centre is coarse structure (big shapes), the edges are fine detail (texture, noise). Averaging 40 clips and subtracting the real average leaves a generator&rsquo;s fingerprint: <span style="color:#1f5fa8"><b>blue</b></span> = less energy than camera video at that frequency, <span style="color:#b2182b"><b>red</b></span> = more. The generators differ from real, and from each other (LTX-Video shows a regular dot grid, a periodic artefact that is plausibly from up-sampling). That makes the spectrum a usable signal, and explains why a detector trained on some generators carries over only partly to others.</p>
 
 <h2>Workflow</h2>
-<p>Figure 2 shows the seven steps, from collecting clips to sharing the code.</p>
+<p>Figure 2 shows the seven steps, from collecting clips to a reproducible result.</p>
 <figure>
 <img src="figs/fig_workflow.png" style="width:230mm">
 <figcaption><b>Figure 2:</b> Overall workflow. Step 6 (red) is the novelty assessment.</figcaption>
