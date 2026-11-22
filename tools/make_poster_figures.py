@@ -175,18 +175,20 @@ def temporal_order():
 
 
 REPO_URL = "https://github.com/Astitva-Garg/Detection-of-AI-Generated-Video-via-Frequency-Domain"
+DEMO_URL = "https://drive.google.com/file/d/1j2pN5h0CsaIPw2K7vSTBoML7otCmXgHS/view?usp=drive_link"
 
 
 def qr():
-    """QR code of the repository link (needs the optional package `segno`)."""
+    """QR codes of the repository and demo-video links (need the optional package `segno`)."""
     try:
         import segno
     except ImportError:
-        print("segno not installed: keeping the existing poster/figs/qr_repo.svg (pip install segno to regenerate)")
+        print("segno not installed: keeping the existing poster/figs/qr_*.svg (pip install segno to regenerate)")
         return
     OUT.mkdir(parents=True, exist_ok=True)
-    segno.make(REPO_URL, error="m").save(OUT / "qr_repo.svg", scale=10, border=1, dark="#000000")
-    print("saved qr_repo.svg")
+    for name, url in (("qr_repo.svg", REPO_URL), ("qr_demo.svg", DEMO_URL)):
+        segno.make(url, error="m").save(OUT / name, scale=10, border=1, dark="#000000")
+        print("saved", name)
 
 
 if __name__ == "__main__":

@@ -51,7 +51,7 @@ def workflow():
         ("1", "COLLECT", ["432 real (Pexels stock,", "YOLO-filtered); 552 AI:", "LTX, AnimateDiff, SVD,", "ModelScope, Wan2.1;", "60 prompts, 18 scenes"]),
         ("2", "NORMALISE", ["14 frames per clip,", "256 x 256 native crop,", "H.264 CRF 18; split by", "source group 70/15/15;", "ModelScope, Wan test-only"]),
         ("3", "EXTRACT", ["grey frame, Hann window,", "2-D FFT: radial + noise-", "residual spectra (48 bins)", "and drift over frames:", "263 frequency, 74 pixel"]),
-        ("4", "TRAIN", ["LR, SVM, LightGBM, MLP,", "1D-CNN, ResNet-18;", "weighted BCE, AdamW,", "cosine schedule, early", "stop on validation AUROC"]),
+        ("4", "TRAIN", ["LR, SVM, LightGBM, MLP,", "1D-CNN, ResNet-18;", "weighted BCE, AdamW,", "cosine schedule; model", "chosen on val. AUROC"]),
         ("5", "EVALUATE", ["AUROC on 267 held-out", "clips (65 real), 2 unseen", "generators, 250 public", "clips; paired bootstrap,", "5 seeds, grouped 5-fold CV"]),
         ("6", "EXTRA CHECKS", ["Resize vs native crop; frame", "reversal and shuffle; 72 clips", "from 36 unseen prompts;", "ResNet-18 + frequency", "late fusion (stacker on val.)"]),
         ("7", "REPRODUCE", ["SHA-256-checked data bundle", "(1,295 files), live demo,", "45 unit tests and a", "one-command pipeline", "(run_pipeline.sh)"]),

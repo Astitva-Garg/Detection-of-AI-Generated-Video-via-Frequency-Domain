@@ -33,7 +33,7 @@ def find_browser():
 
 
 def main(pdf: bool) -> None:
-    for f in (F.compare, F.models, F.resize, SP.spectra, F.temporal_order, DG.workflow, DG.architecture, F.qr):
+    for f in (F.compare, F.resize, SP.spectra, F.temporal_order, DG.workflow, DG.architecture, F.qr):
         f()
     if not pdf:
         return
