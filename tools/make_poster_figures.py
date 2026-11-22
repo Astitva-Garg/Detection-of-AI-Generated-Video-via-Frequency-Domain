@@ -127,6 +127,10 @@ def spectra():
     fig, axs = plt.subplots(2, 3, figsize=(COL, 4.4))
     axs = axs.ravel()
     axs[0].imshow(means["real"], cmap="magma"); axs[0].set_title("Real", fontsize=17)
+    axs[0].annotate("coarse\nstructure", xy=(128, 128), xytext=(128, 200), color="white", ha="center", fontsize=12,
+                    arrowprops=dict(arrowstyle="->", color="white", lw=1.6))
+    axs[0].annotate("fine\ndetail", xy=(252, 128), xytext=(212, 50), color="white", ha="center", fontsize=12,
+                    arrowprops=dict(arrowstyle="->", color="white", lw=1.6))
     allv = np.concatenate([(means[g] - means["real"]).ravel() for g in names])
     v = np.percentile(np.abs(allv), 99)
     for ax, g in zip(axs[1:], names):
