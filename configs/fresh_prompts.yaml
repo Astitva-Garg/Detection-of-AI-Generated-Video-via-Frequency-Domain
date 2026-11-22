@@ -1,0 +1,56 @@
+# 36 prompts written after the main dataset was fixed. None of them (or their wording) appears in configs/scenes.yaml.
+# Used only for the prompt-disjoint test of the unseen generators (src/generate/modelscope.py --fresh, wan.py --fresh).
+ocean waves:
+  - big green swells lifting and breaking against a sea wall at midday
+  - gentle surf washing over wet sand at low tide, reflections on the shore
+waterfall:
+  - a narrow waterfall falling down a dark cliff into a stream, long exposure
+  - water tumbling over several stone steps in a shaded gorge
+river stream:
+  - a shallow brook running over gravel under autumn trees
+  - a broad calm river bending through open grassland, evening light
+lake water surface:
+  - a mountain lake with wind ripples, distant shore hazy
+  - leaves floating on a still pond, small ripples spreading
+clouds sky:
+  - high thin cirrus clouds streaking across a pale blue sky
+  - heavy grey rain clouds building above a distant ridge
+sunset sunrise:
+  - deep red sun sinking behind silhouetted hills, thin clouds glowing
+  - first light of dawn turning a flat plain pink and gold
+night sky stars:
+  - a clear starry sky above a quiet desert at night
+  - faint stars wheeling over the dark silhouette of a pine ridge
+fog mist:
+  - heavy morning fog hanging over a flat lake, treeline fading away
+  - wisps of mist drifting between rocky peaks at sunrise
+forest trees:
+  - birch trees with yellow leaves in a bright woodland, gentle breeze
+  - a mossy forest floor with ferns and shafts of light between trunks
+leaves plants:
+  - broad banana leaves trembling in light rain, close-up
+  - a bed of lavender swaying in warm afternoon wind
+mountains landscape:
+  - jagged grey peaks above a deep valley, slow aerial approach
+  - layered blue mountain ridges receding into haze
+desert sand:
+  - smooth orange dunes with sharp wind-carved crests under a clear sky
+  - cracked dry earth in a flat desert, heat shimmer
+snow ice:
+  - fresh powder snow drifting off a mountain ridge in strong wind
+  - a frozen river with thin ice sheets breaking and drifting
+rain:
+  - steady rain falling on a dark lake, many small ripples
+  - a heavy downpour streaming off a rooftop edge at dusk
+fire:
+  - a campfire with tall flames and drifting sparks against the night
+  - slow burning logs glowing red inside a stone fireplace
+lava volcano:
+  - bright orange lava streams crossing black rock at night
+  - a crater glowing with molten rock and rising steam
+smoke ink abstract:
+  - blue and orange dye clouds blooming in clear water, macro
+  - thin grey smoke rising in slow spirals in a dark room
+rocks texture:
+  - waves breaking over rounded boulders at a rocky cove
+  - water dripping from stalactites inside a damp cave

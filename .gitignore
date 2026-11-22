@@ -30,3 +30,7 @@ docs/~$*
 
 # built distribution files
 /dist/
+/poster/.edge*/
+/poster/preview*.png
+/poster/pdf_*.png
+/poster/dom.html

@@ -29,6 +29,9 @@ What this says, and what it does not:
 - Resizing frames instead of cropping at native resolution costs the frequency features about 0.07 to 0.09 AUROC
   (grouped CV, same clips and splits) and leaves the pixel baseline unchanged (`RESULTS.md`).
 - The unseen test sets are small (99 and 57 clips) and all real footage is professional stock video.
+- Extra checks (`RESULTS.md`): with 36 brand-new prompts ModelScope scores drop by 0.05 to 0.15 AUROC for every
+  model but the ranking holds (frequency above pixel; ResNet-18 barely moves); shuffling the frames costs the temporal
+  features 0.14 to 0.20 AUROC; stacking frequency features with ResNet-18 does not improve ResNet-18.
 
 Where each number comes from: [`RESULTS.md`](RESULTS.md). Known issues of the data: [`data/README.md`](data/README.md).
 
@@ -63,7 +66,8 @@ src/models/     classic.py (LR, SVM, LightGBM, MLP), cnn.py, pixel_cnn.py (pixel
 src/eval/       evaluate, cv, bootstrap, seed_stability, attribution, wild_eval
 src/viz/        figures and the app's reference data
 src/predict.py  the deployment path (raw video to verdict);  src/demo_live.py  the live demo
-tools/          make_bundle.py (data bundle), make_examples.py (the example clips)
+tools/          make_bundle.py (data bundle), make_examples.py (the example clips), make_poster_figures.py
+poster/         the A1 poster (poster.html, poster.pdf, figs/)
 models_crop/    trained models (main pipeline)            results_crop/   results and figures (main pipeline)
 results/        cross-validation of the resize variant (see results/README.md)
 examples/       18 held-out clips (3 per source) for the app and --video      tests/   unit tests      docs/   report and slides

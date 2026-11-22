@@ -18,6 +18,7 @@ from src.data.checksums import core_files  # noqa: E402
 
 extra = [DATA_ROOT / "README.md", DATA_ROOT / "SHA256SUMS.txt", DATA_ROOT / "raw" / "pexels_400k.parquet"]
 extra += [p for p in (DATA_ROOT / "features_crop").glob("*") if p.suffix in (".parquet", ".npz")]
+extra += [p for p in (DATA_ROOT / "fresh").rglob("*") if p.is_file()]   # prompt-disjoint test clips
 files = sorted({p for p in core_files() + extra if p.exists()})
 out = root / "dist" / "ie643_data_bundle.zip"
 out.parent.mkdir(exist_ok=True)

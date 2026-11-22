@@ -39,9 +39,11 @@ deep|pixel CNN from scratch and fine-tuned ResNet-18, 5 seeds|GPU, wild_eval
 seeds|retrain the main models with 5 seeds, mean +/- std|wild_eval, deep
 figures|all figures -> results_crop/figures|evaluate, seeds
 reference|app reference spectra and example clips|train
-ablation|resize versus native crop on identical clips: rebuild the resize variant, cross-validate, compare|data/raw, features"
+ablation|resize versus native crop on identical clips: rebuild the resize variant, cross-validate, compare|data/raw, features
+generate_fresh|ModelScope on 36 new prompts x 2 seeds for the prompt-disjoint test (about 30 GPU-minutes)|GPU
+extras|frame-order test, prompt-disjoint test, frequency + ResNet-18 late fusion|train, deep (+ GPU for the last one)"
 
-BUNDLE="features pixel audit train evaluate cv bootstrap attribution wild wild_eval deep seeds figures reference"
+BUNDLE="features pixel audit train evaluate cv bootstrap attribution wild wild_eval deep seeds extras figures reference"
 RAW_STAGES="filter dataset"
 RAW_LAST="ablation"
 
@@ -79,6 +81,13 @@ stage() {
     seeds)       run seeds       "$PY" -m src.eval.seed_stability ;;
     figures)     run figures     "$PY" -m src.viz.figures ;;
     reference)   run reference   "$PY" -m src.viz.reference ;;
+    generate_fresh) run generate_fresh "$PY" -m src.generate.modelscope --fresh ;;
+    extras)
+      run temporal_order "$PY" -m src.eval.temporal_order --workers "$WORKERS"
+      run fresh_prompts  "$PY" -m src.eval.fresh_prompts --workers "$WORKERS"
+      if "$PY" -c "import torch,sys; sys.exit(0 if torch.cuda.is_available() else 1)" 2>/dev/null; then
+        run late_fusion "$PY" -m src.eval.late_fusion
+      else echo; echo "=== late_fusion: no CUDA GPU found, skipping (the stored results in results_crop/ are kept)"; fi ;;
     ablation)
       mkdir -p results
       run ablation_dataset  env IE643_NORM=resize "$PY" -m src.data.build_dataset --workers "$WORKERS" --skip-degraded

@@ -1,0 +1,15 @@
+set,a,b,auroc_a,auroc_b,a_minus_b,ci_low,ci_high
+old prompts,mlp_all,mlp_pixel,0.792,0.611,0.182,0.109,0.253
+new prompts,mlp_all,mlp_pixel,0.721,0.462,0.259,0.173,0.341
+old prompts,mlp_fusion,mlp_pixel,0.738,0.611,0.127,0.078,0.18
+new prompts,mlp_fusion,mlp_pixel,0.643,0.462,0.18,0.116,0.247
+old prompts,mlp_fusion,mlp_all,0.738,0.792,-0.055,-0.096,-0.015
+new prompts,mlp_fusion,mlp_all,0.643,0.721,-0.079,-0.119,-0.04
+old prompts,lr_all,lr_pixel,0.753,0.657,0.096,-0.0,0.191
+new prompts,lr_all,lr_pixel,0.688,0.584,0.104,-0.0,0.216
+old prompts,lgbm_all,lgbm_pixel,0.691,0.574,0.117,0.046,0.191
+new prompts,lgbm_all,lgbm_pixel,0.602,0.439,0.163,0.079,0.246
+old prompts,resnet18,mlp_all,0.905,0.792,0.113,0.035,0.188
+new prompts,resnet18,mlp_all,0.893,0.721,0.172,0.08,0.263
+old prompts,resnet18,mlp_fusion,0.905,0.738,0.167,0.09,0.249
+new prompts,resnet18,mlp_fusion,0.893,0.643,0.25,0.157,0.353

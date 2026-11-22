@@ -45,6 +45,20 @@ def t2v_jobs(generator: str, n: int, seed0: int = 0) -> list[Job]:
     return jobs
 
 
+def fresh_jobs(generator: str, seeds: int, seed0: int) -> list[Job]:
+    """Jobs for the prompt-disjoint test: the 36 prompts of configs/fresh_prompts.yaml, `seeds` seeds each."""
+    import yaml
+    from src.config import PROJECT_ROOT
+    spec = yaml.safe_load((PROJECT_ROOT / "configs" / "fresh_prompts.yaml").read_text(encoding="utf-8"))
+    prompts = [(scene, p) for scene, ps in spec.items() for p in ps]
+    jobs = []
+    for s in range(seeds):
+        for i, (scene, p) in enumerate(prompts):
+            k = s * len(prompts) + i
+            jobs.append(Job(f"{generator}_fresh_{k:04d}", generator, p, scene, seed0 + k, f"fresh_{i:03d}"))
+    return jobs
+
+
 def _done_ids(manifest: Path) -> set[str]:
     if not manifest.exists():
         return set()

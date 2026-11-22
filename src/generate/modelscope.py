@@ -4,13 +4,13 @@ import argparse
 import torch
 
 from src.config import RAW_FAKE
-from src.generate.common import NEGATIVE, run_jobs, t2v_jobs, to_uint8
+from src.generate.common import NEGATIVE, fresh_jobs, run_jobs, t2v_jobs, to_uint8
 
 REPO = "ali-vilab/text-to-video-ms-1.7b"
 W, H, FRAMES, FPS, STEPS = 256, 256, 16, 8, 30
 
 
-def main(n: int) -> None:
+def main(n: int, fresh: bool = False) -> None:
     from diffusers import DiffusionPipeline, DPMSolverMultistepScheduler
     pipe = DiffusionPipeline.from_pretrained(REPO, torch_dtype=torch.float16, variant="fp16")
     pipe.scheduler = DPMSolverMultistepScheduler.from_config(pipe.scheduler.config)
@@ -23,10 +23,15 @@ def main(n: int) -> None:
         return to_uint8(out), FPS
 
     # offset seeds so prompts/seeds differ from the seen generators
-    run_jobs(t2v_jobs("modelscope", n, seed0=50_000), gen, RAW_FAKE / "modelscope")
+    if fresh:   # prompt-disjoint test: new prompts, 2 seeds each, separate folder (not part of the main dataset)
+        run_jobs(fresh_jobs("modelscope", 2, seed0=60_000), gen, RAW_FAKE / "modelscope_fresh")
+    else:
+        run_jobs(t2v_jobs("modelscope", n, seed0=50_000), gen, RAW_FAKE / "modelscope")
 
 
 if __name__ == "__main__":
     ap = argparse.ArgumentParser()
     ap.add_argument("--n", type=int, default=80)
-    main(ap.parse_args().n)
+    ap.add_argument("--fresh", action="store_true", help="the 36 new prompts x 2 seeds (prompt-disjoint test)")
+    a = ap.parse_args()
+    main(a.n, a.fresh)
