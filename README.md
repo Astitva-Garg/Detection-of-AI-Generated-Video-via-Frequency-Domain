@@ -107,8 +107,8 @@ re-encoded identically, so that real and fake differ only in how they were made.
 | 4. From the raw clips | adds the object filter, the normalisation and the resize-versus-crop ablation | `bash run_pipeline.sh all` | needs `data/raw` (19 GB), about 20 min more |
 | 5. From scratch | download the real clips and generate the fake ones | `bash run_pipeline.sh real generate` | about 18 GPU-hours |
 
-Checked in a clean copy of the project with only the data bundle: `train`, `evaluate`, `bootstrap` and
-`attribution` regenerate every table and **every model reproduces exactly (to the last digit), except the CNN**.
+Checked in a fresh clone of this repository with only the data bundle: `train`, `evaluate`, `bootstrap`, `attribution` and
+`figures` regenerate every table and figure, and **every model reproduces exactly (to the last digit), except the CNN**.
 The CNN is seeded but trains on the GPU, whose kernels are not bit-exact: one retrain gave a seen-set AUROC of
 0.932 against 0.941 stored (unseen 0.705 against 0.730), within the spread of the reported 5-seed figure
 (0.919 +/- 0.021). The CNN rows of any regenerated file will therefore differ slightly.
