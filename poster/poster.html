@@ -89,7 +89,7 @@ features on identical held-out clips. Frequency cues win on trained generators (
 <ol>
 <li><b>Frequency beats pixels on trained generators:</b> 0.966 vs 0.889 (both together: 0.977).</li>
 <li><b>Transfer to new generators is only partial:</b> on ModelScope and Wan2.1 (never seen in training) our models score 0.64&ndash;0.82, while a fine-tuned ResNet-18 scores 0.90&ndash;0.93.</li>
-<li><b>The clue is real but fragile:</b> shuffling frames costs the time features 0.14&ndash;0.20, so they use real motion; resizing frames (&minus;0.07 to &minus;0.09) or heavy compression, blur or down-scaling (&minus;0.2 to &minus;0.3) erases it.</li>
+<li><b>The clue is real but fragile:</b> shuffling frames costs the time-only features 0.14&ndash;0.20, so they rely on real motion; resizing frames (&minus;0.07 to &minus;0.09) or heavy compression, blur or down-scaling (&minus;0.2 to &minus;0.3) weakens the fine-detail clue sharply.</li>
 </ol></div>
 
 <h2>Introduction</h2>
@@ -153,10 +153,10 @@ features on identical held-out clips. Frequency cues win on trained generators (
 
 <table class="q">
 <tr><th>Question</th><th>What we did</th><th>What we found</th></tr>
-<tr><td>1. Does resizing hurt?</td><td>Shrank frames instead of cropping.</td><td>Fine-detail models lose <b>0.07–0.09</b>; pixel models are unchanged. Resizing erases the clue.</td></tr>
-<tr><td>2. Does it use real motion?</td><td>Played frames backwards, then shuffled them.</td><td>Backwards: no change. Shuffled: the time models lose <b>0.14–0.20</b>. They use real motion.</td></tr>
-<tr><td>3. Were the new-generator scores fair?</td><td>72 new ModelScope clips from 36 unseen prompts.</td><td>Every pixel and detail model drops <b>0.05&ndash;0.15</b>: the old scores were too high. Detail still beats pixels (0.72 vs 0.46); only the big network barely moves (0.91 &rarr; 0.89).</td></tr>
-<tr><td>4. Can our detail help the big network?</td><td>Blended our score with ResNet-18's.</td><td><b>No.</b> It lifts our model (+0.06 to +0.08) but not ResNet-18 (+0.00 on trained generators, &minus;0.06 to &minus;0.20 on new ones).</td></tr>
+<tr><td>1. Does resizing hurt?</td><td>Shrank frames instead of cropping.</td><td>Fine-detail models lose <b>0.07&ndash;0.09</b>; pixel models do not drop. Resizing weakens the clue.</td></tr>
+<tr><td>2. Does it use real motion?</td><td>Played frames backwards, then shuffled them.</td><td>Backwards: no change. Shuffled: the time-only models lose <b>0.14&ndash;0.20</b> (combined models 0.02&ndash;0.04). They rely on real frame-to-frame coherence.</td></tr>
+<tr><td>3. Were the new-generator scores fair?</td><td>72 new ModelScope clips from 36 unseen prompts.</td><td>Every pixel and detail model drops <b>0.05&ndash;0.15</b>: the old scores were too high. Detail still beats pixels (MLP 0.72 vs 0.46); only the big network barely moves (0.91 &rarr; 0.89).</td></tr>
+<tr><td>4. Can our detail help the big network?</td><td>Blended our score with ResNet-18&rsquo;s.</td><td><b>No.</b> It lifts our model (+0.06 to +0.08 on new generators) but not ResNet-18 (+0.00 on trained generators, &minus;0.06 to &minus;0.20 on new ones).</td></tr>
 </table>
 <div class="two">
 <figure><img src="figs/fig_resize.png" style="width:100%"><figcaption><b>Figure 4 (test 1):</b> Score with cropped (dark) vs resized (light) frames. Blue bars drop; grey bars do not.</figcaption></figure>
@@ -177,7 +177,7 @@ features on identical held-out clips. Frequency cues win on trained generators (
 <tr><td class="l"><b>Ours:</b> time CNN</td><td>0.919</td><td>0.740</td><td>0.640</td><td>0.757</td></tr>
 <tr><td class="l"><b>Ours:</b> combined</td><td><b>0.977</b></td><td>0.744</td><td>0.819</td><td>0.754</td></tr>
 </table>
-<div class="tcap" style="margin-bottom:0"><b>Table 3:</b> Held-out scores, mean of 5 runs. Heavy compression, blur or down-scaling cost 0.2&ndash;0.3.</div>
+<div class="tcap" style="margin-bottom:0"><b>Table 3:</b> Held-out scores, mean of 5 runs. Blur, heavy compression or down-scaling cost the detail model 0.2&ndash;0.3, pixel models only about 0.02.</div>
 </div></div>
 
 <h2>Conclusion</h2>
