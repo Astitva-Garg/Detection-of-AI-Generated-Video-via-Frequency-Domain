@@ -5,14 +5,14 @@
 <title>IE 643 poster: Detection of AI-generated video via the frequency domain</title>
 <style>
   @page { size: 594mm 841mm; margin: 0; }
-  :root { --navy:#00008b; --green:#007a1f; --blue:#0000c8; --ink:#111; }
+  :root { --navy:#00008b; --green:#007a1f; --blue:#0000c8; --red:#c9184a; --ink:#111; }
   * { box-sizing:border-box; }
   html { width:594mm; height:836mm; overflow:hidden; }
   body { margin:0; width:594mm; height:836mm; overflow:hidden; background:#fff; color:var(--ink);
-         font-family:"Palatino Linotype","Book Antiqua",Palatino,"URW Palladio L",Georgia,serif; font-size:16.4pt; line-height:1.26; }
+         font-family:"Palatino Linotype","Book Antiqua",Palatino,"URW Palladio L",Georgia,serif; font-size:17.4pt; line-height:1.28; }
 
   header { height:104mm; margin:10mm 14mm 0; display:grid; grid-template-columns:80mm 1fr 80mm; align-items:center; column-gap:6mm; }
-  header .l { text-align:left; } header .l img { height:72mm; display:block; margin-left:2mm; }
+  header .l img { height:72mm; display:block; margin-left:2mm; }
   header .r { text-align:center; } header .r img { height:52mm; display:block; margin:0 auto; }
   header .r b { display:block; font-size:19pt; line-height:1.15; }
   header .r .big { font-size:30pt; font-weight:700; line-height:1.0; margin-top:1mm; }
@@ -23,33 +23,36 @@
   .hd .t4 { font-size:22pt; font-weight:700; margin-top:1mm; }
   .hd .t5 { font-size:16pt; }
 
-  .frame { margin:4mm 14mm 0; height:calc(836mm - 10mm - 104mm - 4mm - 6mm); border:7mm solid var(--navy); padding:5mm 7mm 3mm; display:grid; grid-template-columns:1fr 1fr; column-gap:0; overflow:hidden; }
-  .col { min-width:0; display:block; }
+  .frame { margin:4mm 14mm 0; height:calc(836mm - 10mm - 104mm - 4mm - 6mm); border:7mm solid var(--navy); padding:5mm 7mm 3mm; display:grid; grid-template-columns:1fr 1fr; overflow:hidden; }
+  .col { min-width:0; }
   .col + .col { border-left:2.2mm solid var(--navy); padding-left:6mm; margin-left:6mm; }
 
-  h2 { font-size:25pt; font-weight:700; margin:3.5mm 0 1.4mm; line-height:1.1; }
+  h2 { font-size:26pt; font-weight:700; margin:3.6mm 0 1.4mm; line-height:1.1; }
   h2:first-child { margin-top:0; }
   p { margin:0 0 2mm; }
-  ul { margin:0 0 2.2mm; padding-left:7mm; } li { margin:0 0 1.2mm; }
+  ul { margin:0 0 2.2mm; padding-left:7mm; } li { margin:0 0 1.3mm; }
   b { font-weight:700; }
   figure { margin:1.5mm 0 2.5mm; text-align:center; }
-  figure img, figure svg { display:block; margin:0 auto; max-width:100%; }
-  figcaption { font-size:12.5pt; color:var(--blue); margin-top:0.8mm; line-height:1.2; text-align:center; }
+  figure img { display:block; margin:0 auto; max-width:100%; }
+  figcaption { font-size:13.6pt; color:var(--blue); margin-top:0.8mm; line-height:1.2; text-align:center; }
   figcaption b { color:#000; }
   .two { display:grid; grid-template-columns:1fr 1fr; column-gap:4mm; align-items:start; }
-  .two figure { margin-bottom:1mm; } .two img { max-height:68mm; width:auto !important; max-width:100%; }
-  table { border-collapse:collapse; margin:1mm auto 1mm; font-size:14.5pt; }
-  th, td { border:1px solid #777; padding:0.6mm 3mm; text-align:center; }
+  .two figure { margin-bottom:1mm; } .two img { max-height:60mm; width:auto; max-width:100%; }
+  table { border-collapse:collapse; margin:1mm auto 1mm; font-size:15pt; }
+  th, td { border:1px solid #777; padding:0.7mm 3mm; text-align:center; }
   td.l, th.l { text-align:left; }
   tr.tot td { font-weight:700; }
-  .tcap { text-align:center; font-size:12.5pt; color:var(--blue); margin:0 0 2mm; } .tcap b { color:#000; }
-  .nov li { margin-bottom:1.4mm; }
-  .nov .n { display:inline-block; min-width:6mm; text-align:center; background:var(--navy); color:#fff; border-radius:50%; font-size:13pt; font-weight:700; margin-right:1.5mm; line-height:1.3; }
-  .refs { font-size:11pt; line-height:1.17; margin:0; padding-left:0; list-style:none; } .refs li { margin-bottom:1mm; }
+  .tcap { text-align:center; font-size:13pt; color:var(--blue); margin:0 0 2mm; } .tcap b { color:#000; }
+  .take { border:2.2px solid var(--red); background:#fdf3f5; border-radius:3mm; padding:2mm 4mm; margin:1mm 0 2mm; }
+  .take b.h { color:var(--red); font-size:19pt; }
+  .take ol { margin:1mm 0 0; padding-left:6.5mm; } .take li { margin-bottom:1mm; }
+  table.q { font-size:14pt; width:100%; }
+  table.q th { background:#e9e9f7; } table.q td { text-align:left; vertical-align:top; padding:1.2mm 2.4mm; }
+  table.q td:first-child { font-weight:700; width:22%; } table.q td:nth-child(2) { width:31%; }
+  .refs { font-size:10.4pt; line-height:1.15; margin:0; padding-left:0; list-style:none; } .refs li { margin-bottom:1mm; }
   .qrrow { display:flex; justify-content:space-around; align-items:flex-start; text-align:center; font-weight:700; font-size:13pt; margin-top:1mm; }
-  .qrrow img { width:38mm; height:38mm; display:block; margin:0 auto; }
-  .qrrow .ph { width:38mm; height:38mm; border:2px dashed #777; display:flex; align-items:center; justify-content:center; font-weight:400; font-size:12pt; margin:0 auto; }
-  svg text { font-family:"Palatino Linotype","Book Antiqua",Palatino,Georgia,serif; }
+  .qrrow img { width:34mm; height:34mm; display:block; margin:0 auto; }
+  .qrrow .ph { width:34mm; height:34mm; border:2px dashed #777; display:flex; align-items:center; justify-content:center; font-weight:400; font-size:12pt; margin:0 auto; }
 </style>
 </head>
 <body>
@@ -72,84 +75,55 @@
 <div class="col">
 
 <h2>Abstract</h2>
-<p>Do the frequency content of video frames, and how it drifts from frame to frame, detect diffusion-generated video better than pixel
-statistics? On a controlled set of 432 real and 552 generated clips (five generators, two held out) we compare pixel-only, frequency-only
-and fused models on the <b>same held-out clips</b>, plus 250 public clips and four extra experiments. Every number comes from code in the repository.</p>
+<p>AI video generators now make clips that look real. Can a computer still tell them from camera video, just by measuring the clip's
+<b>fine detail</b> and <b>how that detail changes from frame to frame</b>? We built a fair test set of 984 clips and compared this
+&ldquo;frequency&rdquo; approach with ordinary pixel statistics and with a large pretrained network. It works well on the generators it
+was trained on, but only partly on new ones.</p>
+<div class="take"><b class="h">Key results</b> (score = AUROC: 1.0 is perfect, 0.5 is a coin flip)
+<ol>
+<li>On generators we trained on, fine-detail features score <b>0.97</b>, plain pixel statistics <b>0.89</b>.</li>
+<li>On <b>brand-new generators</b> our scores fall to 0.64–0.82; the big pretrained network holds up better (0.90–0.93).</li>
+<li>Our extra tests show the clue is real (it needs real motion) but fragile (resizing or heavy compression erases it).</li>
+</ol></div>
 
 <h2>Introduction</h2>
 <ul>
-<li><b>Why it matters:</b> realistic synthetic video can mislead, and detectors trained on one generator often fail on the next.</li>
-<li><b>Why frequency:</b> generators denoise and up-sample, leaving traces in the spectrum (too little or too much fine detail); in video, how these traces <b>change over time</b> is a second cue.</li>
-<li><b>Why deep learning:</b> small networks learn to combine hundreds of weak spectral cues; a pixel baseline and a fine-tuned ResNet-18 give every claim a fair reference.</li>
+<li><b>The problem:</b> tools like Sora, Veo and Wan make video that people cannot reliably tell from real footage, and a detector built for one generator often fails on the next.</li>
+<li><b>The idea:</b> every picture has coarse detail (big shapes) and fine detail (tiny texture and noise). Generators build video by cleaning up noise step by step, which changes the fine detail. A Fourier transform measures how much detail there is at each scale (Figure 1).</li>
+<li><b>The second clue is time:</b> in camera footage the fine detail changes naturally from frame to frame; generated video may flicker differently.</li>
+<li><b>Why neural networks:</b> these are hundreds of weak clues; a small network learns how to combine them.</li>
 </ul>
 <figure>
-<img src="figs/fig_spectra.png" style="width:160mm">
-<figcaption><b>Figure 1:</b> Mean log spectrum of 40 clips per source (top-left) and each generator <i>minus real</i> (blue: less energy than real, red: more; * = unseen). Each generator has its own fingerprint: LTX a regular dot grid, ModelScope extra energy.</figcaption>
+<img src="figs/fig_spectra.png" style="width:128mm">
+<figcaption><b>Figure 1:</b> Average &ldquo;detail map&rdquo; (Fourier spectrum) of 40 clips per source. Top left: real clips. The others show how each AI generator differs from real: blue = less fine detail than real, red = more. Each generator leaves its own fingerprint (* = never used in training).</figcaption>
 </figure>
-<p>We outline our major contributions below:</p>
+<p>Our contributions:</p>
 <ul>
-<li>A <b>controlled, checksummed dataset</b> where real and fake differ only in how they were made (same frames, crop, re-encode), with a shortcut audit.</li>
-<li>A <b>like-for-like comparison</b> of pixel, frequency and fusion features, with paired bootstrap intervals, unseen generators and 250 public clips.</li>
-<li><b>Four extra experiments</b> (resize, frame order, new prompts, frequency + ResNet-18), two of them negative results.</li>
-<li>A <b>live, reproducible demo</b> and one-command pipeline from data bundle to every table and figure.</li>
+<li>A <b>fair dataset</b>: real and AI clips are cut and compressed identically, so only their origin differs.</li>
+<li>A <b>head-to-head test</b> of pixel, fine-detail and combined features on the same unseen clips, with error ranges.</li>
+<li><b>Four extra stress tests</b>, two of which gave negative results.</li>
+<li><b>Everything re-runs</b>: code, checksummed data and a live demo.</li>
 </ul>
 
 <h2>Workflow</h2>
-<p>Figure 2 illustrates the workflow, from data collection to the reproducible release.</p>
+<p>Figure 2 shows the seven steps, from collecting clips to sharing the code.</p>
 <figure>
-<svg viewBox="0 0 520 578" style="width:125mm" xmlns="http://www.w3.org/2000/svg">
-  <defs><marker id="ar" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="#00008b"/></marker></defs>
-  <g font-size="19" fill="#111">
-    <rect x="20" y="8" width="480" height="58" rx="10" fill="#fff" stroke="#00008b" stroke-width="2.4"/><text x="260" y="33" text-anchor="middle" font-weight="700">1 · Data</text><text x="260" y="55" text-anchor="middle" font-size="16.5">432 real (Pexels, object filter) + 552 generated</text>
-    <rect x="20" y="92" width="480" height="58" rx="10" fill="#fff" stroke="#00008b" stroke-width="2.4"/><text x="260" y="117" text-anchor="middle" font-weight="700">2 · Normalise &amp; audit</text><text x="260" y="139" text-anchor="middle" font-size="16.5">14 frames · 256² native crop · H.264 · shortcut checks</text>
-    <rect x="20" y="176" width="480" height="58" rx="10" fill="#fff" stroke="#00008b" stroke-width="2.4"/><text x="260" y="201" text-anchor="middle" font-weight="700">3 · Features</text><text x="260" y="223" text-anchor="middle" font-size="16.5">263 frequency · 74 pixel · 337 fusion</text>
-    <rect x="20" y="260" width="480" height="58" rx="10" fill="#fff" stroke="#00008b" stroke-width="2.4"/><text x="260" y="285" text-anchor="middle" font-weight="700">4 · Models</text><text x="260" y="307" text-anchor="middle" font-size="16.5">LR · SVM · LightGBM · MLP · spectro-temporal CNN · ResNet-18</text>
-    <rect x="20" y="344" width="480" height="58" rx="10" fill="#fff" stroke="#00008b" stroke-width="2.4"/><text x="260" y="369" text-anchor="middle" font-weight="700">5 · Evaluate</text><text x="260" y="391" text-anchor="middle" font-size="16.5">held-out · unseen generators · CV · bootstrap · 250 public clips</text>
-    <rect x="20" y="428" width="480" height="58" rx="10" fill="#fdecef" stroke="#c9184a" stroke-width="2.6"/><text x="260" y="453" text-anchor="middle" font-weight="700" fill="#c9184a">6 · Novelty assessment</text><text x="260" y="475" text-anchor="middle" font-size="16.5">resize · frame order · new prompts · ResNet-18 + frequency</text>
-    <rect x="20" y="512" width="480" height="58" rx="10" fill="#fff" stroke="#00008b" stroke-width="2.4"/><text x="260" y="537" text-anchor="middle" font-weight="700">7 · Reproducible release</text><text x="260" y="559" text-anchor="middle" font-size="16.5">live demo · SHA-256 checksums · one-command pipeline</text>
-  </g>
-  <g stroke="#00008b" stroke-width="2.6" marker-end="url(#ar)"><path d="M260 66V90"/><path d="M260 150V174"/><path d="M260 234V258"/><path d="M260 318V342"/><path d="M260 402V426"/><path d="M260 486V510"/></g>
-</svg>
-<figcaption><b>Figure 2:</b> Overall workflow.</figcaption>
+<img src="figs/fig_workflow.png" style="width:214mm">
+<figcaption><b>Figure 2:</b> Overall workflow. Step 6 (red) is the novelty assessment.</figcaption>
 </figure>
 
 <h2>Methodology</h2>
-<p>Figure 3 illustrates the architecture: two feature branches from the same 14 frames, three model families on top.</p>
+<p>Figure 3 follows one clip through the system. Two groups of numbers are measured, and a small neural network turns them into the chance that the clip is AI-made.</p>
 <figure>
-<svg viewBox="0 0 520 470" style="width:176mm" xmlns="http://www.w3.org/2000/svg">
-  <defs><marker id="a2" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="#00008b"/></marker></defs>
-  <g font-size="16.5" fill="#111">
-    <rect x="6" y="150" width="82" height="64" rx="8" fill="#fff" stroke="#00008b" stroke-width="2.2"/><text x="47" y="177" text-anchor="middle" font-weight="700">Video</text><text x="47" y="198" text-anchor="middle" font-size="14">14 frames</text>
-    <rect x="120" y="20" width="168" height="170" rx="8" fill="#fff" stroke="#2a6f97" stroke-width="2.2"/>
-    <text x="204" y="44" text-anchor="middle" font-weight="700" fill="#2a6f97">Spatial branch</text>
-    <text x="204" y="68" text-anchor="middle" font-size="14">grey · Hann window</text><text x="204" y="87" text-anchor="middle" font-size="14">2D FFT, log power</text>
-    <text x="204" y="106" text-anchor="middle" font-size="14">48-bin radial curve</text><text x="204" y="125" text-anchor="middle" font-size="14">noise residual curve</text>
-    <text x="204" y="144" text-anchor="middle" font-size="14">slope · HF ratios · DCT</text><text x="204" y="163" text-anchor="middle" font-size="14">8 orientation wedges</text>
-    <text x="204" y="182" text-anchor="middle" font-weight="700" font-size="14">mean + std → 226</text>
-    <rect x="120" y="205" width="168" height="108" rx="8" fill="#fff" stroke="#3d9970" stroke-width="2.2"/>
-    <text x="204" y="229" text-anchor="middle" font-weight="700" fill="#3d9970">Temporal branch</text>
-    <text x="204" y="252" text-anchor="middle" font-size="14">curve distance between</text><text x="204" y="270" text-anchor="middle" font-size="14">consecutive frames (drift)</text>
-    <text x="204" y="288" text-anchor="middle" font-size="14">band drift · noise over time</text><text x="204" y="306" text-anchor="middle" font-weight="700" font-size="14">→ 37</text>
-    <rect x="120" y="328" width="168" height="64" rx="8" fill="#fff" stroke="#8a8f98" stroke-width="2.2"/>
-    <text x="204" y="354" text-anchor="middle" font-weight="700" fill="#5a606a">Pixel branch</text><text x="204" y="376" text-anchor="middle" font-size="14">74 statistics (control)</text>
-    <rect x="318" y="60" width="196" height="78" rx="8" fill="#e8f1f8" stroke="#00008b" stroke-width="2.4"/>
-    <text x="416" y="86" text-anchor="middle" font-weight="700">263 frequency features</text><text x="416" y="108" text-anchor="middle" font-size="14">LR · SVM · LightGBM</text><text x="416" y="126" text-anchor="middle" font-size="14">MLP 263→128→64→1</text>
-    <rect x="318" y="162" width="196" height="64" rx="8" fill="#e8f1f8" stroke="#00008b" stroke-width="2.4"/>
-    <text x="416" y="188" text-anchor="middle" font-weight="700">2 × 14 × 48 curves</text><text x="416" y="210" text-anchor="middle" font-size="14">1D-CNN (64,817 params)</text>
-    <rect x="318" y="250" width="196" height="64" rx="8" fill="#fdecef" stroke="#c9184a" stroke-width="2.4"/>
-    <text x="416" y="276" text-anchor="middle" font-weight="700" fill="#c9184a">Fusion: 263 + 74 = 337</text><text x="416" y="298" text-anchor="middle" font-size="14">MLP, paired with pixel-only</text>
-    <rect x="318" y="338" width="196" height="64" rx="8" fill="#fff" stroke="#8a8f98" stroke-width="2.4"/>
-    <text x="416" y="364" text-anchor="middle" font-weight="700" fill="#5a606a">Raw frames (reference)</text><text x="416" y="386" text-anchor="middle" font-size="14">pixel CNN · ResNet-18 (11.2 M)</text>
-  </g>
-  <g stroke="#00008b" stroke-width="2.4" fill="none" marker-end="url(#a2)">
-    <path d="M88 182C104 182 104 105 118 105"/><path d="M88 190C104 190 104 259 118 259"/><path d="M88 200C100 200 100 360 118 360"/>
-    <path d="M288 105H316"/><path d="M288 140C300 150 300 190 316 190"/><path d="M288 260C300 270 300 270 316 280"/><path d="M288 360H316"/>
-  </g>
-  <g font-size="15" fill="#111"><text x="260" y="445" text-anchor="middle" font-weight="700">Output: P(AI-generated) per clip · weighted BCE, AdamW, cosine schedule</text></g>
-</svg>
-<figcaption><b>Figure 3:</b> Overall architecture.</figcaption>
+<img src="figs/fig_architecture.png" style="width:212mm">
+<figcaption><b>Figure 3:</b> Overall architecture, with the real curves of one test clip.</figcaption>
 </figure>
-<p>Training: weighted BCE, AdamW, cosine schedule; validation picks settings, the test split is never used for any choice.</p>
+<ul>
+<li><b>A, fine detail:</b> power at 48 scales for each frame, and for the &ldquo;noise left over&rdquo; after smoothing it.</li>
+<li><b>B, change over time:</b> how far those curves move between neighbouring frames.</li>
+<li><b>Control:</b> 74 ordinary pixel statistics. If A and B beat this, they add something new.</li>
+<li><b>Reference models:</b> a 1D-CNN on the curves, and ResNet-18, a big pretrained image network (11 million weights).</li>
+</ul>
 
 </div>
 
@@ -159,56 +133,57 @@ and fused models on the <b>same held-out clips</b>, plus 250 public clips and fo
 <h2>Dataset Details</h2>
 <table>
 <tr><th class="l">Source</th><th>Train</th><th>Val</th><th>Test</th><th>Total</th></tr>
-<tr><td class="l">Real (Pexels stock)</td><td>304</td><td>63</td><td>65</td><td>432</td></tr>
-<tr><td class="l">LTX-Video</td><td>115</td><td>19</td><td>17</td><td>151</td></tr>
-<tr><td class="l">AnimateDiff</td><td>98</td><td>19</td><td>13</td><td>130</td></tr>
-<tr><td class="l">Stable Video Diffusion</td><td>78</td><td>21</td><td>16</td><td>115</td></tr>
-<tr><td class="l">ModelScope (unseen)</td><td>0</td><td>0</td><td>99</td><td>99</td></tr>
-<tr><td class="l">Wan2.1 (unseen)</td><td>0</td><td>0</td><td>57</td><td>57</td></tr>
+<tr><td class="l">Real (Pexels stock video)</td><td>304</td><td>63</td><td>65</td><td>432</td></tr>
+<tr><td class="l">LTX-Video (AI)</td><td>115</td><td>19</td><td>17</td><td>151</td></tr>
+<tr><td class="l">AnimateDiff (AI)</td><td>98</td><td>19</td><td>13</td><td>130</td></tr>
+<tr><td class="l">Stable Video Diffusion (AI)</td><td>78</td><td>21</td><td>16</td><td>115</td></tr>
+<tr><td class="l">ModelScope (AI, test only)</td><td>0</td><td>0</td><td>99</td><td>99</td></tr>
+<tr><td class="l">Wan2.1 (AI, test only)</td><td>0</td><td>0</td><td>57</td><td>57</td></tr>
 <tr class="tot"><td class="l">Total</td><td>595</td><td>122</td><td>267</td><td>984</td></tr>
 </table>
-<div class="tcap"><b>Table 1:</b> Clips per source and split (split by source group, 70/15/15).</div>
+<div class="tcap"><b>Table 1:</b> Clips per source. ModelScope and Wan2.1 are never used for training: they are the &ldquo;brand-new generators&rdquo;.</div>
 <ul>
-<li>18 scene types, 60 prompts; YOLOv8 filter (no people or cars); 250 public clips (Sora 2, Veo 3, Kling, HunyuanVideo, Wan2) used only as a stress test.</li>
-<li><b>Shortcut audit:</b> metadata alone gives AUROC 1.0 on raw files (hence the normalisation); file size still leaves 0.65.</li>
+<li>Every clip: 14 frames, 256 × 256 pixels, same compression; people and cars filtered out.</li>
+<li>Extra test: <b>250 public AI clips</b> (Sora 2, Veo 3, Kling, HunyuanVideo, Wan2).</li>
+<li>Watch-out: file size alone still separates real from AI a little (0.65).</li>
 </ul>
 
 <h2>Novelty Assessment</h2>
-<p>Extra experiments, each from a script and a result file:</p>
-<ul class="nov" style="list-style:none;padding-left:0">
-<li><span class="n">1</span><b>Resize vs native crop.</b> Resizing low-passes frames. On identical clips it costs the frequency features <b>0.07–0.09 AUROC</b>; the pixel baseline is unchanged (Figure 4).</li>
-<li><span class="n">2</span><b>Real motion?</b> Frames reversed or shuffled. Reversal changes nothing (drift is time-symmetric); <b>shuffling costs the temporal features 0.14–0.20 AUROC</b> on seen generators (Figure 5).</li>
-<li><span class="n">3</span><b>New prompts.</b> ModelScope regenerated from 36 unseen prompts (72 clips), no retraining: spectral and pixel models lose <b>0.05–0.15 AUROC</b> (prompt reuse had inflated them). Frequency still beats pixel by <b>+0.26</b> [+0.17, +0.34]; ResNet-18 barely moves (0.91 → 0.89).</li>
-<li><span class="n">4</span><b>Frequency + ResNet-18 (negative).</b> Late fusion helps the frequency model (+0.06–0.08 unseen) but <b>not ResNet-18</b>: seen +0.004 [−0.03, +0.04], Wan2.1 −0.20.</li>
-<li><span class="n">5</span><b>Reproducible.</b> Live demo, 1,295 checksums, one-command pipeline, 45 tests, 18 example clips (wrong verdicts kept).</li>
-</ul>
+<p>Four stress tests beyond the required comparison:</p>
+<table class="q">
+<tr><th>Question</th><th>What we did</th><th>What we found</th></tr>
+<tr><td>1. Does resizing hurt?</td><td>Shrank frames instead of cropping, same clips.</td><td>Fine-detail models lose <b>0.07–0.09</b>; pixel models are unchanged. Resizing erases the clue.</td></tr>
+<tr><td>2. Does it use real motion?</td><td>Played frames backwards, then shuffled them.</td><td>Backwards: no change. Shuffled: the time models lose <b>0.14–0.20</b>. They use real motion.</td></tr>
+<tr><td>3. Were the new-generator scores fair?</td><td>Made 72 new ModelScope clips from 36 prompts never used before.</td><td>Every model drops <b>0.05–0.15</b>: the old scores were too high. Detail still beats pixels (0.72 vs 0.46); the big network barely moves (0.91 &rarr; 0.89).</td></tr>
+<tr><td>4. Can our detail help the big network?</td><td>Blended our score with ResNet-18's.</td><td><b>No.</b> It lifts our model (+0.06 to +0.08) but not ResNet-18 (+0.00 on trained generators, &minus;0.06 to &minus;0.20 on new ones).</td></tr>
+</table>
 <div class="two">
-<figure><img src="figs/fig_resize.png" style="width:100%"><figcaption><b>Figure 4:</b> Grouped-CV AUROC, native crop vs resized.</figcaption></figure>
-<figure><img src="figs/fig_temporal.png" style="width:100%"><figcaption><b>Figure 5:</b> AUROC change when frames are shuffled.</figcaption></figure>
+<figure><img src="figs/fig_resize.png" style="width:100%"><figcaption><b>Figure 4 (test 1):</b> Score with cropped (dark) vs resized (light) frames. Blue bars drop; grey bars do not.</figcaption></figure>
+<figure><img src="figs/fig_temporal.png" style="width:100%"><figcaption><b>Figure 5 (test 2):</b> Score change when frames are shuffled. Below zero = the model used the frame order.</figcaption></figure>
 </div>
 
 <h2>Results</h2>
-<p><b>Pixel vs frequency vs fusion</b> on the same held-out clips (MLP, 95 % intervals): on seen generators frequency beats pixel (<b>+0.075</b> [+0.020, +0.145]) and fusion beats pixel (<b>+0.092</b> [+0.045, +0.147]). Transfer to unseen generators is uneven (Figures 6 and 7, Table 2).</p>
+<p>On the same 267 unseen clips, fine detail beats pixel statistics on trained generators: <b>0.966 vs 0.889</b> (gap +0.075, 95 % range +0.02 to +0.15). On new generators the picture is mixed (Figure 6, Table 2).</p>
 <div class="two" style="grid-template-columns:0.9fr 1.3fr">
-<figure><img src="figs/fig_compare.png" style="width:100%"><figcaption><b>Figure 6:</b> Pixel vs frequency vs fusion, held-out clips.</figcaption></figure>
-<figure><img src="figs/fig_models.png" style="width:100%"><figcaption><b>Figure 7:</b> All models, mean of 5 seeds.</figcaption></figure>
+<figure><img src="figs/fig_compare.png" style="width:100%"><figcaption><b>Figure 6:</b> Pixel vs detail vs both. Black lines: 95 % range.</figcaption></figure>
+<figure><img src="figs/fig_models.png" style="width:100%"><figcaption><b>Figure 7:</b> All models, average of 5 runs.</figcaption></figure>
 </div>
 <table>
-<tr><th class="l">Model</th><th>Seen</th><th>ModelScope</th><th>Wan2.1</th><th>250 public</th></tr>
-<tr><td class="l">MLP pixel statistics</td><td>0.889</td><td>0.619</td><td>0.827</td><td>0.694</td></tr>
-<tr><td class="l">Pixel CNN (scratch)</td><td>0.808</td><td>0.598</td><td>0.871</td><td>0.679</td></tr>
-<tr><td class="l">ResNet-18 (fine-tuned)</td><td>0.954</td><td><b>0.900</b></td><td><b>0.926</b></td><td><b>0.781</b></td></tr>
-<tr><td class="l"><b>Ours:</b> MLP frequency</td><td>0.966</td><td>0.798</td><td>0.690</td><td>0.727</td></tr>
-<tr><td class="l"><b>Ours:</b> spectro-temporal CNN</td><td>0.919</td><td>0.740</td><td>0.640</td><td>0.757</td></tr>
-<tr><td class="l"><b>Ours:</b> MLP fusion</td><td><b>0.977</b></td><td>0.744</td><td>0.819</td><td>0.754</td></tr>
+<tr><th class="l">Model (AUROC)</th><th>Trained-on</th><th>ModelScope (new)</th><th>Wan2.1 (new)</th><th>250 public</th></tr>
+<tr><td class="l">Pixel statistics</td><td>0.889</td><td>0.619</td><td>0.827</td><td>0.694</td></tr>
+<tr><td class="l">Pixel CNN (from scratch)</td><td>0.808</td><td>0.598</td><td>0.871</td><td>0.679</td></tr>
+<tr><td class="l">ResNet-18 (big, pretrained)</td><td>0.954</td><td><b>0.900</b></td><td><b>0.926</b></td><td><b>0.781</b></td></tr>
+<tr><td class="l"><b>Ours:</b> fine detail</td><td>0.966</td><td>0.798</td><td>0.690</td><td>0.727</td></tr>
+<tr><td class="l"><b>Ours:</b> detail-over-time CNN</td><td>0.919</td><td>0.740</td><td>0.640</td><td>0.757</td></tr>
+<tr><td class="l"><b>Ours:</b> detail + pixels</td><td><b>0.977</b></td><td>0.744</td><td>0.819</td><td>0.754</td></tr>
 </table>
-<div class="tcap"><b>Table 2:</b> AUROC on held-out clips, mean of 5 seeds. Heavy compression, blur and down-scaling remove the measured high frequencies and cost 0.2–0.3 AUROC.</div>
+<div class="tcap"><b>Table 2:</b> Scores on unseen clips (average of 5 runs). Heavy compression, blur or down-scaling cost 0.2–0.3.</div>
 
 <h2>Conclusion</h2>
 <ul>
-<li>Frequency and drift features <b>beat pixel statistics on seen generators</b> with 42 k parameters; transfer to unseen generators and compression is <b>partial</b>.</li>
-<li>Resizing quietly removes the signal. ResNet-18 transfers best; frequency adds nothing to it in simple fusion.</li>
-<li><b>Next:</b> non-stock real footage, prompt-disjoint unseen sets at scale, compression-aware training.</li>
+<li><b>It works</b> on generators it was trained on: fine detail beats pixel statistics with only 42 000 weights.</li>
+<li><b>It transfers only partly:</b> new generators, resizing and compression hurt; the big pretrained network is better on new generators, and our features do not help it.</li>
+<li><b>Next:</b> non-stock real footage, more new-generator tests, compression-aware training.</li>
 </ul>
 
 <h2>References</h2>
@@ -221,8 +196,8 @@ and fused models on the <b>same held-out clips</b>, plus 250 public clips and fo
 <li>[6] Kaiming He, Xiangyu Zhang, Shaoqing Ren and Jian Sun. Deep Residual Learning for Image Recognition, CVPR, 2016. https://arxiv.org/abs/1512.03385</li>
 </ol>
 
-<h2>Acknowledgments</h2>
-<p style="font-size:14pt">We thank the IE 643 instructor and TAs, Pexels, and the authors of the open generators used here.</p>
+<h2 style="margin-top:2mm">Acknowledgments</h2>
+<p style="font-size:13.5pt;margin-bottom:0">We thank the IE 643 instructor and TAs, Pexels, and the authors of the open generators used here.</p>
 
 <h2>Github Link and Demo Video Link</h2>
 <div class="qrrow">

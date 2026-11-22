@@ -74,7 +74,7 @@ Caveats: the ResNet-18 here is the single stored seed-643 checkpoint; the prompt
 | Poster item | Source file | Written by |
 |---|---|---|
 | Figure 1: mean spectra, real and generator minus real (40 clips per source) | `data/manifest_crop.csv`, `data/clips_crop/` | `tools/make_poster_figures.py` (`spectra`) |
-| Figures 2 and 3: workflow and architecture diagrams | drawn in `poster/poster.html` (inline SVG, no data) | by hand |
+| Figures 2 and 3: workflow and architecture diagrams (Figure 3 holds the real curves of one held-out clip and the shipped model's verdict) | `data/clips_crop/`, `results_crop/predictions.csv` | `tools/poster_diagrams.py` |
 | Figure 4: resize vs native crop | `resize_ablation_cv.csv` | stage `ablation` |
 | Figure 5: frame shuffling | `temporal_order.csv` | stage `extras` |
 | Figure 6: pixel vs frequency vs fusion with intervals | `live_comparison.csv` | stage `demo` (`python -m src.demo_live`) |
