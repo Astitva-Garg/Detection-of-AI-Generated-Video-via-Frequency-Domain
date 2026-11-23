@@ -162,9 +162,9 @@ features on identical held-out clips. Frequency cues win on trained generators (
 <tr><td>4. Can our detail help the big network?</td><td>Blended our score with ResNet-18&rsquo;s.</td><td><b>No.</b> It lifts our model (+0.06 to +0.08 on new generators) but not ResNet-18 (+0.00 on trained generators, &minus;0.06 to &minus;0.20 on new ones).</td></tr>
 </table>
 <div class="two">
-<figure><img src="figs/fig_resize.png" style="width:100%"><figcaption><b>Figure 4 (test 1):</b> Cropped (solid) vs resized (hatched) frames. Detail and combined drop; pixel does not.</figcaption></figure>
-<figure><img src="figs/fig_temporal.png" style="width:100%"><figcaption><b>Figure 5 (test 2):</b> Score change when frames are shuffled. Below zero = the model used the frame order.</figcaption></figure>
-<figure><img src="figs/fig_prompts.png" style="width:100%"><figcaption><b>Figure 6 (test 3):</b> New ModelScope clips from unseen prompts (hatched) vs old (solid). One run.</figcaption></figure>
+<figure><img src="figs/fig_resize.png" style="width:100%"><figcaption><b>Figure 4 (test 1):</b> Native crop (blue) vs resized frames (red). Detail and combined drop; pixel does not.</figcaption></figure>
+<figure><img src="figs/fig_temporal.png" style="width:100%"><figcaption><b>Figure 5 (test 2):</b> Original (blue) vs shuffled frames (red). Only the time features fall.</figcaption></figure>
+<figure><img src="figs/fig_prompts.png" style="width:100%"><figcaption><b>Figure 6 (test 3):</b> ModelScope clips from old prompts (blue) vs 36 new prompts (red). One run.</figcaption></figure>
 <figure><img src="figs/fig_fusion.png" style="width:100%"><figcaption><b>Figure 7 (test 4):</b> ResNet-18, our detail model and both fused (one run). Fusion helps ours, not ResNet-18.</figcaption></figure>
 </div>
 
