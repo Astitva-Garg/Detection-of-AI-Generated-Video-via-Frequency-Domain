@@ -22,7 +22,6 @@ ROOT = Path(__file__).parent
 EXAMPLES = sorted((ROOT / "examples").glob("*.mp4"))
 REF = MODELS / "reference_spectra.json"   # class-mean radial spectra, written by build_reference()
 P = Predictor()
-x_freq = (np.arange(N_BINS) + 0.5) / N_BINS
 
 MODEL_LABELS = {
     "mlp_fusion": "MLP — frequency + pixel fusion (recommended)",
@@ -69,22 +68,6 @@ def _frames_fig(frames):
     return fig
 
 
-def _spectrum_fig(res):
-    fig, ax = plt.subplots(figsize=(6, 3.6))
-    rad = np.array([res.features[f"sp_rad_{i:02d}_mean"] for i in range(N_BINS)])
-    ref = _ref()
-    if ref:
-        ax.plot(x_freq, ref["real"]["rad"], color="#2a6f97", label="real (training mean)")
-        ax.plot(x_freq, ref["fake"]["rad"], color="#c9184a", label="AI (training mean)")
-    ax.plot(x_freq, rad, color="k", lw=2, label="this clip")
-    ax.set_title("Radial power spectrum")
-    ax.set_xlabel("spatial frequency (fraction of Nyquist)")
-    ax.set_ylabel("log power (mean removed)")
-    ax.legend(fontsize=8)
-    fig.tight_layout()
-    return fig
-
-
 def _drift_fig(res):
     s = res.seq[0]
     l2 = np.linalg.norm(np.diff(s, axis=0), axis=1)
@@ -106,7 +89,7 @@ def detect(video, model, start, degradation):
     if video is None:
         raise gr.Error("Please upload a video or pick an example.")
     res = P.predict(video, model=model, start=float(start), degradation=degradation)
-    return _verdict_html(res), _frames_fig(res.frames), _spectrum_fig(res), _drift_fig(res)
+    return _verdict_html(res), _frames_fig(res.frames), _drift_fig(res)
 
 
 def _perf_tables():
@@ -150,10 +133,8 @@ def build_ui():
                 with gr.Column(scale=2):
                     verdict = gr.HTML()
                     frames_plot = gr.Plot(label="Frames and their 2D spectra")
-            with gr.Row():
-                spec_plot = gr.Plot(label="Spectrum vs training means")
-                drift_plot = gr.Plot(label="Temporal frequency drift")
-            btn.click(detect, [vid, model, start, deg], [verdict, frames_plot, spec_plot, drift_plot])
+            drift_plot = gr.Plot(label="Temporal frequency drift")
+            btn.click(detect, [vid, model, start, deg], [verdict, frames_plot, drift_plot])
         with gr.Tab("Performance"):
             gr.Markdown("### Test-set metrics (seen generators and unseen generators)")
             gr.Dataframe(tables["test_metrics"])
