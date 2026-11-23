@@ -27,7 +27,10 @@ x_freq = (np.arange(N_BINS) + 0.5) / N_BINS
 MODEL_LABELS = {
     "mlp_fusion": "MLP — frequency + pixel fusion (recommended)",
     "mlp_all": "MLP — frequency: spatial + temporal",
+    "mlp_spatial": "MLP — spatial frequency only (fine detail)",
+    "mlp_temporal": "MLP — temporal only (change over time)",
     "mlp_pixel": "MLP — pixel statistics only (control)",
+    "resnet18": "ResNet-18 — fine-tuned on raw frames",
 }
 
 
@@ -115,6 +118,12 @@ def _perf_tables():
             out[name] = d[d.model.str.startswith("mlp")]
         except (FileNotFoundError, pd.errors.EmptyDataError):
             out[name] = pd.DataFrame({"info": [f"{name}.csv not available — run evaluation"]})
+    try:
+        r = pd.read_csv(RESULTS / "late_fusion.csv")
+        r = r[r.set.isin(["seen", "modelscope", "wan"])][["set", "n", "resnet18", "frequency_mlp"]]
+        out["resnet"] = r.rename(columns={"set": "test set", "n": "clips", "frequency_mlp": "frequency MLP"}).round(3)
+    except FileNotFoundError:
+        out["resnet"] = pd.DataFrame({"info": ["late_fusion.csv not available"]})
     return out
 
 
@@ -152,6 +161,8 @@ def build_ui():
             gr.Dataframe(tables["per_generator"])
             gr.Markdown("### Robustness to degradations")
             gr.Dataframe(tables["degraded"])
+            gr.Markdown("### ResNet-18 vs the frequency MLP (AUROC, one stored run)")
+            gr.Dataframe(tables["resnet"])
     return demo
 
 

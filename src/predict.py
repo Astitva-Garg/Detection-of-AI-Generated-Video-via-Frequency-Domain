@@ -14,6 +14,17 @@ from src.features.temporal import clip_features
 from src.models.cnn import SpecTempCNN, cnn_predict
 
 
+class _Squeeze(torch.nn.Module):
+    """Single-logit wrapper around ResNet-18, same layout as src.models.pixel_cnn (state-dict keys 'net.*')."""
+
+    def __init__(self, net):
+        super().__init__()
+        self.net = net
+
+    def forward(self, x):
+        return self.net(x).squeeze(-1)
+
+
 @dataclass
 class PredictionResult:
     p_fake: float
@@ -37,11 +48,20 @@ class Predictor:
                        if "_logo_" not in p.stem)
         if (self.model_dir / "cnn.pt").exists():
             names.append("cnn")
+        if (self.model_dir / "resnet18.pt").exists():
+            names.append("resnet18")
         return names
 
     def _load(self, name):
         if name not in self._cache:
-            if name == "cnn":
+            if name == "resnet18":
+                from torchvision.models import resnet18
+                net = resnet18(weights=None)                      # the fine-tuned weights come from the checkpoint
+                net.fc = torch.nn.Linear(net.fc.in_features, 1)
+                m = _Squeeze(net)
+                m.load_state_dict(torch.load(self.model_dir / "resnet18.pt", map_location="cpu"))
+                self._cache[name] = {"resnet18": m.eval()}
+            elif name == "cnn":
                 ck = torch.load(self.model_dir / "cnn.pt", weights_only=False)
                 m = SpecTempCNN(ck["in_ch"], ck["n_bins"])
                 m.load_state_dict(ck["state"])
@@ -85,7 +105,9 @@ class Predictor:
         feats.update(clip_pixel_features(frames))
         entry = self._load(model)
         top = []
-        if "cnn" in entry:
+        if "resnet18" in entry:
+            p = self._resnet_score(entry["resnet18"], frames)
+        elif "cnn" in entry:
             p = float(cnn_predict(entry["cnn"], entry["stats"], seq[None])[0])
         else:
             cols = entry["cols"]
@@ -95,6 +117,18 @@ class Predictor:
         warn = self._content_check(raw) if check_content else None
         return PredictionResult(p, "AI-generated" if p >= 0.5 else "Real (camera)", feats, seq, frames,
                                 top, warn, notes)
+
+    @staticmethod
+    def _resnet_score(net, frames: np.ndarray) -> float:
+        """Clip score as in training: every 2nd frame, centre 224 crop, mean sigmoid over those frames."""
+        crop = 224
+        o = (frames.shape[1] - crop) // 2
+        x = np.ascontiguousarray(frames[list(range(0, N_FRAMES, 2)), o:o + crop, o:o + crop])
+        x = torch.from_numpy(x).permute(0, 3, 1, 2).float().div_(255)
+        mean = torch.tensor([0.485, 0.456, 0.406]).view(1, 3, 1, 1)
+        std = torch.tensor([0.229, 0.224, 0.225]).view(1, 3, 1, 1)
+        with torch.no_grad():
+            return float(torch.sigmoid(net((x - mean) / std)).mean())
 
     def _explain(self, entry, X, cols, k: int = 10) -> list[tuple[str, float]]:
         """Top-k feature contributions (SHAP for trees, coef*standardised value for linear)."""

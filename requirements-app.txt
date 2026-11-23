@@ -1,6 +1,7 @@
 # Minimal packages to run the Gradio demo (python app.py) on any machine, CPU only. Python 3.11.
 # Same pins as requirements.txt, without the generation / training extras.
 torch==2.11.0
+torchvision==0.26.0
 numpy==2.4.6
 scipy==1.17.1
 pandas==3.0.6
