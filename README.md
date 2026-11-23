@@ -46,7 +46,7 @@ python -m src.demo_live
 
 To run a notebook without opening Jupyter: `python tools/run_demo_notebook.py` or `python tools/run_novelty_notebook.py` (each saves an executed copy and an HTML page in `demo_output/`).
 
-**Novelty checks:** `novelty.ipynb` shows the four extra experiments (resize vs native crop, frame order, prompt-disjoint test, ResNet-18 late fusion), each with a labelled graph from the stored result file and the script that writes it.
+**Novelty checks** (double-click `run_novelty_notebook.bat`): `novelty.ipynb` shows the four extra experiments (resize vs native crop, frame order, prompt-disjoint test, ResNet-18 late fusion), each with a labelled graph from the stored result file and the script that writes it.
 
 It runs on real held-out clips and prints every step (outputs in `demo_output/`):
 1. shows a real and a generated clip (chosen by a fixed random seed, not by hand);
