@@ -77,8 +77,10 @@ Caveats: the ResNet-18 here is the single stored seed-643 checkpoint; the prompt
 | Figures 2 and 3: workflow and architecture diagrams (Figure 3 holds the real curves of one held-out clip and the shipped model's verdict) | `data/clips_crop/`, `results_crop/predictions.csv` | `tools/poster_diagrams.py` |
 | Figure 4: resize vs native crop | `resize_ablation_cv.csv` | stage `ablation` |
 | Figure 5: frame shuffling | `temporal_order.csv` | stage `extras` |
-| Figure 6: pixel vs frequency vs fusion with intervals | `live_comparison.csv` | stage `demo` (`python -m src.demo_live`) |
-| Table 3 (all models, 5 seeds; Figure 7 was dropped as it repeated this table) | `seed_stability.csv`, `pixel_deep.csv` | stages `seeds`, `deep` |
+| Figure 6: new-prompt test (old vs new ModelScope prompts; pixel, detail, combined MLP and ResNet-18) | `fresh_prompts.csv` | stage `extras` |
+| Figure 7: ResNet-18, detail MLP and the two fused | `late_fusion.csv` | stage `extras` |
+| Figure 8: pixel vs frequency vs fusion with intervals | `live_comparison.csv` | stage `demo` (`python -m src.demo_live`) |
+| Table 3 (all models, 5 seeds; an older Figure 7 was dropped as it repeated this table) | `seed_stability.csv`, `pixel_deep.csv` | stages `seeds`, `deep` |
 | Table 1: features in groups A, B and control (counts and definitions) | `src/features/spatial.py`, `temporal.py`, `pixel_baseline.py` | by hand from the code |
 | Table 2: clips per source and split | `data/manifest_crop.csv` | stage `dataset` |
 | Numbers in the novelty text | `resize_ablation_cv.csv`, `temporal_order.csv`, `fresh_prompts*.csv`, `late_fusion.csv`, `bootstrap_diffs.csv` | stages above |

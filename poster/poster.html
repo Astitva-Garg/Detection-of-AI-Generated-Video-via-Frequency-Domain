@@ -136,6 +136,7 @@ features on identical held-out clips. Frequency cues win on trained generators (
 <div class="tcap"><b>Table 1:</b> Features. Models: an MLP (263&rarr;128&rarr;64&rarr;1) on A + B; ResNet-18 (11 M weights, fine-tuned) on raw frames.</div>
 
 <h2>Dataset Details</h2>
+<div style="display:grid;grid-template-columns:1.4fr 0.8fr;column-gap:4mm;align-items:center"><div>
 <table>
 <tr><th class="l">Source</th><th>Train</th><th>Val</th><th>Test</th><th>Total</th></tr>
 <tr><td class="l">Real (Pexels stock video)</td><td>304</td><td>63</td><td>65</td><td>432</td></tr>
@@ -146,8 +147,10 @@ features on identical held-out clips. Frequency cues win on trained generators (
 <tr><td class="l">Wan2.1 (AI, test only)</td><td>0</td><td>0</td><td>57</td><td>57</td></tr>
 <tr class="tot"><td class="l">Total</td><td>595</td><td>122</td><td>267</td><td>984</td></tr>
 </table>
-<div class="tcap"><b>Table 2:</b> Clips per source. ModelScope and Wan2.1 are never used for training: they are the &ldquo;brand-new generators&rdquo;.</div>
+<div class="tcap"><b>Table 2:</b> Clips per source. ModelScope and Wan2.1 are never trained on.</div>
+</div>
 <p style="font-size:14.6pt;margin-bottom:1mm">Every clip: 14 frames, 256 &times; 256 pixels, same compression; people and cars filtered out. Extra test: <b>250 public AI clips</b> (Sora 2, Veo 3, Kling, HunyuanVideo, Wan2). Watch-out: file size alone still separates real from AI a little (AUROC 0.65).</p>
+</div>
 
 <h2>Novelty Assessment</h2>
 
@@ -159,14 +162,16 @@ features on identical held-out clips. Frequency cues win on trained generators (
 <tr><td>4. Can our detail help the big network?</td><td>Blended our score with ResNet-18&rsquo;s.</td><td><b>No.</b> It lifts our model (+0.06 to +0.08 on new generators) but not ResNet-18 (+0.00 on trained generators, &minus;0.06 to &minus;0.20 on new ones).</td></tr>
 </table>
 <div class="two">
-<figure><img src="figs/fig_resize.png" style="width:100%"><figcaption><b>Figure 4 (test 1):</b> Score with cropped (solid) vs resized (hatched) frames. Detail and combined bars drop; the pixel bar does not.</figcaption></figure>
+<figure><img src="figs/fig_resize.png" style="width:100%"><figcaption><b>Figure 4 (test 1):</b> Cropped (solid) vs resized (hatched) frames. Detail and combined drop; pixel does not.</figcaption></figure>
 <figure><img src="figs/fig_temporal.png" style="width:100%"><figcaption><b>Figure 5 (test 2):</b> Score change when frames are shuffled. Below zero = the model used the frame order.</figcaption></figure>
+<figure><img src="figs/fig_prompts.png" style="width:100%"><figcaption><b>Figure 6 (test 3):</b> New ModelScope clips from unseen prompts (hatched) vs old (solid). One run.</figcaption></figure>
+<figure><img src="figs/fig_fusion.png" style="width:100%"><figcaption><b>Figure 7 (test 4):</b> ResNet-18, our detail model and both fused (one run). Fusion helps ours, not ResNet-18.</figcaption></figure>
 </div>
 
 <h2>Results</h2>
-<p>On the same held-out clips, fine detail beats pixel statistics on trained generators: <b>0.966 vs 0.889</b> (5-run means; for the final trained model the paired gap is +0.079, 95 % interval +0.02 to +0.14). On new generators the picture is mixed (Figure 6, Table 3).</p>
+<p>On the same held-out clips, fine detail beats pixel statistics on trained generators: <b>0.966 vs 0.889</b> (5-run means; for the final trained model the paired gap is +0.079, 95 % interval +0.02 to +0.14). On new generators the picture is mixed (Figure 8, Table 3).</p>
 <div style="display:grid;grid-template-columns:0.82fr 1.18fr;column-gap:4mm;align-items:center">
-<figure style="margin:0"><img src="figs/fig_compare.png" style="width:100%"><figcaption><b>Figure 6:</b> Final trained model (one run): pixel vs detail vs both. Black lines: 95 % range. Table 3 gives 5-run means.</figcaption></figure>
+<figure style="margin:0"><img src="figs/fig_compare.png" style="width:100%"><figcaption><b>Figure 8:</b> One run: pixel vs detail vs both. Black lines: 95 % range.</figcaption></figure>
 <div>
 <table class="res">
 <tr><th class="l">AUROC</th><th>Trained-on</th><th>ModelScope (new)</th><th>Wan2.1 (new)</th><th>250 public</th></tr>

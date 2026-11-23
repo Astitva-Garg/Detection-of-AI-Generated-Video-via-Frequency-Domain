@@ -78,7 +78,7 @@ def models():
 def resize():
     d = pd.read_csv(RESULTS / "resize_ablation_cv.csv").set_index(["model", "features"])
     groups = [("pixel", "Pixel", GREY), ("all", "Frequency", BLUE), ("fusion", "Combined", RED)]
-    fig, ax = plt.subplots(figsize=(COL, 3.25))
+    fig, ax = plt.subplots(figsize=(COL, 2.5))
     w = 0.34
     for i, (feat, _, col) in enumerate(groups):
         ax.bar(i - w / 2, d.loc[("mlp", feat), "crop"], w, color=col, edgecolor="white")
@@ -91,6 +91,38 @@ def resize():
     save(fig, "fig_resize.png")
 
 
+def prompts():
+    """Test 3: ModelScope clips from the training prompts vs 36 new prompts (stored result, MLP and ResNet-18)."""
+    d = pd.read_csv(RESULTS / "fresh_prompts.csv").set_index("model")
+    groups = [("mlp_pixel", "Pixel", GREY), ("mlp_all", "Detail", BLUE), ("mlp_fusion", "Combined", RED), ("resnet18", "ResNet-18", PURPLE)]
+    fig, ax = plt.subplots(figsize=(COL, 2.5))
+    w = 0.36
+    for i, (m, _, col) in enumerate(groups):
+        ax.bar(i - w / 2, d.loc[m, "auroc_old_prompts"], w, color=col, edgecolor="white")
+        ax.bar(i + w / 2, d.loc[m, "auroc_new_prompts"], w, color=col, hatch="///", edgecolor="white", alpha=0.65)
+    ax.axhline(0.5, color="k", lw=1.2, ls=":")
+    ax.set_xticks(range(4)); ax.set_xticklabels([l for _, l, _ in groups], fontsize=17)
+    ax.set_ylim(0.3, 1.0); ax.set_ylabel("AUROC, ModelScope vs real")
+    from matplotlib.patches import Patch
+    ax.legend(handles=[Patch(facecolor="#555555", label="Old prompts"), Patch(facecolor="#555555", hatch="///", alpha=0.65, label="New prompts")],
+              loc="upper center", bbox_to_anchor=(0.5, 1.25), ncol=2, frameon=False, fontsize=16)
+    save(fig, "fig_prompts.png")
+
+
+def fusion():
+    """Test 4: ResNet-18 alone, our detail MLP alone, and the two fused (stored result)."""
+    d = pd.read_csv(RESULTS / "late_fusion.csv").set_index("set")
+    sets = [("seen", "Seen"), ("modelscope", "ModelScope\n(unseen)"), ("wan", "Wan2.1\n(unseen)")]
+    fig, ax = plt.subplots(figsize=(COL, 2.5))
+    w = 0.26
+    for j, (col_, color, lab) in enumerate([("resnet18", PURPLE, "ResNet-18"), ("frequency_mlp", BLUE, "Detail MLP"), ("fused", ORANGE, "Both fused")]):
+        ax.bar(np.arange(3) + (j - 1) * w, [d.loc[s, col_] for s, _ in sets], w, color=color, label=lab)
+    ax.set_xticks(range(3)); ax.set_xticklabels([l for _, l in sets])
+    ax.set_ylim(0.5, 1.0); ax.set_ylabel("AUROC (held-out clips)")
+    ax.legend(loc="upper center", bbox_to_anchor=(0.5, 1.22), frameon=False, ncol=3, fontsize=16, columnspacing=1.0, handlelength=1.0)
+    save(fig, "fig_fusion.png")
+
+
 def temporal_order():
     p = RESULTS / "temporal_order.csv"
     if not p.exists():
@@ -99,7 +131,7 @@ def temporal_order():
     d = d[d.variant == "shuffled"]
     sets = [("seen", "Seen"), ("ModelScope (unseen)", "ModelScope"), ("Wan2.1 (unseen)", "Wan2.1")]
     models_ = [("mlp_spatial", GREY, "Spatial only (0 by design)"), ("mlp_temporal", GREEN, "Temporal only"), ("mlp_all", BLUE, "Spatial + temporal")]
-    fig, ax = plt.subplots(figsize=(COL, 3.25))
+    fig, ax = plt.subplots(figsize=(COL, 2.5))
     w = 0.26
     for j, (m, col, lab) in enumerate(models_):
         r = [d[(d.model == m) & (d.set == s)].iloc[0] for s, _ in sets]
