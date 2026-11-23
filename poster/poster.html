@@ -88,8 +88,8 @@ features on identical held-out clips. Frequency cues win on trained generators (
 <div style="font-size:14pt;margin:0.5mm 0 1mm">AUROC = chance that a random AI clip is scored more &ldquo;AI-like&rdquo; than a random real clip: 1.0 is perfect, 0.5 is guessing.</div>
 <ol>
 <li><b>Frequency beats pixels on trained generators:</b> 0.966 vs 0.889 (both together: 0.977).</li>
-<li><b>Transfer to new generators is only partial:</b> on ModelScope and Wan2.1 (never seen in training) our models score 0.64&ndash;0.82, while a fine-tuned ResNet-18 scores 0.90&ndash;0.93.</li>
-<li><b>The clue is real but fragile:</b> shuffling frames costs the time-only features 0.14&ndash;0.20, so they rely on real motion; resizing frames (&minus;0.07 to &minus;0.09) or heavy compression, blur or down-scaling (&minus;0.2 to &minus;0.3) weakens the fine-detail clue sharply.</li>
+<li><b>Transfer to new generators is only partial:</b> on ModelScope and Wan2.1 (never seen in training) our models score 0.69&ndash;0.82, while a fine-tuned ResNet-18 scores 0.90&ndash;0.93.</li>
+<li><b>The clue is real but fragile:</b> shuffling frames costs the time-only features 0.14, so they rely on real motion; resizing frames (&minus;0.08) or heavy compression, blur or down-scaling (&minus;0.2 to &minus;0.3) weakens the fine-detail clue sharply.</li>
 </ol></div>
 
 <h2>Introduction</h2>
@@ -98,7 +98,7 @@ features on identical held-out clips. Frequency cues win on trained generators (
 <li><b>Relevance:</b> text-to-video diffusion models (Sora 2, Veo 3, Kling, Wan) have passed the point where people can reliably tell their output from real footage, and open models (LTX-Video, Wan2.1) put this capability in everyone&rsquo;s hands.</li>
 <li><b>Significance:</b> misinformation, fraud and tampered evidence need detectors. A detector tied to one generator&rsquo;s artefacts fails on the next release, so it must rest on cues that all generators share and be tested on generators it has never seen.</li>
 <li><b>Why frequency:</b> diffusion models synthesise frames by iterative denoising and up-sampling, which leaves systematic traces in the power spectrum (excess or missing energy at high spatial frequencies) and in how the spectrum drifts between frames (Figure 1) [1&ndash;5].</li>
-<li><b>Why deep learning:</b> the traces are spread over hundreds of weak, correlated features, and no hand-written rule separates them. Networks learn the decision boundary from data: an MLP on 263 spectral features and a 1D-CNN on the 2 &times; 14 &times; 48 radial-spectrum sequence, against pixel-statistics models and a fine-tuned ResNet-18 [6] as baselines.</li>
+<li><b>Why deep learning:</b> the traces are spread over hundreds of weak, correlated features, and no hand-written rule separates them. Networks learn the decision boundary from data: an MLP on 263 spectral features, against a pixel-statistics MLP and a fine-tuned ResNet-18 [6] as baselines.</li>
 </ul>
 <figure style="margin:1mm 0 1mm">
 <img src="figs/fig_spectra.png" style="width:222mm">
@@ -133,7 +133,7 @@ features on identical held-out clips. Frequency cues win on trained generators (
 <tr><td><b>B</b> change over time</td><td>37</td><td>L2 and cosine distance between consecutive frames&rsquo; radial spectra (mean, std, max, lag-1 autocorrelation); second-order change; low/mid/high-band drift; drift of slope, high-frequency share, centroid, DCT-high; 5 noise-residual features (lag-1 temporal correlation, high-temporal-frequency share, energy, residual-spectrum drift).</td></tr>
 <tr><td><b>Control</b> pixels</td><td>74</td><td>Mean and std over frames: HSV histograms (8 bins &times; 3), luminance mean, std, 5/50/95th percentiles, Sobel gradient mean, std, p95, Laplacian variance, edge density, saturation mean, std; plus mean and std of the frame difference.</td></tr>
 </table>
-<div class="tcap"><b>Table 1:</b> Features. Models: LR, SVM, LightGBM and an MLP (263&rarr;128&rarr;64&rarr;1) on A + B; a 1D-CNN on the 2 &times; 14 &times; 48 spectrum sequence; ResNet-18 (11 M weights, fine-tuned) on raw frames.</div>
+<div class="tcap"><b>Table 1:</b> Features. Models: an MLP (263&rarr;128&rarr;64&rarr;1) on A + B; ResNet-18 (11 M weights, fine-tuned) on raw frames.</div>
 
 <h2>Dataset Details</h2>
 <table>
@@ -153,13 +153,13 @@ features on identical held-out clips. Frequency cues win on trained generators (
 
 <table class="q">
 <tr><th>Question</th><th>What we did</th><th>What we found</th></tr>
-<tr><td>1. Does resizing hurt?</td><td>Shrank frames instead of cropping.</td><td>Fine-detail models lose <b>0.07&ndash;0.09</b>; pixel models do not drop. Resizing weakens the clue.</td></tr>
-<tr><td>2. Does it use real motion?</td><td>Played frames backwards, then shuffled them.</td><td>Backwards: no change. Shuffled: the time-only models lose <b>0.14&ndash;0.20</b> (combined models 0.02&ndash;0.04). They rely on real frame-to-frame coherence.</td></tr>
-<tr><td>3. Were the new-generator scores fair?</td><td>72 new ModelScope clips from 36 unseen prompts.</td><td>Every pixel and detail model drops <b>0.05&ndash;0.15</b>: the old scores were too high. Detail still beats pixels (MLP 0.72 vs 0.46); only the big network barely moves (0.91 &rarr; 0.89).</td></tr>
+<tr><td>1. Does resizing hurt?</td><td>Shrank frames instead of cropping.</td><td>The fine-detail model loses <b>0.08</b>; the pixel model does not drop. Resizing weakens the clue.</td></tr>
+<tr><td>2. Does it use real motion?</td><td>Played frames backwards, then shuffled them.</td><td>Backwards: no change. Shuffled: the time-only model loses <b>0.14</b> (the combined model 0.02). It relies on real frame-to-frame coherence.</td></tr>
+<tr><td>3. Were the new-generator scores fair?</td><td>72 new ModelScope clips from 36 unseen prompts.</td><td>The pixel, detail and combined models drop <b>0.07&ndash;0.15</b>: the old scores were too high. Detail still beats pixels (0.72 vs 0.46); only the big network barely moves (0.91 &rarr; 0.89).</td></tr>
 <tr><td>4. Can our detail help the big network?</td><td>Blended our score with ResNet-18&rsquo;s.</td><td><b>No.</b> It lifts our model (+0.06 to +0.08 on new generators) but not ResNet-18 (+0.00 on trained generators, &minus;0.06 to &minus;0.20 on new ones).</td></tr>
 </table>
 <div class="two">
-<figure><img src="figs/fig_resize.png" style="width:100%"><figcaption><b>Figure 4 (test 1):</b> Score with cropped (dark) vs resized (light) frames. Blue bars drop; grey bars do not.</figcaption></figure>
+<figure><img src="figs/fig_resize.png" style="width:100%"><figcaption><b>Figure 4 (test 1):</b> Score with cropped (solid) vs resized (hatched) frames. Detail and combined bars drop; the pixel bar does not.</figcaption></figure>
 <figure><img src="figs/fig_temporal.png" style="width:100%"><figcaption><b>Figure 5 (test 2):</b> Score change when frames are shuffled. Below zero = the model used the frame order.</figcaption></figure>
 </div>
 
@@ -171,10 +171,8 @@ features on identical held-out clips. Frequency cues win on trained generators (
 <table class="res">
 <tr><th class="l">AUROC</th><th>Trained-on</th><th>ModelScope (new)</th><th>Wan2.1 (new)</th><th>250 public</th></tr>
 <tr><td class="l">Pixel statistics</td><td>0.889</td><td>0.619</td><td>0.827</td><td>0.694</td></tr>
-<tr><td class="l">Pixel CNN</td><td>0.808</td><td>0.598</td><td>0.871</td><td>0.679</td></tr>
 <tr><td class="l">ResNet-18</td><td>0.954</td><td><b>0.900</b></td><td><b>0.926</b></td><td><b>0.781</b></td></tr>
 <tr><td class="l"><b>Ours:</b> detail</td><td>0.966</td><td>0.798</td><td>0.690</td><td>0.727</td></tr>
-<tr><td class="l"><b>Ours:</b> time CNN</td><td>0.919</td><td>0.740</td><td>0.640</td><td>0.757</td></tr>
 <tr><td class="l"><b>Ours:</b> combined</td><td><b>0.977</b></td><td>0.744</td><td>0.819</td><td>0.754</td></tr>
 </table>
 <div class="tcap" style="margin-bottom:0"><b>Table 3:</b> Held-out scores, mean of 5 runs. Blur, heavy compression or down-scaling cost the detail model 0.2&ndash;0.3, pixel models only about 0.02.</div>
