@@ -44,6 +44,8 @@ python -m src.demo_live
 
 **Step by step:** `demo.ipynb` is the same demonstration as a notebook, run one cell at a time (double-click `run_notebook.bat`, or `python -m notebook demo.ipynb` in the environment). Cells: real and generated clips, live spectra, drift, features, trace of one clip to its verdict, pixel vs frequency vs fusion on the 267 held-out clips, and the check against the stored results.
 
+To run a notebook without opening Jupyter: `python tools/run_demo_notebook.py` or `python tools/run_novelty_notebook.py` (each saves an executed copy and an HTML page in `demo_output/`).
+
 **Novelty checks:** `novelty.ipynb` shows the four extra experiments (resize vs native crop, frame order, prompt-disjoint test, ResNet-18 late fusion), each with a labelled graph from the stored result file and the script that writes it.
 
 It runs on real held-out clips and prints every step (outputs in `demo_output/`):
