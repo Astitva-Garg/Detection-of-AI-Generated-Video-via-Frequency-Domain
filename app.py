@@ -27,13 +27,7 @@ x_freq = (np.arange(N_BINS) + 0.5) / N_BINS
 MODEL_LABELS = {
     "mlp_fusion": "MLP — frequency + pixel fusion (recommended)",
     "mlp_all": "MLP — frequency: spatial + temporal",
-    "lgbm_all": "LightGBM — frequency: spatial + temporal",
-    "lgbm_all_robust": "LightGBM — degradation-aware",
-    "cnn": "Spectro-temporal 1D-CNN",
-    "lr_all": "Logistic regression — spatial + temporal",
-    "svm_all": "Linear SVM — spatial + temporal",
-    "lgbm_spatial": "LightGBM — spatial only",
-    "lgbm_temporal": "LightGBM — temporal only",
+    "mlp_pixel": "MLP — pixel statistics only (control)",
 }
 
 
@@ -118,8 +112,8 @@ def _drift_fig(res):
 def _shap_fig(res):
     fig, ax = plt.subplots(figsize=(7, 3.8))
     if not res.top_features:
-        ax.text(0.5, 0.5, "Per-feature attribution is shown for LightGBM / linear models.\n"
-                "The CNN's frequency×time saliency is in the Performance tab.", ha="center", va="center")
+        ax.text(0.5, 0.5, "Per-feature attribution is not available for the MLP.\n"
+                "See the spectrum and drift plots above.", ha="center", va="center")
         ax.axis("off")
         return fig
     names = [n for n, _ in res.top_features][::-1]
@@ -140,17 +134,18 @@ def detect(video, model, start, degradation):
 
 def _perf_tables():
     out = {}
-    for name in ["test_metrics", "per_generator", "degraded", "logo", "metadata_baseline"]:
+    for name in ["test_metrics", "per_generator", "degraded"]:
         p = RESULTS / f"{name}.csv"
         try:
-            out[name] = pd.read_csv(p).round(3)
+            d = pd.read_csv(p).round(3)
+            out[name] = d[d.model.str.startswith("mlp")]
         except (FileNotFoundError, pd.errors.EmptyDataError):
             out[name] = pd.DataFrame({"info": [f"{name}.csv not available — run evaluation"]})
     return out
 
 
 def build_ui():
-    models = [m for m in MODEL_LABELS if m in P.available()] + [m for m in P.available() if m not in MODEL_LABELS]
+    models = [m for m in MODEL_LABELS if m in P.available()]
     choices = [(MODEL_LABELS.get(m, m), m) for m in models]
     tables = _perf_tables()
     figs = RESULTS / "figures"
@@ -184,14 +179,7 @@ def build_ui():
             gr.Dataframe(tables["per_generator"])
             gr.Markdown("### Robustness to degradations")
             gr.Dataframe(tables["degraded"])
-            gr.Markdown("### Leave-one-generator-out and metadata-only shortcut check")
-            gr.Dataframe(tables["logo"])
-            gr.Dataframe(tables["metadata_baseline"])
-            imgs = [str(figs / f) for f in ["roc_curves.png", "ablation_bars.png", "degradation_bars.png",
-                                            "radial_profiles.png", "mean_spectrum_2d.png",
-                                            "feature_importance_groups.png", "importance_over_frequency.png",
-                                            "cnn_saliency.png", "drift_distributions.png", "tsne.png",
-                                            "error_gallery.png", "confusion_matrices.png"] if (figs / f).exists()]
+            imgs = [str(figs / f) for f in ["radial_profiles.png", "mean_spectrum_2d.png", "drift_distributions.png", "tsne.png"] if (figs / f).exists()]
             gr.Gallery(imgs, columns=2, height="auto", label="Figures")
     return demo
 
