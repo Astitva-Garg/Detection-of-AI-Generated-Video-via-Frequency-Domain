@@ -1,4 +1,5 @@
-"""Build dist/ie643_data_bundle.zip: everything needed to reproduce the results from the normalised clips.
+"""Build dist/ie643_data_bundle.zip: everything needed to reproduce the results from the normalised clips
+(including the resize variant's manifest and features and the 72 new-prompt clips, for the novelty tests).
 
     python tools/make_bundle.py
 

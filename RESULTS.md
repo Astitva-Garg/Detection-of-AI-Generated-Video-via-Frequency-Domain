@@ -63,6 +63,8 @@ baseline is unchanged (LightGBM 0.884 and 0.880). An earlier run on a smaller cl
 | Prompt-disjoint test: ModelScope regenerated from 36 new prompts (`configs/fresh_prompts.yaml`, 72 clips), scored by the shipped models with no retraining, next to the old-prompt ModelScope test clips. Every pixel and spectral model loses 0.05 to 0.15 AUROC (ResNet-18: 0.905 to 0.893); frequency still beats pixel (MLP +0.259, interval [+0.173, +0.341]) | `fresh_prompts.csv`, `fresh_prompts_diffs.csv` | `src/eval/fresh_prompts.py` |
 | Frequency + ResNet-18 late fusion (a 2-weight logistic stacker fitted on the seen validation clips only). Negative result: it raises the frequency MLP on unseen generators (+0.06 to +0.08) but does not improve ResNet-18 (seen +0.004 [-0.028, +0.038], ModelScope -0.055, Wan2.1 -0.195) | `late_fusion.csv` | `src/eval/late_fusion.py` |
 
+Reproduction: tests 1 to 3 rewrite their files identically from the data bundle alone (fresh-clone check); test 4 needs a CUDA GPU and the frame caches built from `data/raw` and `data/wild` (rewritten identically on the GPU machine).
+
 Caveats: the ResNet-18 here is the single stored seed-643 checkpoint; the prompt-disjoint test has one unseen generator
 (ModelScope) and 72 clips; the fresh clips are not content-filtered by YOLO (the prompts exclude people and vehicles).
 

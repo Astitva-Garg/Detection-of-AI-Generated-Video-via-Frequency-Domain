@@ -17,6 +17,10 @@ def core_files():
     files += sorted((DATA_ROOT / "raw" / "fake").glob("*/manifest.jsonl"))
     files += sorted((DATA_ROOT / "features_crop").glob("*.parquet"))
     files += sorted((DATA_ROOT / "features_crop").glob("seq_*.npz"))
+    # resize variant (resize-vs-crop test): manifest and clean + pixel features
+    files += [DATA_ROOT / "manifest.csv", DATA_ROOT / "features" / "clean.parquet", DATA_ROOT / "features" / "pixel.parquet"]
+    # prompt-disjoint test: the 72 new-prompt clips and their manifest
+    files += [DATA_ROOT / "fresh" / "manifest.csv"] + sorted((DATA_ROOT / "fresh" / "clips").glob("*.mp4"))
     return [p for p in files if p.exists()]
 
 

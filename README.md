@@ -97,10 +97,10 @@ py -3.11 -m venv .venv
 
 `data/` is not in git. Its layout, what each folder is, how it was made, sizes and known issues are in
 [`data/README.md`](data/README.md). To reproduce from the normalised clips you need the data bundle (the
-manifests, `clips_crop/`, the small files of `features_crop/`, 173 MB zip); unzip it **in the project root** (the zip already contains the `data/` folder) and check it:
+manifests, `clips_crop/`, the small files of `features_crop/`, the resize variant's manifest and features, the 72 new-prompt clips; 188 MB zip); unzip it **in the project root** (the zip already contains the `data/` folder) and check it:
 
 ```bash
-python -m src.data.checksums --verify        # compares 1,295 core files with data/SHA256SUMS.txt
+python -m src.data.checksums --verify        # compares 1,371 core files with data/SHA256SUMS.txt
 ```
 
 The dataset in numbers: 432 real clips (Pexels) and 552 generated clips from five generators (LTX-Video,
@@ -123,6 +123,22 @@ Checked in a fresh clone of this repository with only the data bundle: `train`, 
 The CNN is seeded but trains on the GPU, whose kernels are not bit-exact: one retrain gave a seen-set AUROC of
 0.932 against 0.941 stored (unseen 0.705 against 0.730), within the spread of the reported 5-seed figure
 (0.919 +/- 0.021). The CNN rows of any regenerated file will therefore differ slightly.
+
+### Reproducing the novelty assessment
+
+Checked in a fresh clone of this repository with only the data bundle unzipped into it: each command below rewrote its
+result file **identically** to the one in git, and `python -m tools.build_poster` rebuilt all eight poster figures
+byte for byte.
+
+| Test | Command | Needs | Result file(s) in `results_crop/` |
+|---|---|---|---|
+| 1. Resize vs native crop | `python -m src.eval.resize_ablation` | the bundle (about 1 min) | `resize_ablation.csv`, `resize_ablation_cv.csv` |
+| 2. Frame order | `python -m src.eval.temporal_order` | the bundle (about 3 min) | `temporal_order.csv` |
+| 3. New prompts | `python -m src.eval.fresh_prompts` | the bundle (the 72 clips are in it; about 1 min). Without a GPU the stored ResNet-18 rows are kept. Regenerating the clips: `bash run_pipeline.sh generate_fresh` (GPU, about 30 min) | `fresh_prompts.csv`, `fresh_prompts_diffs.csv` |
+| 4. ResNet-18 fusion | `python -m src.eval.late_fusion` | a CUDA GPU and the frame caches of stage `deep` (these need `data/raw` and `data/wild`) | `late_fusion.csv` |
+
+`bash run_pipeline.sh extras` runs tests 2 to 4 in one go. The notebook `novelty.ipynb` plots these files
+(`python tools/run_novelty_notebook.py`); it needs only what is in git.
 
 `bash run_pipeline.sh list` shows every stage with what it needs. Stages are resumable, write their full output to
 `data/logs/pipeline/<stage>.log`, and delete nothing. The `deep` stage (pixel CNN, ResNet-18) needs a CUDA GPU and
