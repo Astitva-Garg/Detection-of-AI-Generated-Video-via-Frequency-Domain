@@ -16,3 +16,7 @@ joblib==1.6.0
 pyyaml==6.0.3
 # Optional: only for the "prominent person/animal/object" warning (the app works without it).
 ultralytics==8.4.183
+
+# Notebook demo (demo.ipynb)
+notebook==7.6.5
+ipykernel==7.4.0

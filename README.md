@@ -42,6 +42,8 @@ Where each number comes from: [`RESULTS.md`](RESULTS.md). Known issues of the da
 python -m src.demo_live
 ```
 
+**Step by step:** `demo.ipynb` is the same demonstration as a notebook, run one cell at a time (double-click `run_notebook.bat`, or `python -m notebook demo.ipynb` in the environment). Cells: real and generated clips, live spectra, drift, features, trace of one clip to its verdict, pixel vs frequency vs fusion on the 267 held-out clips, and the check against the stored results.
+
 It runs on real held-out clips and prints every step (outputs in `demo_output/`):
 1. shows a real and a generated clip (chosen by a fixed random seed, not by hand);
 2. extracts their spectra live (2D spectrum, radial curves, noise-residual curves, spectral drift);
