@@ -80,7 +80,7 @@ def resize():
     """Test 1 (as in novelty.ipynb): native crop vs resized frames, MLP, grouped 5-fold CV."""
     d = pd.read_csv(RESULTS / "resize_ablation_cv.csv")
     d = d[d.model == "mlp"].set_index("features").loc[["pixel", "all", "fusion"]]
-    fig, ax = plt.subplots(figsize=(COL, 2.5))
+    fig, ax = plt.subplots(figsize=(COL, 2.25))
     w = 0.36
     for j, (col, color, lab) in enumerate([("crop", NB_BLUE, "Native crop"), ("resize", NB_RED, "Resized")]):
         ax.bar(np.arange(3) + (j - 0.5) * w, d[col], w, color=color, label=lab)
@@ -94,7 +94,7 @@ def prompts():
     """Test 3 (as in novelty.ipynb): ModelScope clips from the training prompts vs 36 new prompts."""
     d = pd.read_csv(RESULTS / "fresh_prompts.csv").set_index("model")
     names = [("mlp_pixel", "Pixel"), ("mlp_all", "Frequency"), ("mlp_fusion", "Combined"), ("resnet18", "ResNet-18")]
-    fig, ax = plt.subplots(figsize=(COL, 2.5))
+    fig, ax = plt.subplots(figsize=(COL, 2.25))
     w = 0.36
     for j, (col, color, lab) in enumerate([("auroc_old_prompts", NB_BLUE, "Old prompts"), ("auroc_new_prompts", NB_RED, "New prompts")]):
         ax.bar(np.arange(4) + (j - 0.5) * w, [d.loc[m, col] for m, _ in names], w, color=color, label=lab)
@@ -108,7 +108,7 @@ def prompts():
 def fusion():
     """Test 4 (as in novelty.ipynb): ResNet-18 alone, frequency MLP alone, and the two fused."""
     d = pd.read_csv(RESULTS / "late_fusion.csv").set_index("set").loc[["seen", "modelscope", "wan"]]
-    fig, ax = plt.subplots(figsize=(COL, 2.5))
+    fig, ax = plt.subplots(figsize=(COL, 2.25))
     w = 0.26
     for j, (col, color, lab) in enumerate([("resnet18", "#999999", "ResNet-18"), ("frequency_mlp", NB_BLUE, "Frequency MLP"), ("fused", "#f2b705", "Both fused")]):
         ax.bar(np.arange(3) + (j - 1) * w, d[col], w, color=color, label=lab)
@@ -122,7 +122,7 @@ def temporal_order():
     """Test 2 (as in novelty.ipynb): AUROC on seen generators with the original frame order vs shuffled frames, MLP."""
     d = pd.read_csv(RESULTS / "temporal_order.csv")
     d = d[(d.set == "seen") & (d.variant == "shuffled")].set_index("model").loc[["mlp_spatial", "mlp_temporal", "mlp_all"]]
-    fig, ax = plt.subplots(figsize=(COL, 2.5))
+    fig, ax = plt.subplots(figsize=(COL, 2.25))
     w = 0.36
     for j, (col, color, lab) in enumerate([("auroc_original", NB_BLUE, "Original order"), ("auroc_variant", NB_RED, "Frames shuffled")]):
         ax.bar(np.arange(3) + (j - 0.5) * w, d[col], w, color=color, label=lab)

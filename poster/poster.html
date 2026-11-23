@@ -169,9 +169,9 @@ features on identical held-out clips. Frequency cues win on trained generators (
 </div>
 
 <h2>Results</h2>
-<p>On the same held-out clips, fine detail beats pixel statistics on trained generators: <b>0.966 vs 0.889</b> (5-run means; for the final trained model the paired gap is +0.079, 95 % interval +0.02 to +0.14). On new generators the picture is mixed (Figure 8, Table 3).</p>
+<p>On the same held-out clips, fine detail beats pixel statistics on trained generators: <b>0.966 vs 0.889</b> (5-run means; final model: gap +0.079, interval +0.02 to +0.14). New generators: mixed (Figure 8, Table 3).</p>
 <div style="display:grid;grid-template-columns:0.82fr 1.18fr;column-gap:4mm;align-items:center">
-<figure style="margin:0"><img src="figs/fig_compare.png" style="width:100%"><figcaption><b>Figure 8:</b> One run: pixel vs detail vs both. Black lines: 95 % range.</figcaption></figure>
+<figure style="margin:0"><img src="figs/fig_compare.png" style="width:100%"><figcaption><b>Figure 8:</b> One run. Black lines: 95 % range.</figcaption></figure>
 <div>
 <table class="res">
 <tr><th class="l">AUROC</th><th>Trained-on</th><th>ModelScope (new)</th><th>Wan2.1 (new)</th><th>250 public</th></tr>
@@ -185,9 +185,9 @@ features on identical held-out clips. Frequency cues win on trained generators (
 
 <h2>Conclusion</h2>
 <ul>
-<li><b>It works</b> on generators it was trained on: fine detail beats pixel statistics with only 42 000 weights.</li>
-<li><b>It transfers only partly:</b> new generators, resizing and compression hurt; the big pretrained network is better on new generators, and our features do not help it.</li>
-
+<li><b>It works</b> on generators it was trained on: fine detail beats pixel statistics (0.966 vs 0.889).</li>
+<li><b>Novelty tests: the cue is real but narrow.</b> It needs fine detail (resizing &minus;0.08) and real frame order (shuffling &minus;0.14), and it loses 0.07&ndash;0.15 on new prompts.</li>
+<li><b>It transfers only partly:</b> ResNet-18 beats it on new generators; fusing helps our model (+0.06 to +0.08), not ResNet-18.</li>
 </ul>
 
 <h2>References</h2>
