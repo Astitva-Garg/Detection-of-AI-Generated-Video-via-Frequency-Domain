@@ -67,19 +67,17 @@ def _frames_fig(frames):
 
 
 def _spectrum_fig(res):
-    fig, ax = plt.subplots(1, 2, figsize=(10, 3.6))
+    fig, ax = plt.subplots(figsize=(6, 3.6))
     rad = np.array([res.features[f"sp_rad_{i:02d}_mean"] for i in range(N_BINS)])
-    res_rad = np.array([res.features[f"sp_res_rad_{i:02d}_mean"] for i in range(N_BINS)])
     ref = _ref()
-    for a, v, key, title in ((ax[0], rad, "rad", "Radial power spectrum"),
-                             (ax[1], res_rad, "res_rad", "Noise-residual spectrum")):
-        if ref:
-            a.plot(x_freq, ref["real"][key], color="#2a6f97", label="real (training mean)")
-            a.plot(x_freq, ref["fake"][key], color="#c9184a", label="AI (training mean)")
-        a.plot(x_freq, v, color="k", lw=2, label="this clip")
-        a.set_title(title)
-        a.set_xlabel("spatial frequency (fraction of Nyquist)")
-        a.legend(fontsize=8)
+    if ref:
+        ax.plot(x_freq, ref["real"]["rad"], color="#2a6f97", label="real (training mean)")
+        ax.plot(x_freq, ref["fake"]["rad"], color="#c9184a", label="AI (training mean)")
+    ax.plot(x_freq, rad, color="k", lw=2, label="this clip")
+    ax.set_title("Radial power spectrum")
+    ax.set_xlabel("spatial frequency (fraction of Nyquist)")
+    ax.set_ylabel("log power (mean removed)")
+    ax.legend(fontsize=8)
     fig.tight_layout()
     return fig
 
@@ -87,40 +85,16 @@ def _spectrum_fig(res):
 def _drift_fig(res):
     s = res.seq[0]
     l2 = np.linalg.norm(np.diff(s, axis=0), axis=1)
-    hi = s[:, 2 * N_BINS // 3:].mean(1)
-    fig, ax = plt.subplots(1, 3, figsize=(12, 3.4))
-    ax[0].plot(range(1, len(s)), l2, marker="o")
-    ax[0].set_title("Frame-to-frame spectral drift (L2)")
-    ax[0].set_xlabel("frame")
+    fig, ax = plt.subplots(figsize=(6, 3.6))
+    ax.plot(range(1, len(s)), l2, marker="o", color="k", label="this clip")
     ref = _ref()
     if ref:
-        for k, c in (("real", "#2a6f97"), ("fake", "#c9184a")):
-            ax[0].axhline(ref[k]["drift_l2_mean"], color=c, ls="--", label=f"{k} mean")
-        ax[0].legend(fontsize=8)
-    ax[1].plot(hi - hi.mean(), marker="o", color="#e07a5f")
-    ax[1].set_title("High-frequency log power over time")
-    ax[1].set_xlabel("frame")
-    im = ax[2].imshow(s.T, origin="lower", aspect="auto", cmap="magma", extent=[0, len(s), 0, 1])
-    ax[2].set_title("Radial spectrum over time")
-    ax[2].set_xlabel("frame")
-    ax[2].set_ylabel("freq (frac. Nyquist)")
-    fig.colorbar(im, ax=ax[2])
-    fig.tight_layout()
-    return fig
-
-
-def _shap_fig(res):
-    fig, ax = plt.subplots(figsize=(7, 3.8))
-    if not res.top_features:
-        ax.text(0.5, 0.5, "Per-feature attribution is not available for the MLP.\n"
-                "See the spectrum and drift plots above.", ha="center", va="center")
-        ax.axis("off")
-        return fig
-    names = [n for n, _ in res.top_features][::-1]
-    vals = [v for _, v in res.top_features][::-1]
-    ax.barh(names, vals, color=["#c9184a" if v > 0 else "#2a6f97" for v in vals])
-    ax.axvline(0, color="k", lw=0.8)
-    ax.set_title("Top feature contributions (red → AI, blue → real)")
+        for k, c, lab in (("real", "#2a6f97", "real (training mean)"), ("fake", "#c9184a", "AI (training mean)")):
+            ax.axhline(ref[k]["drift_l2_mean"], color=c, ls="--", label=lab)
+    ax.set_title("Frame-to-frame spectral drift")
+    ax.set_xlabel("frame step (t to t+1)")
+    ax.set_ylabel("distance between radial spectra")
+    ax.legend(fontsize=8)
     fig.tight_layout()
     return fig
 
@@ -129,7 +103,7 @@ def detect(video, model, start, degradation):
     if video is None:
         raise gr.Error("Please upload a video or pick an example.")
     res = P.predict(video, model=model, start=float(start), degradation=degradation)
-    return _verdict_html(res), _frames_fig(res.frames), _spectrum_fig(res), _drift_fig(res), _shap_fig(res)
+    return _verdict_html(res), _frames_fig(res.frames), _spectrum_fig(res), _drift_fig(res)
 
 
 def _perf_tables():
@@ -148,7 +122,6 @@ def build_ui():
     models = [m for m in MODEL_LABELS if m in P.available()]
     choices = [(MODEL_LABELS.get(m, m), m) for m in models]
     tables = _perf_tables()
-    figs = RESULTS / "figures"
     with gr.Blocks(title="AI-Generated Video Detector") as demo:
         gr.Markdown("# AI-Generated Video Detection via Frequency Domain\n"
                     "IE 643 course project. Upload a short clip (scenery works best: no prominent people, "
@@ -168,10 +141,10 @@ def build_ui():
                 with gr.Column(scale=2):
                     verdict = gr.HTML()
                     frames_plot = gr.Plot(label="Frames and their 2D spectra")
-            spec_plot = gr.Plot(label="Spectrum vs training means")
-            drift_plot = gr.Plot(label="Temporal frequency drift")
-            shap_plot = gr.Plot(label="Why this decision")
-            btn.click(detect, [vid, model, start, deg], [verdict, frames_plot, spec_plot, drift_plot, shap_plot])
+            with gr.Row():
+                spec_plot = gr.Plot(label="Spectrum vs training means")
+                drift_plot = gr.Plot(label="Temporal frequency drift")
+            btn.click(detect, [vid, model, start, deg], [verdict, frames_plot, spec_plot, drift_plot])
         with gr.Tab("Performance"):
             gr.Markdown("### Test-set metrics (seen generators and unseen generators)")
             gr.Dataframe(tables["test_metrics"])
@@ -179,8 +152,6 @@ def build_ui():
             gr.Dataframe(tables["per_generator"])
             gr.Markdown("### Robustness to degradations")
             gr.Dataframe(tables["degraded"])
-            imgs = [str(figs / f) for f in ["radial_profiles.png", "mean_spectrum_2d.png", "drift_distributions.png", "tsne.png"] if (figs / f).exists()]
-            gr.Gallery(imgs, columns=2, height="auto", label="Figures")
     return demo
 
 
